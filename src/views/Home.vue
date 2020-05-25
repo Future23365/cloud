@@ -1,9 +1,7 @@
 <template>
   <div class="home">
     <Newsong :list='newsong'></Newsong>
-    <Player></Player>
-    <Ranking ></Ranking>
-    
+    <Ranking v-on:getRanking='getSong'></Ranking>
   </div>
 </template>
 
@@ -11,20 +9,20 @@
 import server from '../request/request';
 import Newsong from '../components/Newsong';
 import Ranking from '../components/Ranking';
-import Player from '../components/Player';
+
 
 export default {
   name: 'Home',
   data() {
     return {
       newsong: [],
-      ranking: []
+      ranking: [],
+      songinformation: {}
     }
   },
   components: {
     Newsong,
     Ranking,
-    Player
   },
   methods: {
     getData() {
@@ -36,6 +34,12 @@ export default {
         
       })
     },
+    getSong(song, name) {
+      this.$emit('setau', song, name);
+      // this.getinfsong(this.audio.data[0].id);
+
+    },
+    
     
   },
   created() {
@@ -45,11 +49,11 @@ export default {
 </script>
 
 <style scoped>
-  .home {
+  /* .home {
     max-width: 1200px;
     min-width: 800px;
     margin: 0 auto;
     text-align: center;
-  }
+  } */
 
 </style>

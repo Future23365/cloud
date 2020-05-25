@@ -1,23 +1,27 @@
 <template>
   <div class="header">
-    <div class="logo">
+    <div class="main">
+      <div class="logo">
       <a href="/">
       <div class="page"></div>
       </a>
-      <el-menu :default-active="activeIndex"
-       class="el-menu-demo menu"
+    </div>
+    <el-menu :default-active="activeIndex"
+      class="el-menu-demo menu"
       mode="horizontal" 
       @select="handleSelect" 
-      background-color="#444"
+      background-color="#33a3dc"
       text-color="#fff"
       active-text-color="#ffd04b"
       router
       >
-        <el-menu-item index="1" style="height: 50px;line-height: 50px" route="/">发现音乐</el-menu-item>
+        <el-menu-item index="1" style="height: 50px;line-height: 50px" route="/" >发现音乐</el-menu-item>
         <el-menu-item index="2" style="height: 50px;line-height: 50px" route="/my">我的音乐</el-menu-item>
+        <el-menu-item index="3" style="height: 50px;line-height: 50px" route="/music">播放器</el-menu-item>
       </el-menu>
       <span @click="dialogVisible = true">关于</span>
     </div>
+    
     <el-dialog title="关于本项目" :visible.sync="dialogVisible" width="30%">
       <p>作者:刘松柏</p>
       <p>简介：
@@ -66,38 +70,38 @@ export default {
   .header {
     min-width: 800px;
     height: 50px;
-    background: #444;
-    
+    background: #67C23A;
   }
-  .header .logo {
+  .header .main {
     margin: 0 auto;
     max-width: 1200px;
     min-width: 800px;
     height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  .header .logo a {
-    display: block;
+  .header .main .logo a {
+    /* display: block; */
     float: left;
     width: 157px;
     height: 50px;
   }
-  .header .logo a .page {
+  .header .main .logo a .page {
     width: 157px;
     height: 50px;
     background: url(../assets/img/topbar.png) no-repeat;
     background-position: 0 -10px;
   }
-  .header .logo span {
-    float: right;
+  .header .main span {
+    /* float: right; */
     height: 50px;
     line-height: 50px;
     color: #fff;
     cursor: pointer;
   }
   .menu {
-    float: left;
-    margin-left: 50%;
-    left: -288px;
+    margin-left: -125px;
   }
 
 </style>

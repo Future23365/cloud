@@ -1,0 +1,44 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "807277",
+      "name": "音量",
+      "font_class": "yinliang",
+      "unicode": "e662",
+      "unicode_decimal": 58978
+    },
+    {
+      "icon_id": "12036461",
+      "name": "随机01",
+      "font_class": "suiji",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "12036470",
+      "name": "循环05",
+      "font_class": "xunhuan",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "14418903",
+      "name": "next-1",
+      "font_class": "next-1",
+      "unicode": "e72e",
+      "unicode_decimal": 59182
+    },
+    {
+      "icon_id": "14418915",
+      "name": "previous-1",
+      "font_class": "previous-1",
+      "unicode": "e731",
+      "unicode_decimal": 59185
+    }
+  ]
+}
