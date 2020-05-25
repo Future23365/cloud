@@ -1,5 +1,5 @@
 <template>
-  <div class="Newsong">
+  <div class="newsong">
     <el-carousel :interval="3000" 
     type="card" 
     :outoplay="true" 
@@ -23,6 +23,7 @@ export default {
 </script>
 
 <style scoped>
+  
   .el-carousel__item img{
     height: 400px;
   }

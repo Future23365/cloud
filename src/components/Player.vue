@@ -1,30 +1,213 @@
 <template>
-<div class="outplayer">
   <div class="player">
-</div>
-  
+    <div class="w">
+      <audio :src="seturl.data[0].url" ref="myaudio" @timeupdate="updatetime" @durationchange="setdura"></audio>
+      <div class="play">
+        <button><i class="el-icon-caret-left"></i></button>
+        <button @click="puse()"><i :class="{'el-icon-video-play' : !ispuse, 'el-icon-video-pause' : ispuse}"></i></button>
+        <button><i class="el-icon-caret-right"></i></button>
+      </div>
+      <div class="center">
+        <!-- <div class="mask"></div> -->
+          <div class="up">
+            <span class="name">{{seturl.name}}</span>
+            <span class="author">{{songinf.author}}</span> 
+          </div>
+          <div class="down">
+            <div class="down-left"><el-slider v-model="value1.value" :show-tooltip="value1.showtooltip" style="max-width: 600px; min-width: 400px" :max="value1.max" @change="settime"></el-slider></div>
+            <div class="down-right">
+              <span>{{nowtime}}</span>
+              <span>/{{alltime}}</span>
+              </div>
+            </div>
+        
+      </div>
+      <div class="menu">
+        <svg class="icon" aria-hidden="true" @click="isvoice = !isvoice">
+            <use xlink:href="#icon-yinliang"></use>
+        </svg>
+
+        <div class="voice" v-show="isvoice">
+          <el-slider v-model="value2.volume" vertical height="100px" :max="value2.max" :step="0.1" @input="setvolume"></el-slider>
+        </div>
+
+        <svg class="icon pattern" aria-hidden="true">
+          <use xlink:href="#icon-xunhuan"></use>
+        </svg>
+
+      </div>
+    </div>
   </div>
+
 </template>
 
 <script>
+import iconfom from "../assets/font/iconfont.js"
 export default {
-  name: 'Plalyer'
+  name: 'Plalyer',
+  props: ['seturl'],
+  data() {
+    return {
+      ispuse: false,
+      songinf: {
+        name: 'name',
+        author: 'author'
+      },
+      value1: {
+        value: 0,
+        max: 100,
+        showtooltip: false
+      },
+      value2: {
+        volume: 0.5,
+        max: 1,
+        steep: 0.1
+      },
+      alltime: '00:00',
+      nowtime: '00:00',
+      isvoice: false
+    }
+  },
+  methods: {
+    puse() {
+      this.ispuse = !this.ispuse;
+      this.ispuse ? this.$refs.myaudio.play() : this.$refs.myaudio.pause();
+      // this.$refs.myaudio.play();
+    },
+    tochance(time) {
+      let minute;
+      let second;
+      if(time >= 60) {
+        minute = (time / 60).toFixed(2).split(".")[0];
+        minute < 10 ? minute = "0" + minute : minute = minute;
+        second= (time - minute * 60).toFixed(0); 
+        second < 10 ? second = "0" + second : second = second;
+        
+      }else {
+        minute = "00";
+        second = time.toFixed(0);
+        second < 10 ? second = "0" + second : second = second;
+      }
+      return minute + ":" + second;
+    }
+    ,
+    updatetime(e) {
+      // console.log(this.$refs.myaudio.currentTime);
+      this.value1.value = this.$refs.myaudio.currentTime;
+      this.setindex ++;
+      if(this.setindex = 4) {
+        this.nowtime = this.tochance(this.value1.value);
+        this.setindex = 0;
+      }
+      
+    },
+    setdura(e) {
+      // console.log(this.$refs.myaudio.duration);
+      this.value1.max = this.$refs.myaudio.duration;
+      this.alltime = this.tochance(this.value1.max);
+      this.value2.volume = this.$refs.myaudio.volume;
+    },
+    settime(e) {
+      this.$refs.myaudio.currentTime = e;
+    },
+    setvolume(e) {
+      this.$refs.myaudio.volume = e;
+    }
+  }
 }
 </script>
 
 <style scoped>
-.outplayer {
-  float: right;
-  
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
 }
   .player {
     position: sticky;
-    width: 200px;
-    height: 200px;
-    background-color: skyblue;
-    margin-top: -400px;
-    margin-left: 1200px;
+    width: 100%;
+    min-width: 800px;
+    height: 50px;
+    background-color: #67C23A;
+    color: #fff;
     right: 0px;
-    top: -400px;
+    bottom: 0px;
+  }
+  .w {
+    height: 100%;
+    max-width: 1200px;
+    min-width: 800px;
+    margin: 0 auto;
+    /* background-color: #ccc; */
+    display: flex;
+    justify-content: space-around;
+  }
+  .w .play {
+    min-width: 150px;
+  }
+  .w .play button{
+    width: 50px;
+    height: 50px;
+    font-size: 30px;
+    border-radius: 50%;
+  }
+  .w .play button i {
+    display: inline-block;
+  }
+  .w .center {
+    /* min-width: 800px; */
+    width: 800px;
+    height: 50px;
+    margin-left: 50px;
+    /* background-color: red; */
+  }
+
+  .w .menu {
+    position: relative;
+    min-width: 200px;
+    width: 200px;
+    height: 50px;
+    /* background-color: blue; */
+  }
+  .w .menu .voice {
+    position: absolute;
+    top: -100px;
+    left: 0;
+  }
+  .w .center .up {
+    height: 20px;
+  }
+  .w .center .up .author {
+    margin-left: 50px;
+  }
+  .w .center .down {
+    width: 100%;
+    line-height: 38px;
+    height: 38px;
+  }
+  .w .center .down .down-left{
+    float: left;
+    /* margin-left: 50px; */
+    /* width: 600px; */
+    /* height: 30px; */
+  }
+  .w .center .down .down-right {
+    float: left;
+  }
+  .w .menu svg {
+    width: 25px;
+    height: 25px;
+    margin-top: 12.5px;
+    
+  }
+  .w .menu svg:hover {
+    cursor: pointer;
+  }
+  .menu .pattern {
+    width: 25px;
+    height: 25px;
+    margin-left: 10px;
   }
 </style>

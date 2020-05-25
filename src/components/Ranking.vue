@@ -3,7 +3,6 @@
     <el-table
       :data="tableData"
       stripe
-      
       style="width: 100%">
       <el-table-column
       width="50"
@@ -13,31 +12,31 @@
       </el-table-column>
       <el-table-column 
       label="云音乐热歌榜"
-      width="350"
+      min-width="200"
       align="center"
       class="table-row"
       >
         <template slot-scope="scope">
-          <a href="javascript: void(0);" style="text-decoration: none; color: #232323;" :data-songid="scope.row.hotmusicid" @click="getSongurl(scope.row.hotmusicid)">{{scope.row.hotmusic}}</a>
+          <a href="javascript: void(0);" style="text-decoration: none; color: #232323;" :data-songid="scope.row.hotmusicid" @click="getSongurl(scope.row.hotmusicid, scope.row.hotmusic)">{{scope.row.hotmusic}}</a>
         </template>
       </el-table-column>
       
       <el-table-column 
       label="云音乐新歌榜"
-      width="400"
+      min-width="200"
       align="center"
       >
         <template slot-scope="scope">
-          <a href="javascript: void(0);" style="text-decoration: none; color: #232323;" :data-songid="scope.row.newmusicid">{{scope.row.newmusic}}</a>
+          <a href="javascript: void(0);" style="text-decoration: none; color: #232323;" :data-songid="scope.row.newmusicid" @click="getSongurl(scope.row.newmusicid, scope.row.newmusic)">{{scope.row.newmusic}}</a>
         </template>
       </el-table-column>
       <el-table-column 
       label="云音乐电音榜"
-      width="400"
+      min-width="200"
       align="center"
       >
         <template slot-scope="scope">
-          <a href="javascript: void(0);" style="text-decoration: none; color: #232323;" :data-songid="scope.row.electronicid">{{scope.row.electronic}}</a>
+          <a href="javascript: void(0);" style="text-decoration: none; color: #232323;" :data-songid="scope.row.electronicid" @click="getSongurl(scope.row.electronicid, scope.row.electronic)">{{scope.row.electronic}}</a>
         </template>
       </el-table-column>
     </el-table>
@@ -82,7 +81,7 @@ export default {
         url: '/top/list?idx=0',
         method: 'get'
       }),server({
-        url: '/top/list?idx=4',
+        url: '/top/list?idx=25',
         method: 'get'
       })]).then(res => {
         this.ranking = res;
@@ -90,12 +89,12 @@ export default {
         console.log(this.ranking);
       })
     },
-    getSongurl(id) {
+    getSongurl(id, name) {
       server({
         url: '/song/url?id=' + id,
         method: 'get'
       }).then(res => {
-        console.log(res);
+        this.$emit('getRanking',res, name);
       })
     }
     
@@ -108,5 +107,10 @@ export default {
 </script>
 
 <style scoped>
-  
+  .ranking {
+    max-width: 1200px;
+    min-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
 </style>
