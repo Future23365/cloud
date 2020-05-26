@@ -2,9 +2,9 @@
   <div id="app">
     <Header></Header>
     <div>
-      <router-view v-on:setau="setaudio"></router-view>
+      <router-view  :musicid="audio.data[0].id"></router-view>
     </div>
-    <Player :seturl='audio' ></Player>
+    <Player ></Player>
   </div>
   
 </template>
@@ -24,16 +24,22 @@ export default {
     Player
   },
   methods: {
-    setaudio(song, name) {
-      this.audio = song;
-      this.audio.name = name;
-      // console.log(this.audio);
-      // console.log(this.audio.data[0].id);
+    formlocal() {
+      let music = JSON.parse(localStorage.getItem('music'));
+      this.$store.state.songid = music[0].songid;
+      this.$store.state.songurl = music[0].songurl;
+      this.$store.state.songname = music[0].songname;
+      
     }
+  },
+  mounted() {
+    this.formlocal();
   }
 }
 </script>
 
-<style scoped>
-
+<style>
+ * {
+   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+ }
 </style>

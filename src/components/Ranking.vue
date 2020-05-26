@@ -57,6 +57,18 @@ export default {
     }
   },
   methods: {
+    savelocal(id, name, url) {
+      if(localStorage.getItem('music') === null) {
+        localStorage.setItem('music', JSON.stringify([]))
+      }
+      let music = {};
+      let arr = []
+      music.songid = id;
+      music.songname = name;
+      music.songurl = url;
+      arr.push(music);
+      localStorage.setItem('music', JSON.stringify(arr));
+    },
     setTabledata(arr) {
       for(let i = 0; i < 20; i++) {
         this.tableData.push({
@@ -86,7 +98,7 @@ export default {
       })]).then(res => {
         this.ranking = res;
         this.setTabledata(this.ranking);
-        console.log(this.ranking);
+        // console.log(this.ranking);
       })
     },
     getSongurl(id, name) {
@@ -95,12 +107,19 @@ export default {
         method: 'get'
       }).then(res => {
         this.$emit('getRanking',res, name);
+        // console.log(res);
+        this.$store.state.songid = res.data[0].id;
+        this.$store.state.songurl = res.data[0].url;
+        this.$store.state.songauthor = [];
+        this.$store.state.songname = name;
+        // console.log(this.$store.state);
+        this.savelocal(res.data[0].id, name, res.data[0].url);
       })
     }
     
     
   },
-  created() {
+  mounted() {
     this.getRanking();
   }
 }

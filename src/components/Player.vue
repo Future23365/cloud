@@ -1,7 +1,7 @@
 <template>
   <div class="player">
     <div class="w">
-      <audio :src="seturl.data[0].url" ref="myaudio" @timeupdate="updatetime" @durationchange="setdura"></audio>
+      <audio :src="$store.state.songurl" ref="myaudio" @timeupdate="updatetime" @durationchange="setdura"></audio>
       <div class="play">
         <button><i class="el-icon-caret-left"></i></button>
         <button @click="puse()"><i :class="{'el-icon-video-play' : !ispuse, 'el-icon-video-pause' : ispuse}"></i></button>
@@ -10,8 +10,8 @@
       <div class="center">
         <!-- <div class="mask"></div> -->
           <div class="up">
-            <span class="name">{{seturl.name}}</span>
-            <span class="author">{{songinf.author}}</span> 
+            <span class="name">{{$store.state.songname}}</span>
+            <span class="author" v-for="(item,index) in $store.state.songauthor" :key="index" style="font-size: 10px;" >{{item}}</span> 
           </div>
           <div class="down">
             <div class="down-left"><el-slider v-model="value1.value" :show-tooltip="value1.showtooltip" style="max-width: 600px; min-width: 400px" :max="value1.max" @change="settime"></el-slider></div>
@@ -45,7 +45,7 @@
 import iconfom from "../assets/font/iconfont.js"
 export default {
   name: 'Plalyer',
-  props: ['seturl'],
+  // props: ['seturl'],
   data() {
     return {
       ispuse: false,
@@ -72,6 +72,7 @@ export default {
     puse() {
       this.ispuse = !this.ispuse;
       this.ispuse ? this.$refs.myaudio.play() : this.$refs.myaudio.pause();
+      this.savesongtime();
       // this.$refs.myaudio.play();
     },
     tochance(time) {
@@ -99,7 +100,6 @@ export default {
         this.nowtime = this.tochance(this.value1.value);
         this.setindex = 0;
       }
-      
     },
     setdura(e) {
       // console.log(this.$refs.myaudio.duration);
@@ -112,7 +112,22 @@ export default {
     },
     setvolume(e) {
       this.$refs.myaudio.volume = e;
+    },
+    savesongtime() {
+      let arr = JSON.parse(localStorage.getItem('music'));
+      arr[0].songtime = this.$refs.myaudio.currentTime.toFixed(5);
+      localStorage.setItem('music', JSON.stringify(arr));
     }
+  },
+  beforeDestroy() {
+    this.savesongtime();
+    // alert(this.$store);
+  },
+  mounted() {
+    let music = JSON.parse(localStorage.getItem('music'));
+    this.$refs.myaudio.currentTime = music[0].songtime;
+    // console.log(this.$store.state.songtime);
+    // console.log(this.$refs.myaudio.currentTime);
   }
 }
 </script>
