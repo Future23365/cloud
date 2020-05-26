@@ -38,6 +38,7 @@
         <ul>
           <li>Vue</li>
           <li>Vue Router</li>
+          <li>vuex</li>
           <li>ElementUI</li>
           <li>Axios</li>
         </ul>
@@ -60,7 +61,7 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      console.log(key,keyPath);
+      // console.log(key,keyPath);
     }
   }
 }
