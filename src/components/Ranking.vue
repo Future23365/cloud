@@ -1,6 +1,9 @@
 <template>
   <div class="ranking">
     <el-table
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
       :data="tableData"
       stripe
       style="width: 100%">
@@ -17,7 +20,11 @@
       class="table-row"
       >
         <template slot-scope="scope">
-          <a href="javascript: void(0);" style="text-decoration: none; color: #232323;" :data-songid="scope.row.hotmusicid" @click="getSongurl(scope.row.hotmusicid, scope.row.hotmusic)">{{scope.row.hotmusic}}</a>
+          <a href="javascript: void(0);" 
+          style="text-decoration: none; color: #232323;" 
+          :data-songid="scope.row.hotmusicid" 
+          @click="setsongId(scope.row.hotmusicid)">
+          {{scope.row.hotmusic}}</a>
         </template>
       </el-table-column>
       
@@ -27,7 +34,11 @@
       align="center"
       >
         <template slot-scope="scope">
-          <a href="javascript: void(0);" style="text-decoration: none; color: #232323;" :data-songid="scope.row.newmusicid" @click="getSongurl(scope.row.newmusicid, scope.row.newmusic)">{{scope.row.newmusic}}</a>
+          <a href="javascript: void(0);" 
+          style="text-decoration: none; color: #232323;" 
+          :data-songid="scope.row.newmusicid" 
+          @click="setsongId(scope.row.newmusicid)">
+          {{scope.row.newmusic}}</a>
         </template>
       </el-table-column>
       <el-table-column 
@@ -36,7 +47,11 @@
       align="center"
       >
         <template slot-scope="scope">
-          <a href="javascript: void(0);" style="text-decoration: none; color: #232323;" :data-songid="scope.row.electronicid" @click="getSongurl(scope.row.electronicid, scope.row.electronic)">{{scope.row.electronic}}</a>
+          <a href="javascript: void(0);" 
+          style="text-decoration: none; color: #232323;" 
+          :data-songid="scope.row.electronicid"
+          @click="setsongId(scope.row.electronicid)">
+          {{scope.row.electronic}}</a>
         </template>
       </el-table-column>
     </el-table>
@@ -44,8 +59,8 @@
 </template>
 
 <script>
-import axios from 'axios';
-import server from '../request/request';
+import { getsongTop, getsongUrl, serverAll } from '../request/getdata';
+
 export default {
   name: 'Ranking',
   
@@ -54,6 +69,7 @@ export default {
       ranking: {},
       tableData: [],
       music: [[],[],[]],
+      loading: true,
     }
   },
   methods: {
@@ -70,7 +86,7 @@ export default {
       localStorage.setItem('music', JSON.stringify(arr));
     },
     setTabledata(arr) {
-      for(let i = 0; i < 20; i++) {
+      for(let i = 0; i < 40; i++) {
         this.tableData.push({
           hotmusic: arr[0].playlist.tracks[i].name,
           newmusic: arr[1].playlist.tracks[i].name,
@@ -86,39 +102,38 @@ export default {
       // console.log(this.tableData);
     },
     getRanking() {
-      axios.all([server({
-        url: '/top/list?idx=1',
-        method: 'get'
-      }),server({
-        url: '/top/list?idx=0',
-        method: 'get'
-      }),server({
-        url: '/top/list?idx=25',
-        method: 'get'
-      })]).then(res => {
+      serverAll([getsongTop(1), getsongTop(0), getsongTop(25)]).then(res => {
         this.ranking = res;
         this.setTabledata(this.ranking);
+        this.loading = false;
         // console.log(this.ranking);
       })
     },
-    getSongurl(id, name) {
-      server({
-        url: '/song/url?id=' + id,
-        method: 'get'
-      }).then(res => {
-        this.$emit('getRanking',res, name);
+    setsongId(id, name) {
+        // this.$emit('getRanking',res, name);
         // console.log(res);
-        this.$store.state.songid = res.data[0].id;
-        this.$store.state.songurl = res.data[0].url;
-        this.$store.state.songauthor = [];
-        this.$store.state.songname = name;
+        let s = {};
+        s.id = id;
+        console.log(id);
+        console.log(this.$store.state);
+        // s.url = res.data[0].url;
+        // s.name = name;
+        this.$store.commit('updateSong', s);
         // console.log(this.$store.state);
-        this.savelocal(res.data[0].id, name, res.data[0].url);
-      })
-    }
-    
-    
+        // this.savelocal(res.data[0].id, name, res.data[0].url);
+        this.$router.push('/music');
+    },
   },
+  // computed: {
+  //   monitorSong: function() {
+  //     return this.$store.state.songid;
+  //   }
+  // },
+  // watch: {
+  //   monitorSong: function() {
+  //     this.getSongurl();
+  //   }
+  // },
   mounted() {
     this.getRanking();
   }

@@ -8,12 +8,12 @@
         <div class="info">
           <p class="song-name">{{song.name}}</p>
           <p>歌手：</p>
-          <p v-for="(item,index) in song.ar" :key="index" class="song-author">{{item.name}}</p>
+          <p v-for="(item,index) in song.ar" :key="index" class="song-author"><el-link type="primary">{{item.name}}</el-link></p>
           <p>专辑：</p>
-          <p>{{song.al.name}}</p>
+          <p><el-link type="primary">{{song.al.name}}</el-link></p>
         </div>
       </div>
-      <div class="lyric" :style="{height: height}">
+      <div class="lyric" :style="{height: height}" v-loading="loading">
         <ul>
           <li v-for="(item, index) in lyric" :key="index">{{item}}<br>{{index in translyric ? translyric[index] : ""}}</li>
         </ul>
@@ -21,13 +21,13 @@
     </div>
     <el-button icon="el-icon-arrow-down" circle class="showlyric" v-on:click="setheight" :class="{'rota': isactive}"></el-button>
     <div class="comment">
-      <Comment :id="$store.state.songid"></Comment>
+      <Comment></Comment>
     </div>
   </div>
 </template>
 
 <script>
-import server from '../request/request';
+import { getsongLyric, getsongDetail } from '../request/getdata';
 import Comment from './Comment'
 export default {
   name: 'Music',
@@ -39,6 +39,7 @@ export default {
       translyric: {},
       isactive: false,
       height: '500px',
+      loading: true
     }
   },
   components: {
@@ -46,13 +47,13 @@ export default {
   },
   methods: {
     setheight() {
+      // console.log(Object.keys(this.lyric).length);
       if(!this.isactive) {
         let size = Object.keys(this.lyric).length + Object.keys(this.translyric).length;
-      size = size * 20;
-      this.height = size + 'px';
-      // console.log(size);
-      // console.log("点击了");
-      this.isactive = !this.isactive;
+        Object.keys(this.translyric).length < 5 ? size = size * 25 : size = size * 19; 
+        
+        this.height = size + 'px';
+        this.isactive = !this.isactive;
       } else {
         this.height = '500px';
         this.isactive = !this.isactive;
@@ -69,36 +70,47 @@ export default {
       return obj;
     },
     getsong() {
-      if(this.$store.state.songid) {
-        server({
-        url: '/song/detail?ids=' + this.$store.state.songid,
-        method: 'get'
-      }).then(res => {
+      if(this.changeid) {
+        getsongDetail(this.$store.state.songid).then(res => {
         this.song = res.songs[0];
-        this.$store.state.songauthor = [];
-        for(let item in res.songs[0].ar) {
-          // console.log(res.songs[0].ar[item].name);
-          this.$store.state.songauthor.push(res.songs[0].ar[item].name);
-        }
+        // this.$store.state.songauthor = [];
+        // for(let item in res.songs[0].ar) {
+        //   // console.log(res.songs[0].ar[item].name);
+        //   this.$store.state.songauthor.push(res.songs[0].ar[item].name);
+        // }
         // console.log(this.$store.state);
       })
       }
     },
     getlyric() {
-      if(this.$store.state.songid) {
-        server({
-          url: '/lyric?id=' + this.$store.state.songid,
-          method: 'get'
-        }).then(res => {
-          // console.log("歌词:");
+      if(this.changeid) {
+        getsongLyric(this.$store.state.songid).then(res => {
+          this.loading = false;
           // console.log(res);
           // this.width = 500;
-          this.lyric = this.stolyric(res.lrc.lyric.split('\n'));
-          this.translyric = this.stolyric(res.tlyric.lyric.split('\n'));         
+          console.log('lrc' in res);
+          if('lrc' in res && 'lyric' in res.lrc) {
+            this.lyric = this.stolyric(res.lrc.lyric.split('\n'));
+          }
+          if('tlyric' in res && 'lyric' in res.tlyric) {
+            this.translyric = this.stolyric(res.tlyric.lyric.split('\n'));  
+          }
+          // console.log(this.lyric);
         })
       }
     },
     
+  },
+  computed: {
+    changeid: function() {
+      return this.$store.state.songid
+    }
+  },
+  watch: {
+    changeid: function(){
+      this.getsong();
+      this.getlyric()
+    }
   },
   mounted() {
     this.getsong();
@@ -108,35 +120,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  * {
-    margin: 0;
-    padding: 0;
-  }
-  li {
-    list-style: none;
 
-  }
+  
   .music {
     // max-width: 980px;
     width: 640px;
     // height: 960px;
     margin: 0 auto;
-    background-color: #ccc;
+    background-color: #fffef9;
     padding-top: 80px;
     padding-left: 80px;
     padding-right: 80px;
     // overflow: hidden;
+    border: 1px solid #ccc;
     .s-info {
       width: 640px;
       // height: 500px;
-      background-color: #666;
+      // background-color: #666;
       overflow: hidden;
       .song-info {
         float: left;
         position: relative;
         width: 200px;
         height: 500px;
-        background: #ffc20e;
+        // background: #ffc20e;
         .mask {
           width: 200px;
           height: 200px;
@@ -166,6 +173,7 @@ export default {
             text-align: center;
             font-size: 10px;
             &:nth-child(2n) {
+              color: #999;
               margin-top: 10px;
             }
           }
@@ -180,7 +188,7 @@ export default {
           float: right;
           width: 440px;
           height: 500px;
-          background-color: #d3d7d4;
+          // background-color: #d3d7d4;
           font-size: 10px;
           overflow: hidden;
           transition: height 3s ;

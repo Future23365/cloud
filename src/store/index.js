@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import vuex from 'vuex';
+import serve from '../request/request'
 Vue.use(vuex);
 
 export default new vuex.Store({
@@ -8,5 +9,15 @@ export default new vuex.Store({
     songname: '',
     songauthor: [],
     songurl: '',
+  },
+  mutations: {
+    updateSong(state, songi) {
+      console.log('store');
+      console.log(songi);
+      !!songi.id === true  ? state.songid = songi.id: '';
+      !!songi.name === true ? state.songname = songi.name: '';
+      !!songi.url === true ? state.songurl = songi.url: '';
+      console.log(state);
+    }
   }
 })
