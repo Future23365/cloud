@@ -4,7 +4,7 @@
     <div>
       <router-view  :musicid="audio.data[0].id"></router-view>
     </div>
-    <Player ></Player>
+    <Player ref="childPlayer"></Player>
   </div>
   
 </template>
@@ -24,22 +24,33 @@ export default {
     Player
   },
   methods: {
-    formlocal() {
-      let music = JSON.parse(localStorage.getItem('music'));
-      this.$store.state.songid = music[0].songid;
-      this.$store.state.songurl = music[0].songurl;
-      this.$store.state.songname = music[0].songname;
-      
-    }
+
   },
   mounted() {
-    this.formlocal();
+    console.log(this.$refs.childPlayer);
+    this.$refs.childPlayer.localSet();
   }
 }
 </script>
 
 <style>
  * {
+    margin: 0;
+    padding: 0;
    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
  }
+ li {
+    list-style: none;
+  }
+  .icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+ #app {
+   background-color: #f6f5ec;
+ }
+
 </style>

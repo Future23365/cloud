@@ -13,6 +13,13 @@
       "unicode_decimal": 58978
     },
     {
+      "icon_id": "2076196",
+      "name": "赞",
+      "font_class": "zan",
+      "unicode": "e870",
+      "unicode_decimal": 59504
+    },
+    {
       "icon_id": "12036461",
       "name": "随机01",
       "font_class": "suiji",

@@ -1,12 +1,12 @@
 <template>
   <div class="home">
     <Newsong :list='newsong'></Newsong>
-    <Ranking v-on:getRanking='getSong'></Ranking>
+    <Ranking></Ranking>
   </div>
 </template>
 
 <script>
-import server from '../request/request';
+import { getsongNew } from '../request/getdata';
 import Newsong from '../components/Newsong';
 import Ranking from '../components/Ranking';
 
@@ -26,19 +26,16 @@ export default {
   },
   methods: {
     getData() {
-      server({
-        url: '/personalized/newsong',
-        method: 'get'
-      }).then(res => {
+      getsongNew().then(res => {
         this.newsong.push(res.result);  //获取新课
         
       })
     },
-    getSong(song, name) {
-      this.$emit('setau', song, name);
-      // this.getinfsong(this.audio.data[0].id);
+    // getSong(song, name) {
+    //   // this.$emit('setau', song, name);
+    //   // this.getinfsong(this.audio.data[0].id);
 
-    },
+    // },
     
     
   },
@@ -49,11 +46,6 @@ export default {
 </script>
 
 <style scoped>
-  /* .home {
-    max-width: 1200px;
-    min-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-  } */
+  
 
 </style>

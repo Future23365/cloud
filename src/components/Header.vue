@@ -5,8 +5,8 @@
       <a href="/">
       <div class="page"></div>
       </a>
-    </div>
-    <el-menu :default-active="activeIndex"
+      </div>
+      <el-menu :default-active="activeIndex"
       class="el-menu-demo menu"
       mode="horizontal" 
       @select="handleSelect" 
@@ -19,6 +19,7 @@
         <el-menu-item index="2" style="height: 50px;line-height: 50px" route="/my">我的音乐</el-menu-item>
         <el-menu-item index="3" style="height: 50px;line-height: 50px" route="/music">播放器</el-menu-item>
       </el-menu>
+      <Search></Search>
       <span @click="dialogVisible = true">关于</span>
     </div>
     
@@ -51,6 +52,7 @@
 </template>
 
 <script>
+import Search from './Search'
 export default {
   name: 'Header',
   data() {
@@ -63,6 +65,9 @@ export default {
     handleSelect(key, keyPath) {
       // console.log(key,keyPath);
     }
+  },
+  components: {
+    Search
   }
 }
 </script>
@@ -102,7 +107,7 @@ export default {
     cursor: pointer;
   }
   .menu {
-    margin-left: -125px;
+    /* margin-left: -125px; */
   }
 
 </style>
