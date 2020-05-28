@@ -49,7 +49,6 @@
 <script>
 export default {
   name: 'single',
-  props: ['dingleData'],
   data() {
     return {
       tableData: [],
@@ -107,7 +106,7 @@ export default {
 
   },
   mounted() {
-    this.$emit('startRequest');
+    this.$emit('startRequest', 1);
   }
 }
 </script>
