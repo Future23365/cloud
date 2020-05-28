@@ -27,9 +27,10 @@ export default {
 
   },
   mounted() {
-    console.log(this.$refs.childPlayer);
+    // console.log(this.$refs.childPlayer);
     this.$refs.childPlayer.localSet();
   }
+
 }
 </script>
 

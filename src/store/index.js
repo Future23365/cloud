@@ -12,12 +12,9 @@ export default new vuex.Store({
   },
   mutations: {
     updateSong(state, songi) {
-      console.log('store');
-      console.log(songi);
       !!songi.id === true  ? state.songid = songi.id: '';
       !!songi.name === true ? state.songname = songi.name: '';
       !!songi.url === true ? state.songurl = songi.url: '';
-      console.log(state);
     }
   }
 })

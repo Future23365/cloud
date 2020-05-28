@@ -74,7 +74,6 @@ export default {
   methods: {
     getComment(limit) {
       getsongComment(this.moniterId, 20).then(res => {
-        console.log(res);
         this.goodiscuss = res.hotComments;
         this.newdiscuss = res.comments;
         this.total = res.total;

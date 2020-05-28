@@ -83,11 +83,11 @@ export default {
       let minute;
       let second;
       if(time >= 60) {
-        minute = (time / 60).toFixed(2).split(".")[0];
+        time = Math.ceil(time);
+        minute = (time / 60).toString().split(".")[0];
         minute < 10 ? minute = "0" + minute : minute = minute;
         second= (time - minute * 60).toFixed(0); 
         second < 10 ? second = "0" + second : second = second;
-        
       }else {
         minute = "00";
         second = time.toFixed(0);
@@ -124,9 +124,7 @@ export default {
       // console.log(arr);
       let obj = {};
       obj.songtime = this.$refs.myaudio.currentTime.toFixed(5);
-      obj.name = this.sname;
-      obj.url = this.url;
-      obj.author = this.author;
+      obj.songid = this.updateid;
       arr.push(obj);
       localStorage.setItem('music', JSON.stringify(arr));
     },
@@ -147,19 +145,16 @@ export default {
       })
     },
     localSet() {
-      setTimeout(function() {
-        console.log('成功调用');
-        if(localStorage.getItem('music') === [] || localStorage.getItem('music') === null) {
-        localStorage.setItem('music', JSON.stringify([]));
-        }else {
-          let music = JSON.parse(localStorage.getItem('music'));
-          console.log(music);
-          !!music[0].songname === true ? this.sname = music[0].songname : '';
-          !!music[0].songurl === true ? this.url = music[0].songurl : '';
-          !!music[0].songaughor === true ? this.author = music[0].songaughor : '';
-          !!music[0].songtime === true ? this.$refs.myaudio.currentTime = music[0].songtime : '';
-        }
-      }, 2000)
+      if(localStorage.getItem('music') === [] || localStorage.getItem('music') === null) {
+      localStorage.setItem('music', JSON.stringify([]));
+      }else {
+        let music = JSON.parse(localStorage.getItem('music'));
+        let obj = {};
+        !!music[0].songid === true ?  obj.id = music[0].songid : '';
+        this.$store.commit('updateSong', obj)
+        !!music[0].songtime === true ? this.$refs.myaudio.currentTime = music[0].songtime : '';
+      }
+      
       
   },
   },
@@ -175,7 +170,7 @@ export default {
     }
   },
   beforeDestroy() {
-    this.savesonginf();
+    // this.savesonginf();
     // alert(this.$store);
   },
  
