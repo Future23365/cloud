@@ -47,6 +47,13 @@ export const getsearchSuggest = (keywords) => {
   })
 }
 
+//获取搜索结果
+export const getsearchResult = (keywords, limit = 30, offset = 0, type = 1) => {
+  return server({
+    url: `/search?keywords=${keywords}&limit=${limit}&offset=${offset}&type=${type}`
+  })
+}
+
 //并发请求
 export const serverAll = (arr) => {
   return axios.all(arr)

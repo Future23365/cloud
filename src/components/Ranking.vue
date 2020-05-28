@@ -73,18 +73,18 @@ export default {
     }
   },
   methods: {
-    savelocal(id, name, url) {
-      if(localStorage.getItem('music') === null) {
-        localStorage.setItem('music', JSON.stringify([]))
-      }
-      let music = {};
-      let arr = []
-      music.songid = id;
-      music.songname = name;
-      music.songurl = url;
-      arr.push(music);
-      localStorage.setItem('music', JSON.stringify(arr));
-    },
+    // savelocal(id, name, url) {
+    //   if(localStorage.getItem('music') === null) {
+    //     localStorage.setItem('music', JSON.stringify([]))
+    //   }
+    //   let music = {};
+    //   let arr = []
+    //   music.songid = id;
+    //   music.songname = name;
+    //   music.songurl = url;
+    //   arr.push(music);
+    //   localStorage.setItem('music', JSON.stringify(arr));
+    // },
     setTabledata(arr) {
       for(let i = 0; i < 40; i++) {
         this.tableData.push({
@@ -110,17 +110,9 @@ export default {
       })
     },
     setsongId(id, name) {
-        // this.$emit('getRanking',res, name);
-        // console.log(res);
         let s = {};
         s.id = id;
-        console.log(id);
-        console.log(this.$store.state);
-        // s.url = res.data[0].url;
-        // s.name = name;
         this.$store.commit('updateSong', s);
-        // console.log(this.$store.state);
-        // this.savelocal(res.data[0].id, name, res.data[0].url);
         this.$router.push('/music');
     },
   },

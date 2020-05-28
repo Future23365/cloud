@@ -86,13 +86,10 @@ export default {
       if(this.changeid) {
         getsongLyric(this.$store.state.songid).then(res => {
           this.loading = false;
-          // console.log(res);
-          // this.width = 500;
-          console.log('lrc' in res);
           if('lrc' in res && 'lyric' in res.lrc) {
             this.lyric = this.stolyric(res.lrc.lyric.split('\n'));
           }
-          if('tlyric' in res && 'lyric' in res.tlyric) {
+          if('tlyric' in res && 'lyric' in res.tlyric && res.tlyric.lyric != null) {
             this.translyric = this.stolyric(res.tlyric.lyric.split('\n'));  
           }
           // console.log(this.lyric);
