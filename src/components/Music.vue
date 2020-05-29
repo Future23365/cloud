@@ -21,7 +21,7 @@
     </div>
     <el-button icon="el-icon-arrow-down" circle class="showlyric" v-on:click="setheight" :class="{'rota': isactive}"></el-button>
     <div class="comment">
-      <Comment></Comment>
+      <Comment ref="childrenComment"></Comment>
     </div>
   </div>
 </template>
@@ -39,7 +39,9 @@ export default {
       translyric: {},
       isactive: false,
       height: '500px',
-      loading: true
+      loading: true,
+      setRequestTo: {},
+
     }
   },
   components: {
@@ -96,6 +98,12 @@ export default {
         })
       }
     },
+    sendSongid() {
+      let obj = {};
+      obj.id = this.changeid;
+      obj.target = 'music';
+      this.$refs.childrenComment.startRequset(obj);
+    }
     
   },
   computed: {
@@ -105,13 +113,17 @@ export default {
   },
   watch: {
     changeid: function(){
+      this.sendSongid();
       this.getsong();
-      this.getlyric()
+      this.getlyric();
+      
     }
   },
   mounted() {
+    this.sendSongid();
     this.getsong();
     this.getlyric();
+    
   }
 }
 </script>

@@ -61,7 +61,6 @@
 import { getsongComment } from '../request/getdata';
 export default {
   name: 'Comment',
-  // props: ['id'],
   data() {
     return {
       goodiscuss: [],
@@ -69,11 +68,13 @@ export default {
       pagesize: 20,
       total: 0,
       loading: true,
+      requestTo: {}
     }
   },
   methods: {
     getComment(limit) {
-      getsongComment(this.moniterId, 20).then(res => {
+      console.log(this.requestTo);
+      getsongComment(this.requestTo.id, 20, this.requestTo.target).then(res => {
         this.goodiscuss = res.hotComments;
         this.newdiscuss = res.comments;
         this.total = res.total;
@@ -84,7 +85,7 @@ export default {
     changeData(e) {
       e--;
       e = e * 20;
-      getsongComment(this.$store.state.songid, 20, e).then(res => {
+      getsongComment(this.requestTo.id, 20, this.requestTo.target, e).then(res => {
         this.newdiscuss = res.comments;
         // console.log(res)
       })
@@ -101,20 +102,27 @@ export default {
       } else {
         return date.toLocaleDateString();
       }
+    },
+    startRequset(obj) {
+      this.requestTo.id = obj.id;
+      this.requestTo.target = obj.target;
+      this.getComment();
     }
   },
   computed: {
-    moniterId: function() {
-      return this.$store.state.songid;
-    }
+    // moniterId: function() {
+    //   console.log(this.requestTo);
+    //   return this.requsetTo.id;
+    // }
   },
   watch: {
-    moniterId: function() {
-      this.getComment(20);
-    }
+    // moniterId: function() {
+    //   console.log(this.moniterId);
+    //   this.getComment(20);
+    // }
   },
   mounted() {
-    this.getComment(20);
+    // this.getComment(20);
   }
   
 }

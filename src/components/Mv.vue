@@ -2,7 +2,7 @@
   <div class="mv">
     <ul>
       <li v-for="(item, index) in mvData" :key="index">
-        <div class="show">
+        <div class="show" @click="playVideo(item.id)">
           <img :src="item.cover" alt />
           <div class="count">
             <i class="el-icon-view"></i>
@@ -50,6 +50,15 @@ export default {
         second < 10 ? (second = "0" + second) : (second = second);
       }
       return minute + ":" + second;
+    },
+    playVideo(id) {
+      console.log("点击了播放");
+      this.$router.push({
+        path: "/mvideo",
+        query: {
+          mvId: id
+        }
+      });
     }
   },
   mounted() {
