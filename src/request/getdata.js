@@ -14,7 +14,7 @@ export const getsongDetail = ids => {
   })
 }
 //获取新歌
-export const  getsongNew = () => {
+export const getsongNew = () => {
   return server({
     url: `/personalized/newsong`,
   })
@@ -34,9 +34,9 @@ export const getsongLyric = id => {
 }
 
 //获取评论
-export const getsongComment = (id, limit, offset = 0) => {
+export const getsongComment = (id, limit, target, offset = 0) => {
   return server({
-    url: `/comment/music?id=${id}&limit=${limit}&offset=${offset}`
+    url: `/comment/${target}?id=${id}&limit=${limit}&offset=${offset}`
   })
 }
 
@@ -53,6 +53,28 @@ export const getsearchResult = (keywords, limit = 30, offset = 0, type = 1) => {
     url: `/search?keywords=${keywords}&limit=${limit}&offset=${offset}&type=${type}`
   })
 }
+
+//获取mv数据
+export const getMvdata = id => {
+  return server({
+    url: `/mv/detail?mvid=${id}`
+  })
+}
+
+//获取mv播放地址
+export const getMvurl = id => {
+  return server({
+    url: `/mv/url?id=${id}`
+  })
+}
+
+//获取mv评论
+export const getMvcomments = (id, limit, offset = 0) => {
+  return server({
+    url: `/comment/mv?id=${id}&limit=${limit}&offset=${offset}`
+  })
+}
+
 
 //并发请求
 export const serverAll = (arr) => {

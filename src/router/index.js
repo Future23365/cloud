@@ -4,6 +4,7 @@ import Home from '../views/Home.vue';
 import My from '../views/My.vue';
 import Music from '../components/Music.vue';
 import Result from '../components/Result.vue';
+import Mvideo from '../components/Mvideo.vue';
 
 Vue.use(Router);
 export default new Router({
@@ -27,6 +28,11 @@ export default new Router({
       path: '/result',
       name: 'result',
       component: Result
+    },
+    {
+      path: '/mvideo',
+      name: 'mvideo',
+      component: Mvideo
     }
   ]
 })
