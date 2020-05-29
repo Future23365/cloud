@@ -1,6 +1,6 @@
 # vue版网易云音乐
 
-vue版网易云音乐，后端接口来自[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi), 功能完善中，bug制造中...
+vue版网易云音乐, 无登录功能版，后端接口来自[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi), 功能完善中，bug制造中...
 
 ## 本地运行
 
