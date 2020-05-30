@@ -1,95 +1,68 @@
 <template>
-  <div class="mv">
+  <div class="album">
     <ul>
-      <li v-for="(item, index) in mvData" :key="index">
-        <div class="show" @click="playVideo(item.id)">
-          <img :src="item.cover || item.imgurl" :alt="item.name" :title="item.name" />
-          <div class="count">
-            <i class="el-icon-view"></i>
-            {{item.playCount.toLocaleString()}}
-          </div>
-          <div class="time">{{timeShow(item.duration / 1000)}}</div>
+      <li v-for="(item, index) in albumData" :key="index">
+        <div class="show" @click="toAlbum(item.id)">
+          <img :src="item.cover || item.picUrl" :alt="item.name" :title="item.name" />
         </div>
         <div class="name">
           <a href="javascript:;" :title="item.name">{{item.name}}</a>
         </div>
         <div class="aughor">
-          <el-link type="info">{{item.artistName}}</el-link>
+          <el-link type="info">{{item.artist.name}}</el-link>
         </div>
       </li>
     </ul>
   </div>
 </template>
-  
-  
+
 <script>
 export default {
-  name: "mv",
+  name: 'album',
   data() {
     return {
-      mvData: []
-    };
+      albumData: [],
+      
+    }
   },
   methods: {
-    getMvdata(data) {
-      this.mvData = data;
-      // this.$forceUpdate();
-      console.log(this.mvData);
+    getAlbumdata(data) {
+      this.albumData = data;
+      console.log(data);
     },
-    timeShow(time) {
-      let minute;
-      let second;
-      if (time >= 60) {
-        time = Math.ceil(time);
-        minute = (time / 60).toString().split(".")[0];
-        minute < 10 ? (minute = "0" + minute) : (minute = minute);
-        second = (time - minute * 60).toFixed(0);
-        second < 10 ? (second = "0" + second) : (second = second);
-      } else {
-        minute = "00";
-        second = time.toFixed(0);
-        second < 10 ? (second = "0" + second) : (second = second);
-      }
-      return minute + ":" + second;
-    },
-    playVideo(id) {
-      // console.log("点击了播放");
+    toAlbum(id) {
       this.$router.push({
-        path: "/mvideo",
+        path: "/albumdetail",
         query: {
-          mvId: id
+          albumdetailId: id
         }
       });
     }
-  },
-  mounted() {
-    // console.log("mv");
-    // this.$emit('getMv', 1004);
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-.mv {
+.album {
   ul {
     overflow: hidden;
     li {
       float: left;
-      margin-left: 10px;
-      margin-bottom: 10px;
-      width: 159px;
-      height: 137px;
+      margin-left: 19px;
+      margin-bottom: 20px;
+      width: 153px;
+      height: 168px;
       // background-color: skyblue;
 
       .show {
-        height: 90px;
+        height: 130px;
         position: relative;
         color: #fff;
         font-size: 14px;
         img {
           position: absolute;
-          width: 159px;
-          height: 90px;
+          width: 153px;
+          height: 130px;
           &:hover {
             cursor: pointer;
           }
