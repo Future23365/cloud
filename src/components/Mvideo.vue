@@ -1,15 +1,16 @@
 <template>
   <div class="mvideo">
     <div class="inf">
-      <span class="mvname">{{this.mvData.mvName}}</span>
-      <span class="author">{{this.mvData.author}}</span>
+      <span class="mvname">{{mvData.mvName}}</span>
+      <span class="author">{{mvData.author}}</span>
     </div>
-    <video :src="this.mvData.url" controls></video>
+    <video :src="mvData.url" controls preload="auto"></video>
     <div class="introduce">
-      <div class="publishTime"><span>发布时间:</span><span>{{this.mvData.publishTime}}</span></div>
-      <div class="playCount"><span>播放次数:</span><span>{{this.mvData.playCount}}</span></div>
-      <div class="subCount"><span>收藏次数:</span><span>{{this.mvData.subCount}}</span></div>
-      <div class="shareCount"><span>分享次数:</span><span>{{this.mvData.shareCount}}</span></div>
+      <div class="publishTime"><span>发布时间:</span><span>{{mvData.publishTime}}</span></div>
+      <div class="playCount"><span>播放次数:</span><span>{{mvData.playCount}}</span></div>
+      <div class="subCount"><span>收藏次数:</span><span>{{mvData.subCount}}</span></div>
+      <div class="shareCount"><span>分享次数:</span><span>{{mvData.shareCount}}</span></div>
+      <p>{{mvData.desc}}</p>
     </div>
     <Comment ref="childrenComment"></Comment>
   </div>
@@ -33,9 +34,9 @@ export default {
   },
   methods: {
     setMvdata() {
-      console.log(this.$route.query.mvId);
+      // console.log(this.$route.query.mvId);
       getMvdata(this.$route.query.mvId).then(res => {
-        console.log(res);
+        // console.log(res);
         this.mvData.mvName = res.data.name;
         this.mvData.author = res.data.artistName;
         this.mvData.duration = res.data.duration;
@@ -43,12 +44,14 @@ export default {
         this.mvData.publishTime = res.data.publishTime;
         this.mvData.shareCount = res.data.shareCount.toLocaleString();
         this.mvData.subCount = res.data.subCount.toLocaleString();
+        this.mvData.desc = res.data.desc;
+        this.$forceUpdate();
         // console.log(this.mvData);
       })
       getMvurl(this.$route.query.mvId).then(res => {
         // console.log(res)
         this.mvData.url = res.data.url;
-        console.log(this.mvData);
+        // console.log(this.mvData);
         this.$forceUpdate();  //    强制渲染
       })
 
@@ -92,7 +95,9 @@ export default {
         margin-right: 5px;
       }
     }
-
+    p {
+      margin-top: 8px;
+    }
   }
 }
 </style>

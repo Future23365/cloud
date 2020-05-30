@@ -32,7 +32,6 @@ export const getsongLyric = id => {
     url: `/lyric?id=${id}`
   })
 }
-
 //获取评论
 export const getsongComment = (id, limit, target, offset = 0) => {
   return server({
@@ -46,7 +45,6 @@ export const getsearchSuggest = (keywords) => {
     url: `/search/suggest?keywords=${keywords}`
   })
 }
-
 //获取搜索结果
 export const getsearchResult = (keywords, limit = 30, offset = 0, type = 1) => {
   return server({
@@ -60,14 +58,12 @@ export const getMvdata = id => {
     url: `/mv/detail?mvid=${id}`
   })
 }
-
 //获取mv播放地址
 export const getMvurl = id => {
   return server({
     url: `/mv/url?id=${id}`
   })
 }
-
 //获取mv评论
 export const getMvcomments = (id, limit, offset = 0) => {
   return server({
@@ -75,6 +71,44 @@ export const getMvcomments = (id, limit, offset = 0) => {
   })
 }
 
+//获取歌手描述
+export const getArtistdesc = id => {
+  return server({
+    url: `/artist/desc?id=${id}`
+  })
+}
+//获取歌手热门单曲
+export const getArtistsongs = id => {
+  return server({
+    url: `/artists?id=${id}`
+  })
+}
+//获取歌手专辑
+export const getArtistalbum = (id, limit = 50, offset = 0) => {
+  return server({
+    url: `/artist/album?id=${id}&limit=${limit}&offst=${offset}`
+  })
+}
+//获取歌手mv
+export const getArtistmv = (id, limit = 30) => {
+  return server({
+    url: `/artist/mv?id=${id}&limit=${limit}`
+  })
+}
+
+
+//获取专辑动态信息
+export const getAlbumdata = id => {
+  return server({
+    url: `/album/detail/dynamic?id=${id}`
+  })
+}
+//获取专辑内容
+export const getAlbum = id => {
+  return server({
+    url: `/album?id=${id}`
+  })
+}
 
 //并发请求
 export const serverAll = (arr) => {

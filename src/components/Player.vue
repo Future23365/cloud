@@ -3,9 +3,17 @@
     <div class="w">
       <audio :src="url" ref="myaudio" @timeupdate="updatetime" @durationchange="setdura"></audio>
       <div class="play">
-        <button><i class="el-icon-caret-left"></i></button>
-        <button @click="puse()"><i :class="{'el-icon-video-play' : !ispuse, 'el-icon-video-pause' : ispuse}"></i></button>
-        <button><i class="el-icon-caret-right"></i></button>
+        <div class="left">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-previous-1"></use>
+          </svg>
+        </div>
+        <div class="isplay" @click="puse()"><i :class="{'el-icon-video-play' : !ispuse, 'el-icon-video-pause' : ispuse}"></i></div>
+        <div class="right">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-next-1"></use>
+          </svg>
+        </div>
       </div>
       <div class="center">
         <!-- <div class="mask"></div> -->
@@ -185,7 +193,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
   .player {
     position: sticky;
@@ -198,87 +206,120 @@ export default {
     bottom: 0px;
     margin-top: 20px;
     z-index: 9999999;
-  }
-  .w {
-    height: 100%;
-    max-width: 1200px;
-    min-width: 800px;
-    margin: 0 auto;
-    /* background-color: #ccc; */
-    display: flex;
-    justify-content: space-around;
-  }
-  .w .play {
-    min-width: 150px;
-  }
-  .w .play button{
-    width: 50px;
-    height: 50px;
-    font-size: 30px;
-    border-radius: 50%;
-  }
-  .w .play button i {
-    display: inline-block;
-  }
-  .w .center {
-    /* min-width: 800px; */
-    width: 800px;
-    height: 50px;
-    margin-left: 50px;
-    /* background-color: red; */
+    .w {
+      height: 100%;
+      max-width: 1200px;
+      min-width: 800px;
+      margin: 0 auto;
+      /* background-color: #ccc; */
+      display: flex;
+      justify-content: space-around;
+      .play {
+        // min-width: 150px;
+        svg {
+            color: #fff;
+            transition: color .5s;
+            &:hover {
+              color: #f47920;
+            }
+          }
+        .left {
+          float: left;
+          font-size: 20px;
+          line-height: 50px;
+          color: #fff;
+          &:hover {
+            cursor: pointer;
+            
+          }
+        }
+        .isplay {
+          float: left;
+          font-size: 40px;
+          line-height: 50px;
+          margin: 0 10px;
+          i {
+            transition: color .5s;
+            &:hover {
+              color: #f47920;
+            }
+          }
+          &:hover {
+            cursor: pointer;
+          }
+        }
+        .right {
+          float: left;
+          font-size: 20px;
+          line-height: 50px;
+          color: #fff;
+          &:hover {
+            cursor: pointer;
+          }
+        }
+        
+        
+      }
+      .center {
+        /* min-width: 800px; */
+        width: 800px;
+        height: 50px;
+        margin-left: 30px;
+        /* background-color: red; */
+        .up {
+          height: 20px;
+          .author {
+            color: #000;
+            font-size: 19px;
+            .el-link {
+              color: #000;
+            }
+          }
+        }
+        .name {
+          margin-right: 20px;
+        }
+      }
+      .down {
+        width: 100%;
+        line-height: 38px;
+        height: 38px;
+        .down-left{
+          float: left;
+          /* margin-left: 50px; */
+          /* width: 600px; */
+          /* height: 30px; */
+        }
+        .down-right {
+          float: left;
+        }
+      }
+      .menu {
+        position: relative;
+        min-width: 200px;
+        width: 200px;
+        height: 50px;
+        /* background-color: blue; */
+        .voice {
+          position: absolute;
+          top: -100px;
+          left: 0;
+        }
+        svg {
+          width: 25px;
+          height: 25px;
+          margin-top: 12.5px;
+          &:hover {
+            cursor: pointer;
+          }
+        }
+        .pattern {
+          width: 25px;
+          height: 25px;
+          margin-left: 10px;
+        }
+      }
+    }
   }
 
-  .w .menu {
-    position: relative;
-    min-width: 200px;
-    width: 200px;
-    height: 50px;
-    /* background-color: blue; */
-  }
-  .w .menu .voice {
-    position: absolute;
-    top: -100px;
-    left: 0;
-  }
-  .w .center .up {
-    height: 20px;
-  }
-  .w .center .name {
-    margin-right: 20px;
-  }
-  .w .center .up .author {
-    color: #000;
-    font-size: 19px;
-  }
-  .w .center .up .author .el-link {
-    color: #000;
-  }
-  .w .center .down {
-    width: 100%;
-    line-height: 38px;
-    height: 38px;
-  }
-  .w .center .down .down-left{
-    float: left;
-    /* margin-left: 50px; */
-    /* width: 600px; */
-    /* height: 30px; */
-  }
-  .w .center .down .down-right {
-    float: left;
-  }
-  .w .menu svg {
-    width: 25px;
-    height: 25px;
-    margin-top: 12.5px;
-    
-  }
-  .w .menu svg:hover {
-    cursor: pointer;
-  }
-  .menu .pattern {
-    width: 25px;
-    height: 25px;
-    margin-left: 10px;
-  }
 </style>

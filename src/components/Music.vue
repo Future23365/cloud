@@ -8,7 +8,7 @@
         <div class="info">
           <p class="song-name">{{song.name}}</p>
           <p>歌手：</p>
-          <p v-for="(item,index) in song.ar" :key="index" class="song-author"><el-link type="primary">{{item.name}}</el-link></p>
+          <p v-for="(item,index) in song.ar" :key="index" class="song-author"><el-link type="primary" @click="goArtist(item.id)">{{item.name}}</el-link></p>
           <p>专辑：</p>
           <p><el-link type="primary">{{song.al.name}}</el-link></p>
         </div>
@@ -52,7 +52,7 @@ export default {
       // console.log(Object.keys(this.lyric).length);
       if(!this.isactive) {
         let size = Object.keys(this.lyric).length + Object.keys(this.translyric).length;
-        Object.keys(this.translyric).length < 5 ? size = size * 25 : size = size * 19; 
+        Object.keys(this.translyric).length < 5 ? size = size * 25 : size = size * 20; 
         
         this.height = size + 'px';
         this.isactive = !this.isactive;
@@ -73,8 +73,11 @@ export default {
     },
     getsong() {
       if(this.changeid) {
+        console.log(this.$store.state.songid);
         getsongDetail(this.$store.state.songid).then(res => {
+          console.log(res);
         this.song = res.songs[0];
+        
         // this.$store.state.songauthor = [];
         // for(let item in res.songs[0].ar) {
         //   // console.log(res.songs[0].ar[item].name);
@@ -103,6 +106,14 @@ export default {
       obj.id = this.changeid;
       obj.target = 'music';
       this.$refs.childrenComment.startRequset(obj);
+    },
+    goArtist(id) {
+      this.$router.push({
+        path: '/artist',
+        query: {
+          artistid: id
+        }
+      })
     }
     
   },
@@ -198,8 +209,9 @@ export default {
           width: 440px;
           height: 500px;
           // background-color: #d3d7d4;
-          font-size: 10px;
+          font-size: 12px;
           overflow: hidden;
+          color: #333;
           transition: height 3s ;
           ul {
             padding: 0 30px;

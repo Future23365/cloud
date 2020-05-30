@@ -6,7 +6,7 @@
     <el-tabs type="border-card"  @tab-click="setTab">
       <el-tab-pane label="单曲"><Single @startRequest="getData" ref="childrenSingle"></Single></el-tab-pane>
       <el-tab-pane label="歌手">歌手</el-tab-pane>
-      <el-tab-pane label="专辑">专辑</el-tab-pane>
+      <el-tab-pane label="专辑"><Album ref="childrenAlbum"></Album></el-tab-pane>
       <el-tab-pane label="视频">视频</el-tab-pane>
       <el-tab-pane label="MV"><mv ref="childrenMv"></mv></el-tab-pane>
       <el-tab-pane label="歌词">歌词</el-tab-pane>
@@ -25,15 +25,18 @@
 </template>
 
 <script>
-import { getsearchResult } from '../request/getdata'
-import Single from './Single'
-import Mv from './Mv'
+import { getsearchResult } from '../request/getdata';
+import { timeShow } from '../common/tool';
+import Single from './Single';
+import Mv from './Mv';
+import Album from './Album';
 
 export default {
   name: 'result',
   components: {
     Single,
-    Mv
+    Mv,
+    Album
   },
   data() {
     return {
@@ -44,9 +47,10 @@ export default {
     }
   },
   methods: {
+    
     getData(type = 1, obj = {}) {
       let s, limit, offset;
-      console.log(type);
+      // console.log(type);
       if('s' in obj) { s = obj.s };
       if('limit' in obj) { limit = obj.limit };
       if('offset' in obj) { offset = obj.offset };
@@ -54,7 +58,7 @@ export default {
       getsearchResult( s || this.$route.query.s, limit || this.$route.query.limit, offset || this.$route.query.offset, type || this.$route.query.type).then(res => {
 
         console.log(res);
-        this.sendTableData(res.result, type);
+        this.sendTableData(res, type);
       }) 
     },
     getNextdata(page) {
@@ -64,29 +68,62 @@ export default {
         this.getData(1, {'offset': (page - 1)  * 30});
       }else if(this.tabName === 'MV') {
         this.getData(1004, {'offset': (page - 1)  * 30});
+      }else if(this.tabName === '专辑') {
+        this.getData(10, {'offset': (page - 1) * 30})
       }
     },
     setTab(e) {
       this.tabName = e.label;
       switch(e.label) {
+        case '单曲':
+          this.getData(1);
+          break;
         case 'MV':
           this.getData(1004);
           break;
+        case '专辑':
+          this.getData(10);
+          break
       }
 
     },
     sendTableData(data, type) {
       switch(type) {
         case 1: 
-          this.songCount = data.songCount;
-          this.$refs.childrenSingle.settableData(data.songs);
+          this.sendSongs(data);
           break;
         case 1004:
-          this.songCount = data.mvCount;
-          this.$refs.childrenMv.getMvdata(data.mvs);
+          this.sendMv(data);
           break;
+        case 10:
+          this.sendAlbum(data);
+          break
       }
-      
+    },
+    sendSongs(res) {
+      let arr = [];
+        for(let i = 0; i < res.result.songs.length; i++) {
+          let obj = {};
+          obj.songId = res.result.songs[i].id;
+          obj.songName = res.result.songs[i].name;
+          obj.songAuthor = {};
+          for(let j = 0; j < res.result.songs[i].artists.length; j++) {
+            obj.songAuthor[res.result.songs[i].artists[j].id] = res.result.songs[i].artists[j].name;
+          }
+          obj.songAlbum = `《${res.result.songs[i].album.name}》`;
+          obj.songTime = timeShow(res.result.songs[i].duration / 1000);
+          arr.push(obj);
+        }
+        this.songCount = res.result.songCount;
+        this.$refs.childrenSingle.settableData(arr);
+    },
+    sendMv(data) {
+      this.songCount = data.result.mvCount;
+      this.$refs.childrenMv.getMvdata(data.result.mvs);
+    },
+    sendAlbum(data) {
+      this.songCount = data.result.albumCount;
+      this.$refs.childrenAlbum.getAlbumdata(data.result.albums)
     }
   },
   computed: {
@@ -108,7 +145,11 @@ export default {
   },
   watch: {
     '$route' : function() {
-      this.getData();
+      // if(this.$route.params.path.search('result')) {
+        console.log(this.$route);
+        // this.getData();
+      // }
+      
     }
   },
 }
@@ -122,5 +163,15 @@ export default {
     background-color: #ccc;
     margin: 0 auto;
     padding: 80px 40px;
+    .title {
+      color: #999;
+      margin-bottom: 28px;
+      span {
+        &:last-child {
+          color: #c20c0c;
+          margin: 0 3px;
+        }
+      }
+    }
   }
 </style>

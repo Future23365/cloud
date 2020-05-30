@@ -22,7 +22,7 @@
         label="歌手"
         min-width="180">
         <template slot-scope="scope">
-          <a href="javascript:;" v-for="(item, index) in scope.row.songAuthor" :key="index">
+          <a href="javascript:;" v-for="(item, name, index) in scope.row.songAuthor" :key="index" @click="goArtist(name)">
             {{item}}
           </a>
         </template>
@@ -56,38 +56,11 @@ export default {
     }
   },
   methods: {
-    timeShow(time) {
-      let minute;
-      let second;
-      if(time >= 60) {
-        time = Math.ceil(time);
-        minute = (time / 60).toString().split(".")[0];
-        minute < 10 ? minute = "0" + minute : minute = minute;
-        second= (time - minute * 60).toFixed(0); 
-        second < 10 ? second = "0" + second : second = second;
-        
-      }else {
-        minute = "00";
-        second = time.toFixed(0);
-        second < 10 ? second = "0" + second : second = second;
-      }
-      return minute + ":" + second;
-    },
+    
     settableData(data) {
       this.tableData = [];
       // console.log(data);
-      for(let i = 0; i < data.length; i++) {
-        let obj = {};
-        obj.songId = data[i].id;
-        obj.songName = data[i].name;
-        obj.songAuthor = [];
-        for(let j = 0; j < data[i].artists.length; j++) {
-          obj.songAuthor.push(data[i].artists[j].name);
-        }
-        obj.songAlbum = `《${data[i].album.name}》`;
-        obj.songTime = this.timeShow(data[i].duration / 1000);
-        this.tableData.push(obj);
-      }
+      this.tableData = data;
       this.loading = false;
       // console.log(this.tableData);
     },
@@ -97,13 +70,23 @@ export default {
       s.id = id;
       this.$store.commit('updateSong', s);
       this.$router.push('/music');
+    },
+    goArtist(id) {
+      // console.log('歌手id');
+      // console.log(id);
+      this.$router.push({
+        path: '/artist',
+        query: {
+          artistid: id
+        }
+      })
     }
   },
   computed: {
 
   },
   watch: {
-
+    
   },
   mounted() {
     this.$emit('startRequest', 1);
