@@ -15,6 +15,6 @@ export default new vuex.Store({
       !!songi.id === true  ? state.songid = songi.id: '';
       !!songi.name === true ? state.songname = songi.name: '';
       !!songi.url === true ? state.songurl = songi.url: '';
-    }
+    },
   }
 })

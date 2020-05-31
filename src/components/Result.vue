@@ -5,7 +5,7 @@
     </div>
     <el-tabs type="border-card"  @tab-click="setTab">
       <el-tab-pane label="单曲"><Single @startRequest="getData" ref="childrenSingle"></Single></el-tab-pane>
-      <el-tab-pane label="歌手">歌手</el-tab-pane>
+      <el-tab-pane label="歌手"><Album ref="childrenAuthor"></Album></el-tab-pane>
       <el-tab-pane label="专辑"><Album ref="childrenAlbum"></Album></el-tab-pane>
       <el-tab-pane label="视频">视频</el-tab-pane>
       <el-tab-pane label="MV"><mv ref="childrenMv"></mv></el-tab-pane>
@@ -14,13 +14,16 @@
       <el-tab-pane label="主播电台">主播电台</el-tab-pane>
       <el-tab-pane label="用户">用户</el-tab-pane>
     </el-tabs>
-    <el-pagination
+    <div class="pag">
+      <el-pagination
       background
       layout="prev, pager, next"
       @current-change="getNextdata"
       :page-size='30'
       :total="songCount">
-    </el-pagination>
+      </el-pagination>
+    </div>
+    
   </div>
 </template>
 
@@ -70,6 +73,8 @@ export default {
         this.getData(1004, {'offset': (page - 1)  * 30});
       }else if(this.tabName === '专辑') {
         this.getData(10, {'offset': (page - 1) * 30})
+      }else if(this.tabName === '歌手') {
+        this.getData(100, {'offset': (page - 1) * 30})
       }
     },
     setTab(e) {
@@ -83,7 +88,10 @@ export default {
           break;
         case '专辑':
           this.getData(10);
-          break
+          break;
+        case '歌手':
+          this.getData(100);
+          break;
       }
 
     },
@@ -97,10 +105,14 @@ export default {
           break;
         case 10:
           this.sendAlbum(data);
-          break
+          break;
+        case 100:
+          this.sendAuthor(data);
+          break;
       }
     },
     sendSongs(res) {
+      console.log(res);
       let arr = [];
         for(let i = 0; i < res.result.songs.length; i++) {
           let obj = {};
@@ -111,6 +123,7 @@ export default {
             obj.songAuthor[res.result.songs[i].artists[j].id] = res.result.songs[i].artists[j].name;
           }
           obj.songAlbum = `《${res.result.songs[i].album.name}》`;
+          obj.songAlbumId = res.result.songs[i].album.id;
           obj.songTime = timeShow(res.result.songs[i].duration / 1000);
           arr.push(obj);
         }
@@ -123,7 +136,11 @@ export default {
     },
     sendAlbum(data) {
       this.songCount = data.result.albumCount;
-      this.$refs.childrenAlbum.getAlbumdata(data.result.albums)
+      this.$refs.childrenAlbum.getAlbumdata(data.result.albums);
+    },
+    sendAuthor(data) {
+      this.songCount = data.result.artistCount;
+      this.$refs.childrenAuthor.getAlbumdata(data.result.artists);
     }
   },
   computed: {
@@ -147,7 +164,7 @@ export default {
     '$route' : function() {
       // if(this.$route.params.path.search('result')) {
         console.log(this.$route);
-        // this.getData();
+        this.getData();
       // }
       
     }
@@ -172,6 +189,9 @@ export default {
           margin: 0 3px;
         }
       }
+    }
+    .pag {
+      text-align: center;
     }
   }
 </style>

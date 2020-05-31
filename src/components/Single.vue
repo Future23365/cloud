@@ -32,7 +32,7 @@
         label="专辑"
         min-width="180">
         <template slot-scope="scope">
-          <a href="javascript:;">
+          <a href="javascript:;" @click="goAlbum(scope.row.songAlbumId)">
             {{scope.row.songAlbum}}
           </a>
         </template>
@@ -62,7 +62,7 @@ export default {
       // console.log(data);
       this.tableData = data;
       this.loading = false;
-      // console.log(this.tableData);
+      console.log(this.tableData);
     },
     goMusic(id) {
       // console.log(id);
@@ -80,6 +80,14 @@ export default {
           artistid: id
         }
       })
+    },
+    goAlbum(id) {
+      this.$router.push({
+        path: "/albumdetail",
+        query: {
+          albumdetailId: id
+        }
+      });
     }
   },
   computed: {

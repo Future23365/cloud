@@ -2,6 +2,7 @@
   <div class="home">
     <Newsong :list='newsong'></Newsong>
     <Ranking></Ranking>
+    
   </div>
 </template>
 
@@ -28,7 +29,7 @@ export default {
     getData() {
       getsongNew().then(res => {
         this.newsong.push(res.result);  //获取新课
-        
+        // console.log(this.newsong);
       })
     },
     // getSong(song, name) {

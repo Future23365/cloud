@@ -46,8 +46,8 @@ export default {
       getAlbum(this.$route.query.albumdetailId).then(res => {
         this.albumData = res.album;
         this.albumSongs = res.songs
-        console.log(res);
-        console.log(this.albumdata);
+        // console.log(res);
+        // console.log(this.albumdata);
         this.$forceUpdate();
 
         let arr = [];
@@ -81,6 +81,7 @@ export default {
   width: 720px;
   padding: 40px;
   margin: 0 auto;
+  border: 1px solid #ccc;
   p {
     color: #666;
     font-size: 14px;

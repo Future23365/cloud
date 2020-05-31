@@ -2,7 +2,7 @@
   <div class="header">
     <div class="main">
       <div class="logo">
-      <a href="/">
+      <a href="/" title="回到首页">
       <div class="page"></div>
       </a>
       </div>
@@ -33,14 +33,16 @@
           <li>向往自由，对未来充满想象</li>
         </ul>
       </p>
-      <p>源码：<a href="#">这里使源码</a>后端:<a href="#">后端源码</a></p>
+      <p>源码：<a href="https://github.com/Future23365/cloud" title="https://github.com/Future23365/cloud">源码地址</a>
+      后端来自Binaryity:<a href="https://github.com/Binaryify/NeteaseCloudMusicApi" title="https://github.com/Binaryify/NeteaseCloudMusicApi">感谢提供后端接口</a>
+      </p>
       <p>技术栈:
         <ul>
-          <li>Vue</li>
-          <li>Vue Router</li>
-          <li>vuex</li>
-          <li>ElementUI</li>
-          <li>Axios</li>
+          <li>- Vue</li>
+          <li>- Vue Router</li>
+          <li>- vuex</li>
+          <li>- ElementUI</li>
+          <li>- Axios</li>
         </ul>
       </p>
       <span slot="footer" class="dialog-footer">
@@ -71,42 +73,43 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .header {
     min-width: 800px;
     height: 50px;
     background: #67C23A;
+    .main {
+      margin: 0 auto;
+      max-width: 1200px;
+      min-width: 800px;
+      height: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .logo a {
+        /* display: block; */
+        float: left;
+        width: 157px;
+        height: 50px;
+        .page {
+          width: 157px;
+          height: 50px;
+          background: url(../assets/img/topbar.png) no-repeat;
+          background-position: 0 -10px;
+        }
+      }
+      span {
+        /* float: right; */
+        height: 50px;
+        line-height: 50px;
+        color: #fff;
+        cursor: pointer;
+      }
+    }
+    .el-dialog {
+      p {
+        margin-top: 10px;
+      }
+    }
   }
-  .header .main {
-    margin: 0 auto;
-    max-width: 1200px;
-    min-width: 800px;
-    height: 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .header .main .logo a {
-    /* display: block; */
-    float: left;
-    width: 157px;
-    height: 50px;
-  }
-  .header .main .logo a .page {
-    width: 157px;
-    height: 50px;
-    background: url(../assets/img/topbar.png) no-repeat;
-    background-position: 0 -10px;
-  }
-  .header .main span {
-    /* float: right; */
-    height: 50px;
-    line-height: 50px;
-    color: #fff;
-    cursor: pointer;
-  }
-  .menu {
-    /* margin-left: -125px; */
-  }
-
 </style>

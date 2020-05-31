@@ -52,6 +52,8 @@
 <script>
 import iconfom from "../assets/font/iconfont.js"
 import { getsongUrl, getsongDetail } from '../request/getdata'
+import { tochance } from '../common/tool'
+
 export default {
   name: 'Plalyer',
   // props: ['seturl'],
@@ -87,36 +89,22 @@ export default {
       this.savesonginf();
       // this.$refs.myaudio.play();
     },
-    tochance(time) {
-      let minute;
-      let second;
-      if(time >= 60) {
-        time = Math.ceil(time);
-        minute = (time / 60).toString().split(".")[0];
-        minute < 10 ? minute = "0" + minute : minute = minute;
-        second= (time - minute * 60).toFixed(0); 
-        second < 10 ? second = "0" + second : second = second;
-      }else {
-        minute = "00";
-        second = time.toFixed(0);
-        second < 10 ? second = "0" + second : second = second;
-      }
-      return minute + ":" + second;
-    }
-    ,
+    
     updatetime(e) {
       // console.log(this.$refs.myaudio.currentTime);
       this.value1.value = this.$refs.myaudio.currentTime;
       this.setindex ++;
+      this.$emit('updateCome', this.$refs.myaudio.currentTime)
+      // console.log(this.$refs.myaudio.currentTime);
       if(this.setindex = 4) {
-        this.nowtime = this.tochance(this.value1.value);
+        this.nowtime = tochance(this.value1.value);
         this.setindex = 0;
       }
     },
     setdura(e) {
       // console.log(this.$refs.myaudio.duration);
       this.value1.max = this.$refs.myaudio.duration;
-      this.alltime = this.tochance(this.value1.max);
+      this.alltime = tochance(this.value1.max);
       this.value2.volume = this.$refs.myaudio.volume;
     },
     settime(e) {
@@ -175,6 +163,7 @@ export default {
     updateid: function() {
       this.geturl();
       this.getsongDetial();
+      this.ispuse = false;
     }
   },
   beforeDestroy() {
@@ -215,7 +204,7 @@ export default {
       display: flex;
       justify-content: space-around;
       .play {
-        // min-width: 150px;
+        min-width: 100px;
         svg {
             color: #fff;
             transition: color .5s;
