@@ -84,7 +84,7 @@ export const getArtistsongs = id => {
   })
 }
 //获取歌手专辑
-export const getArtistalbum = (id, limit = 50, offset = 0) => {
+export const getArtistalbum = (id, limit = 30, offset = 0) => {
   return server({
     url: `/artist/album?id=${id}&limit=${limit}&offst=${offset}`
   })

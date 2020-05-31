@@ -2,9 +2,9 @@
   <div id="app">
     <Header></Header>
     <div>
-      <router-view  :musicid="audio.data[0].id"></router-view>
+      <router-view  :musicTime="updateProdata"></router-view>
     </div>
-    <Player ref="childPlayer"></Player>
+    <Player ref="childPlayer" @updateCome="updatePro"></Player>
   </div>
   
 </template>
@@ -17,6 +17,8 @@ export default {
   data() {
     return {
     audio: {data: [{url: ''}]},
+    updateProdata: '',
+
     }
   },
   components: {
@@ -24,7 +26,13 @@ export default {
     Player
   },
   methods: {
-
+    load() {
+      console.log("滚动");
+    },
+    updatePro(time) {
+      // console.log(time)
+      this.updateProdata = time;
+    }
   },
   mounted() {
     // console.log(this.$refs.childPlayer);
@@ -52,6 +60,7 @@ export default {
 }
  #app {
    background-color: #f6f5ec;
+   min-width: 800px;
  }
 
 </style>

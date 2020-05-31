@@ -3,13 +3,13 @@
     <ul>
       <li v-for="(item, index) in albumData" :key="index">
         <div class="show" @click="toAlbum(item.id)">
-          <img :src="item.cover || item.picUrl" :alt="item.name" :title="item.name" />
+          <img :src="item.cover || item.picUrl || item.img1v1Url" :alt="item.name" :title="item.name" />
         </div>
         <div class="name">
           <a href="javascript:;" :title="item.name">{{item.name}}</a>
         </div>
         <div class="aughor">
-          <el-link type="info">{{item.artist.name}}</el-link>
+          <el-link type="info">{{'artist' in item ? item.artist.name : ''}}</el-link>
         </div>
       </li>
     </ul>
@@ -31,12 +31,22 @@ export default {
       console.log(data);
     },
     toAlbum(id) {
-      this.$router.push({
+      if('artist' in this.albumData[0]) {
+        this.$router.push({
         path: "/albumdetail",
         query: {
           albumdetailId: id
         }
       });
+      } else {
+        this.$router.push({
+        path: '/artist',
+        query: {
+          artistid: id
+        }
+      })
+      }
+      
     }
   }
 }

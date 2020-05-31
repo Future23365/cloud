@@ -86,7 +86,7 @@ export default {
     //   localStorage.setItem('music', JSON.stringify(arr));
     // },
     setTabledata(arr) {
-      for(let i = 0; i < 40; i++) {
+      for(let i = 0; i < 50; i++) {
         this.tableData.push({
           hotmusic: arr[0].playlist.tracks[i].name,
           newmusic: arr[1].playlist.tracks[i].name,

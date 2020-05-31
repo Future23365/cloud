@@ -10,12 +10,12 @@
           <p>歌手：</p>
           <p v-for="(item,index) in song.ar" :key="index" class="song-author"><el-link type="primary" @click="goArtist(item.id)">{{item.name}}</el-link></p>
           <p>专辑：</p>
-          <p><el-link type="primary">{{song.al.name}}</el-link></p>
+          <p><el-link type="primary" @click="goAlbum(song.al.id)">{{song.al.name}}</el-link></p>
         </div>
       </div>
       <div class="lyric" :style="{height: height}" v-loading="loading">
         <ul>
-          <li v-for="(item, index) in lyric" :key="index">{{item}}<br>{{index in translyric ? translyric[index] : ""}}</li>
+          <li v-for="(item, value, index) in lyric" :key="index" :class="{'whiteActive': progressFlag[setClass(index)]}"  @click="aaa(index)" ref="qqq">{{item}}<br>{{value in translyric ? translyric[value] : ""}}</li>
         </ul>
       </div>
     </div>
@@ -28,10 +28,11 @@
 
 <script>
 import { getsongLyric, getsongDetail } from '../request/getdata';
+import { tochance } from '../common/tool'
 import Comment from './Comment'
 export default {
   name: 'Music',
-  // props: ['musicid'],
+  props: ['musicTime'],
   data() {
     return {
       song: {al: {picUrl: '../assets.img.logo.png'}},
@@ -41,6 +42,9 @@ export default {
       height: '500px',
       loading: true,
       setRequestTo: {},
+      progressFlag: {},
+      lyricFlag: 0,
+      lyricFlagindex: 0,
 
     }
   },
@@ -68,7 +72,10 @@ export default {
         let a = arr[i].split("]");
         obj[a[0]] = a[1];
         // this.width += this.width + 20;
+        this.progressFlag[this.trt(a[0].slice(1))] = false;
       }
+      console.log(this.progressFlag);
+      // console.log(Object.values(this.progressFlag)[0])
       return obj;
     },
     getsong() {
@@ -90,6 +97,7 @@ export default {
     getlyric() {
       if(this.changeid) {
         getsongLyric(this.$store.state.songid).then(res => {
+          console.log(res);
           this.loading = false;
           if('lrc' in res && 'lyric' in res.lrc) {
             this.lyric = this.stolyric(res.lrc.lyric.split('\n'));
@@ -98,6 +106,7 @@ export default {
             this.translyric = this.stolyric(res.tlyric.lyric.split('\n'));  
           }
           // console.log(this.lyric);
+          
         })
       }
     },
@@ -114,6 +123,54 @@ export default {
           artistid: id
         }
       })
+    },
+    goAlbum(id) {
+      this.$router.push({
+        path: "/albumdetail",
+        query: {
+          albumdetailId: id
+        }
+      });
+    },
+    aaa(i) {
+      this.progressFlag[Object.keys(this.progressFlag)[i]] = !this.progressFlag[Object.keys(this.progressFlag)[i]];
+      // console.log(Object.keys(this.progressFlag)[i]);
+      // console.log(this.progressFlag);
+      this.$forceUpdate();
+    },
+    updateWhite(time) {
+      // let to = ''
+      for(let i = 0; i < Object.keys(this.progressFlag).length; i++) {
+        if(time < Object.keys(this.progressFlag)[i]){
+          console.log("*****歌词" + i);
+          console.log(i);
+          this.progressFlag[Object.keys(this.progressFlag)[i -2]] = false;
+          this.progressFlag[Object.keys(this.progressFlag)[i -1]] = true;
+          console.log(Object.keys(this.progressFlag)[i]);
+          this.$forceUpdate();
+          return;
+        }
+      }
+
+      console.log(time);
+
+    },
+    setClass(i) {
+      // console.log(Object.keys(this.progressFlag)[i]);
+      return Object.keys(this.progressFlag)[i];
+    },
+    trt(t) {
+      // console.log(t.split(";"))
+      if(t.split(':') != ''){
+        // console.log(t)
+      let a = t.split(':');
+      // console.log(a);
+      let b = a[1].split('.');
+      // console.log(b);
+      let c = `${Number.parseInt(a[0]) * 60 + Number.parseInt(b[0])}.${Number.parseInt(b[1])}`;
+      return c;
+      }
+      
     }
     
   },
@@ -127,7 +184,10 @@ export default {
       this.sendSongid();
       this.getsong();
       this.getlyric();
-      
+    },
+    musicTime: function() {
+      // console.log(this.musicTime);
+      this.updateWhite(this.musicTime);
     }
   },
   mounted() {
@@ -219,6 +279,7 @@ export default {
             li {
               margin-bottom: 8px;
               text-align: center;
+              transition: color 1s;
             }
           }
           
@@ -236,6 +297,9 @@ export default {
       width: 640px;
 
     }
+  }
+  .whiteActive {
+    color: orange;
   }
 
   

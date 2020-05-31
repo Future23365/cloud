@@ -9,7 +9,7 @@
     style="width: 800px; margin: 0 auto;"
     >
       <el-carousel-item v-for="(item, index) in list[0]" :key="index">
-        <img :src="item.picUrl" alt="">
+        <img :src="item.picUrl" alt="图片走丢了" :title="item.name" @click="goMusic(item.id)">
       </el-carousel-item>
     </el-carousel>
   </div>
@@ -18,7 +18,15 @@
 <script>
 export default {
   name: 'Newsong',
-  props: ['list']
+  props: ['list'],
+  methods: {
+    goMusic (id) {
+      let s = {};
+        s.id = id;
+        this.$store.commit('updateSong', s);
+        this.$router.push('/music');
+    }
+  }
 }
 </script>
 
