@@ -34,9 +34,7 @@ export default {
   },
   methods: {
     setMvdata() {
-      // console.log(this.$route.query.mvId);
       getMvdata(this.$route.query.mvId).then(res => {
-        // console.log(res);
         this.mvData.mvName = res.data.name;
         this.mvData.author = res.data.artistName;
         this.mvData.duration = res.data.duration;
@@ -46,12 +44,9 @@ export default {
         this.mvData.subCount = res.data.subCount.toLocaleString();
         this.mvData.desc = res.data.desc;
         this.$forceUpdate();
-        // console.log(this.mvData);
       })
       getMvurl(this.$route.query.mvId).then(res => {
-        // console.log(res)
         this.mvData.url = res.data.url;
-        // console.log(this.mvData);
         this.$forceUpdate();  //    强制渲染
       })
 
@@ -68,8 +63,6 @@ export default {
 <style lang="scss" scoped>
 .mvideo {
   width: 680px;
-  // height: 1000px;
-  // background-color: skyblue;
   margin: 0 auto;
   padding: 60px 60px;
   border: 1px solid #ccc;

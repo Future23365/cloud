@@ -4,7 +4,7 @@
       ref="cpm"
       v-model="state"
       :fetch-suggestions="querySearchAsync"
-      placeholder="请输入内容"
+      placeholder="请输入内容搜索音乐,回车确认"
       :clearable="true"
       @change="getResult"
       @select="handleSelect">

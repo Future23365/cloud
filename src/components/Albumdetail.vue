@@ -41,13 +41,10 @@ export default {
     
     getAlbum() {
       getAlbumdata(this.$route.query.albumdetailId).then(res => {
-        // console.log(res);
       })
       getAlbum(this.$route.query.albumdetailId).then(res => {
         this.albumData = res.album;
         this.albumSongs = res.songs
-        // console.log(res);
-        // console.log(this.albumdata);
         this.$forceUpdate();
 
         let arr = [];
@@ -64,7 +61,6 @@ export default {
           obj.songTime = timeShow(res.songs[i].dt / 1000);
           arr.push(obj);
         }
-        // console.log(arr);
         this.$refs.childrenSingle.settableData(arr);
       })
     }

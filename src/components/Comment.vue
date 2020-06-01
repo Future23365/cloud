@@ -7,7 +7,7 @@
       </div>
       <div class="details">
         <div class="specific">
-          <span class="user-name"><el-link type="primary">{{item.user.nickname}}</el-link>:</span> {{item.content}}
+          <span class="user-name"><el-link type="primary" @click=goUser(item.user.userId)>{{item.user.nickname}}</el-link>:</span> {{item.content}}
         </div>
         <div class="other">
           <span class="time">{{new Date(item.time).toLocaleDateString()}}</span>
@@ -73,13 +73,13 @@ export default {
   },
   methods: {
     getComment(limit) {
-      console.log(this.requestTo);
+      // console.log(this.requestTo);
       getsongComment(this.requestTo.id, 20, this.requestTo.target).then(res => {
         this.goodiscuss = res.hotComments;
         this.newdiscuss = res.comments;
         this.total = res.total;
         this.loading = false;
-        
+        console.log(this.goodiscuss);
       })
     },
     changeData(e) {
@@ -107,22 +107,17 @@ export default {
       this.requestTo.id = obj.id;
       this.requestTo.target = obj.target;
       this.getComment();
+    },
+    goUser(id) {
+      this.$router.push({
+        path: '/user',
+        query: {
+          userId: id
+        }
+      })
     }
   },
-  computed: {
-    // moniterId: function() {
-    //   console.log(this.requestTo);
-    //   return this.requsetTo.id;
-    // }
-  },
-  watch: {
-    // moniterId: function() {
-    //   console.log(this.moniterId);
-    //   this.getComment(20);
-    // }
-  },
   mounted() {
-    // this.getComment(20);
   }
   
 }

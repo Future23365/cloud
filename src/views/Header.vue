@@ -15,8 +15,8 @@
       active-text-color="#ffd04b"
       router
       >
-        <el-menu-item index="1" style="height: 50px;line-height: 50px" route="/" >发现音乐</el-menu-item>
-        <el-menu-item index="2" style="height: 50px;line-height: 50px" route="/my">我的音乐</el-menu-item>
+        <el-menu-item index="1" style="height: 50px;line-height: 50px" route="/" >推荐音乐</el-menu-item>
+        <!-- <el-menu-item index="2" style="height: 50px;line-height: 50px" route="/my">我的音乐</el-menu-item> -->
       </el-menu>
       <Search></Search>
       <span @click="dialogVisible = true">关于</span>
