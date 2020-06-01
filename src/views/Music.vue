@@ -27,15 +27,15 @@
 </template>
 
 <script>
-import { getsongLyric, getsongDetail } from '../request/getdata';
-import { tochance } from '../common/tool'
-import Comment from './Comment'
+import { getsongLyric, getsongDetail } from '@/request/getdata';
+import { tochance } from '@/common/tool'
+import Comment from '@/components/Comment'
 export default {
   name: 'Music',
   props: ['musicTime'],
   data() {
     return {
-      song: {al: {picUrl: '../assets.img.logo.png'}},
+      song: {al: {picUrl: '@/assets.img.logo.png'}},
       lyric: {},
       translyric: {},
       isactive: false,
@@ -142,11 +142,11 @@ export default {
       // let to = ''
       for(let i = 0; i < Object.keys(this.progressFlag).length; i++) {
         if(time < Object.keys(this.progressFlag)[i]){
-          console.log("*****歌词" + i);
-          console.log(i);
+          // console.log("*****歌词" + i);
+          // console.log(i);
           this.progressFlag[Object.keys(this.progressFlag)[i -2]] = false;
           this.progressFlag[Object.keys(this.progressFlag)[i -1]] = true;
-          console.log(Object.keys(this.progressFlag)[i]);
+          // console.log(Object.keys(this.progressFlag)[i]);
           this.$forceUpdate();
           return;
         }

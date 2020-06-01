@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { getsongComment } from '../request/getdata';
+import { getsongComment } from '@/request/getdata';
 export default {
   name: 'Comment',
   data() {

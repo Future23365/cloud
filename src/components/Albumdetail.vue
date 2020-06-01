@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import { getAlbumdata, getAlbum } from '../request/getdata';
-import { timeShow } from '../common/tool';
-import Single from './Single';
-import Comment from "./Comment";
+import { getAlbumdata, getAlbum } from '@/request/getdata';
+import { timeShow } from '@/common/tool';
+import Single from '@/components/Single';
+import Comment from "@/components/Comment";
 
 export default {
   name: 'albumdetail',

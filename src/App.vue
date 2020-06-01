@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header></Header>
-    <div>
+    <div class="app-center">
       <router-view  :musicTime="updateProdata"></router-view>
     </div>
     <Player ref="childPlayer" @updateCome="updatePro"></Player>
@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import Header from './components/Header.vue'
-import Player from './components/Player';
+import Header from '@/views/Header.vue'
+import Player from '@/components/Player';
 export default {
   name: 'app',
   data() {
@@ -42,7 +42,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
  * {
     margin: 0;
     padding: 0;
@@ -61,6 +61,10 @@ export default {
  #app {
    background-color: #f6f5ec;
    min-width: 800px;
+   .app-center {
+     min-height: 100vh;
+   }
+   
  }
 
 </style>

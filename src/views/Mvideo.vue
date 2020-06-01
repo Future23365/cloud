@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import { getMvdata, getMvurl } from "../request/getdata";
-import Comment from "./Comment"
+import { getMvdata, getMvurl } from "@/request/getdata";
+import Comment from "@/components/Comment"
 
 export default {
   name: "mvideo",

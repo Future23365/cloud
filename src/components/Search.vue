@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getsearchSuggest } from '../request/getdata'
+import { getsearchSuggest } from '@/request/getdata'
 export default {
   name: 'Search',
   data() {
