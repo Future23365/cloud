@@ -28,11 +28,11 @@
 </template>
 
 <script>
-import { getsearchResult } from '../request/getdata';
-import { timeShow } from '../common/tool';
-import Single from './Single';
-import Mv from './Mv';
-import Album from './Album';
+import { getsearchResult } from '@/request/getdata';
+import { timeShow } from '@/common/tool';
+import Single from '@/components/Single';
+import Mv from '@/components/Mv';
+import Album from '@/views/Album';
 
 export default {
   name: 'result',

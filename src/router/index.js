@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '../views/Home.vue';
-import My from '../views/My.vue';
-import Music from '../components/Music.vue';
-import Result from '../components/Result.vue';
-import Mvideo from '../components/Mvideo.vue';
-import Artist from '../components/Artist.vue'
-import Album from '../components/Album.vue'
-import Albumdetail from '../components/Albumdetail.vue'
+import Home from '@/views/Home.vue';
+import My from '@/views/My.vue';
+import Music from '@/views/Music.vue';
+import Result from '@/views/Result.vue';
+import Mvideo from '@/views/Mvideo.vue';
+import Artist from '@/views/Artist.vue'
+import Album from '@/views/Album.vue'
+import Albumdetail from '@/components/Albumdetail.vue'
 
 Vue.use(Router);
 export default new Router({

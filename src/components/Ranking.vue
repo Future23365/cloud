@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { getsongTop, getsongUrl, serverAll } from '../request/getdata';
+import { getsongTop, getsongUrl, serverAll } from '@/request/getdata';
 
 export default {
   name: 'Ranking',

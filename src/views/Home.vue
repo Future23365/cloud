@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import { getsongNew } from '../request/getdata';
-import Newsong from '../components/Newsong';
-import Ranking from '../components/Ranking';
+import { getsongNew } from '@/request/getdata';
+import Newsong from '@/components/Newsong';
+import Ranking from '@/components/Ranking';
 
 
 export default {

@@ -50,9 +50,9 @@
 </template>
 
 <script>
-import iconfom from "../assets/font/iconfont.js"
-import { getsongUrl, getsongDetail } from '../request/getdata'
-import { tochance } from '../common/tool'
+import iconfom from "@/assets/font/iconfont.js"
+import { getsongUrl, getsongDetail } from '@/request/getdata'
+import { tochance } from '@/common/tool'
 
 export default {
   name: 'Plalyer',
