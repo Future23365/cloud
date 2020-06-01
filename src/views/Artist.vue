@@ -56,17 +56,13 @@ export default {
   methods: {
     
     getArtistdata() {
-      // console.log(this.$route.query.artistid);
       getArtistdesc(this.$route.query.artistid).then(res => {
-        // console.log(res);
         this.desc.briefDesc = res.briefDesc;
         this.desc.introduction = res.introduction;
       })
 
       getArtistsongs(this.$route.query.artistid).then(res => {
-        // console.log(res)
         this.artistName = res.artist.name;
-        // this.artistName.alias = res.artist.alias[0];
         this.picUrl = res.artist.picUrl;
         this.hotSongs = res.hotSongs;
 

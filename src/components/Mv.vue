@@ -33,7 +33,6 @@ export default {
   methods: {
     getMvdata(data) {
       this.mvData = data;
-      // this.$forceUpdate();
       console.log(this.mvData);
     },
     timeShow(time) {
@@ -53,7 +52,6 @@ export default {
       return minute + ":" + second;
     },
     playVideo(id) {
-      // console.log("点击了播放");
       this.$router.push({
         path: "/mvideo",
         query: {
@@ -63,8 +61,6 @@ export default {
     }
   },
   mounted() {
-    // console.log("mv");
-    // this.$emit('getMv', 1004);
   }
 };
 </script>
@@ -79,7 +75,6 @@ export default {
       margin-bottom: 10px;
       width: 159px;
       height: 137px;
-      // background-color: skyblue;
 
       .show {
         height: 90px;
@@ -103,7 +98,6 @@ export default {
           &:hover {
             cursor: pointer;
           }
-          // height: 20px;
         }
         .time {
           position: absolute;
@@ -116,8 +110,6 @@ export default {
         }
       }
       .name {
-        // width: 159px;
-        // height: 20px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

@@ -14,7 +14,7 @@
       prop="hotmusic">
       </el-table-column>
       <el-table-column 
-      label="云音乐热歌榜"
+      label="云音乐热歌榜Top50"
       min-width="200"
       align="center"
       class="table-row"
@@ -29,7 +29,7 @@
       </el-table-column>
       
       <el-table-column 
-      label="云音乐新歌榜"
+      label="云音乐新歌榜Top50"
       min-width="200"
       align="center"
       >
@@ -42,7 +42,7 @@
         </template>
       </el-table-column>
       <el-table-column 
-      label="云音乐电音榜"
+      label="云音乐电音榜Top50"
       min-width="200"
       align="center"
       >

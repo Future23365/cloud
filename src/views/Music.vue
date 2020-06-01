@@ -53,7 +53,6 @@ export default {
   },
   methods: {
     setheight() {
-      // console.log(Object.keys(this.lyric).length);
       if(!this.isactive) {
         let size = Object.keys(this.lyric).length + Object.keys(this.translyric).length;
         Object.keys(this.translyric).length < 5 ? size = size * 25 : size = size * 20; 
@@ -71,33 +70,21 @@ export default {
       for(let i = 0; i < arr.length; i++) {
         let a = arr[i].split("]");
         obj[a[0]] = a[1];
-        // this.width += this.width + 20;
         this.progressFlag[this.trt(a[0].slice(1))] = false;
       }
-      console.log(this.progressFlag);
-      // console.log(Object.values(this.progressFlag)[0])
       return obj;
     },
     getsong() {
       if(this.changeid) {
-        console.log(this.$store.state.songid);
         getsongDetail(this.$store.state.songid).then(res => {
-          console.log(res);
         this.song = res.songs[0];
-        
-        // this.$store.state.songauthor = [];
-        // for(let item in res.songs[0].ar) {
-        //   // console.log(res.songs[0].ar[item].name);
-        //   this.$store.state.songauthor.push(res.songs[0].ar[item].name);
-        // }
-        // console.log(this.$store.state);
       })
       }
     },
     getlyric() {
       if(this.changeid) {
         getsongLyric(this.$store.state.songid).then(res => {
-          console.log(res);
+          // console.log(res);
           this.loading = false;
           if('lrc' in res && 'lyric' in res.lrc) {
             this.lyric = this.stolyric(res.lrc.lyric.split('\n'));
@@ -105,7 +92,6 @@ export default {
           if('tlyric' in res && 'lyric' in res.tlyric && res.tlyric.lyric != null) {
             this.translyric = this.stolyric(res.tlyric.lyric.split('\n'));  
           }
-          // console.log(this.lyric);
           
         })
       }
@@ -134,39 +120,27 @@ export default {
     },
     aaa(i) {
       this.progressFlag[Object.keys(this.progressFlag)[i]] = !this.progressFlag[Object.keys(this.progressFlag)[i]];
-      // console.log(Object.keys(this.progressFlag)[i]);
-      // console.log(this.progressFlag);
       this.$forceUpdate();
     },
     updateWhite(time) {
       // let to = ''
       for(let i = 0; i < Object.keys(this.progressFlag).length; i++) {
         if(time < Object.keys(this.progressFlag)[i]){
-          // console.log("*****歌词" + i);
-          // console.log(i);
           this.progressFlag[Object.keys(this.progressFlag)[i -2]] = false;
           this.progressFlag[Object.keys(this.progressFlag)[i -1]] = true;
-          // console.log(Object.keys(this.progressFlag)[i]);
           this.$forceUpdate();
           return;
         }
       }
 
-      console.log(time);
-
     },
     setClass(i) {
-      // console.log(Object.keys(this.progressFlag)[i]);
       return Object.keys(this.progressFlag)[i];
     },
     trt(t) {
-      // console.log(t.split(";"))
       if(t.split(':') != ''){
-        // console.log(t)
       let a = t.split(':');
-      // console.log(a);
       let b = a[1].split('.');
-      // console.log(b);
       let c = `${Number.parseInt(a[0]) * 60 + Number.parseInt(b[0])}.${Number.parseInt(b[1])}`;
       return c;
       }
@@ -186,7 +160,6 @@ export default {
       this.getlyric();
     },
     musicTime: function() {
-      // console.log(this.musicTime);
       this.updateWhite(this.musicTime);
     }
   },

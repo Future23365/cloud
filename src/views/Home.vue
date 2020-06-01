@@ -29,16 +29,8 @@ export default {
     getData() {
       getsongNew().then(res => {
         this.newsong.push(res.result);  //获取新课
-        // console.log(this.newsong);
       })
     },
-    // getSong(song, name) {
-    //   // this.$emit('setau', song, name);
-    //   // this.getinfsong(this.audio.data[0].id);
-
-    // },
-    
-    
   },
   mounted() {
     this.getData();

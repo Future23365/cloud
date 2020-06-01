@@ -110,6 +110,13 @@ export const getAlbum = id => {
   })
 }
 
+//获取用户详情
+export const getUserData = id => {
+  return server({
+    url: `/user/detail?uid=${id}`
+  })
+}
+
 //并发请求
 export const serverAll = (arr) => {
   return axios.all(arr)
