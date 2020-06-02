@@ -29,7 +29,7 @@ import { getArtistdesc, getArtistsongs, getArtistalbum, getArtistmv, getMvdata }
 import { timeShow } from '@/common/tool';
 import Single from '@/components/Single';
 import Mv from '@/components/Mv';
-import Album from '@/views/Album'
+import Album from '@/components/Album'
 
 export default {
   name: 'artist',

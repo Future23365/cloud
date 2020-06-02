@@ -117,6 +117,21 @@ export const getUserData = id => {
   })
 }
 
+//获取用户歌单
+export const getUserplaylist = (id, limit = 29) => {
+  return server({
+    url: `/user/playlist?uid=${id}&limit=${limit}`
+  })
+}
+
+//获取歌单详情
+export const getUserPlaylistDetail = id => {
+  return server({
+    url: `/playlist/detail?id=${id}`
+  })
+}
+
+
 //并发请求
 export const serverAll = (arr) => {
   return axios.all(arr)

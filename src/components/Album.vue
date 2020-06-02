@@ -3,7 +3,7 @@
     <ul>
       <li v-for="(item, index) in albumData" :key="index">
         <div class="show" @click="toAlbum(item.id)">
-          <img :src="item.cover || item.picUrl || item.img1v1Url" :alt="item.name" :title="item.name" />
+          <img :src="item.cover || item.picUrl || item.coverImgUrl || item.img1v1Url" :alt="item.name" :title="item.name" />
         </div>
         <div class="name">
           <a href="javascript:;" :title="item.name">{{item.name}}</a>
@@ -22,32 +22,46 @@ export default {
   data() {
     return {
       albumData: [],
-      
+      albumFlag: '专辑',
+
     }
   },
   methods: {
-    getAlbumdata(data) {
+    getAlbumdata(data , type = '专辑') {
       this.albumData = data;
       console.log(data);
+      if(type != '专辑') {
+        this.albumFlag = type;
+      }
     },
     toAlbum(id) {
-      if('artist' in this.albumData[0]) {
-        this.$router.push({
-        path: "/albumdetail",
-        query: {
-          albumdetailId: id
+      if(this.albumFlag === '专辑') {
+        if('artist' in this.albumData[0]) {
+          this.$router.push({
+          path: "/albumdetail",
+          query: {
+            albumdetailId: id
+          }
+        });
+        } else {
+          this.$router.push({
+          path: '/artist',
+          query: {
+            artistid: id
+            }
+          })
         }
-      });
-      } else {
+      } else if(this.albumFlag === '歌单') {
         this.$router.push({
-        path: '/artist',
-        query: {
-          artistid: id
-        }
-      })
+          path: '/playlist',
+          query: {
+            playlistid: id
+            }
+          })
       }
       
-    }
+    },
+
   }
 }
 </script>

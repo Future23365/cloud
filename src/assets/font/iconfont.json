@@ -13,6 +13,20 @@
       "unicode_decimal": 58978
     },
     {
+      "icon_id": "982373",
+      "name": "女",
+      "font_class": "nv",
+      "unicode": "e665",
+      "unicode_decimal": 58981
+    },
+    {
+      "icon_id": "986671",
+      "name": "男",
+      "font_class": "nan",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
       "icon_id": "2076196",
       "name": "赞",
       "font_class": "zan",

@@ -26,7 +26,7 @@
       </div>
       <div class="details">
         <div class="specific">
-          <span class="user-name"><el-link type="primary">{{item.user.nickname}}</el-link>:</span> {{item.content}}
+          <span class="user-name"><el-link type="primary" @click=goUser(item.user.userId)>{{item.user.nickname}}</el-link>:</span> {{item.content}}
         </div>
         <div class="beReplied" v-if="item.beReplied.length > 0">
           <span class="rep-userhead"><img :src="item.beReplied[0].user.avatarUrl" alt=""></span>

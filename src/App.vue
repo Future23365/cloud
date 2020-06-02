@@ -59,7 +59,7 @@ export default {
   overflow: hidden;
 }
  #app {
-   background-color: #f6f5ec;
+   background-color: #f5f5f5;
    min-width: 800px;
    .app-center {
      min-height: 100vh;
