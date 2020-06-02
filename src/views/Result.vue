@@ -10,7 +10,7 @@
       <el-tab-pane label="视频">视频</el-tab-pane>
       <el-tab-pane label="MV"><mv ref="childrenMv"></mv></el-tab-pane>
       <el-tab-pane label="歌词">歌词</el-tab-pane>
-      <el-tab-pane label="歌单">歌单</el-tab-pane>
+      <el-tab-pane label="歌单"><Album ref="childrenPlaylist"></Album></el-tab-pane>
       <el-tab-pane label="主播电台">主播电台</el-tab-pane>
       <el-tab-pane label="用户">用户</el-tab-pane>
     </el-tabs>
@@ -32,7 +32,7 @@ import { getsearchResult } from '@/request/getdata';
 import { timeShow } from '@/common/tool';
 import Single from '@/components/Single';
 import Mv from '@/components/Mv';
-import Album from '@/views/Album';
+import Album from '@/components/Album';
 
 export default {
   name: 'result',
@@ -75,6 +75,8 @@ export default {
         this.getData(10, {'offset': (page - 1) * 30})
       }else if(this.tabName === '歌手') {
         this.getData(100, {'offset': (page - 1) * 30})
+      }else if(this.tabName === '歌单') {
+        this.getData(1000, {'offset': (page - 1) * 30})
       }
     },
     setTab(e) {
@@ -91,6 +93,9 @@ export default {
           break;
         case '歌手':
           this.getData(100);
+          break;
+        case '歌单':
+          this.getData(1000)
           break;
       }
 
@@ -109,6 +114,8 @@ export default {
         case 100:
           this.sendAuthor(data);
           break;
+        case 1000:
+          this.sendPlaylist(data);
       }
     },
     sendSongs(res) {
@@ -141,6 +148,10 @@ export default {
     sendAuthor(data) {
       this.songCount = data.result.artistCount;
       this.$refs.childrenAuthor.getAlbumdata(data.result.artists);
+    },
+    sendPlaylist(data) {
+      this.songCount = data.result.playlistCount;
+      this.$refs.childrenPlaylist.getAlbumdata(data.result.playlists, '歌单');
     }
   },
   computed: {

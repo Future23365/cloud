@@ -6,9 +6,10 @@ import Music from '@/views/Music.vue';
 import Result from '@/views/Result.vue';
 import Mvideo from '@/views/Mvideo.vue';
 import Artist from '@/views/Artist.vue';
-import Album from '@/views/Album.vue';
-import Albumdetail from '@/components/Albumdetail.vue';
+import Album from '@/components/Album.vue';
+import Albumdetail from '@/views/Albumdetail.vue';
 import User from '@/views/User.vue'
+import Playlist from '@/views/Playlist';
 
 Vue.use(Router);
 export default new Router({
@@ -57,6 +58,11 @@ export default new Router({
       path: '/user',
       name: 'user',
       component: User
+    },
+    {
+      path: '/playlist',
+      name: 'playlist',
+      component: Playlist
     }
   ]
 })
