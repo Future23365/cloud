@@ -79,7 +79,7 @@ export default {
         this.newdiscuss = res.comments;
         this.total = res.total;
         this.loading = false;
-        console.log(this.goodiscuss);
+        // console.log(this.goodiscuss);
       })
     },
     changeData(e) {
