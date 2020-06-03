@@ -54,7 +54,7 @@ export default {
   },
   data() {
     return {
-      userData: {},
+      userData: {profile: {avatarUrl: ''}},
       gender: ['#icon-nv', '#icon-nan'],
       songlistPage: 30,
       isHasmore: true,

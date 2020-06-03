@@ -62,7 +62,7 @@ export default {
       // console.log(data);
       this.tableData = data;
       this.loading = false;
-      console.log(this.tableData);
+      // console.log(this.tableData);
     },
     goMusic(id) {
       // console.log(id);

@@ -14,7 +14,8 @@
     </div>
     <h3>包含歌曲列表</h3>
     <Single ref="childrenSingle"></Single>
-    <button>获得详细歌单请点击</button>
+    <button @click="goSonglist">获得详细歌单请点击</button>
+    <PlaylistSongs v-show="isListSongsActive" :songList="songsListData"></PlaylistSongs>
     <Comment ref="childrenComment"></Comment>
   </div>
 </template>
@@ -23,22 +24,26 @@
 import { getUserPlaylistDetail } from '@/request/getdata';
 import { timeShow } from '@/common/tool';
 import Single from '@/components/Single';
-import Comment from "@/components/Comment";
+import Comment from '@/components/Comment';
+import PlaylistSongs from '@/components/PlaylistSongs'
 
 export default {
   name: 'albumdetail',
   components: {
     Single,
-    Comment
+    Comment,
+    PlaylistSongs
   },
   data() {
     return {
-      playList: {},
-      priviLeges: []
+      playList: {creator: {avatarUrl: ''}},
+      priviLeges: [],
+      songsListData: [],
+      isListSongsActive: false,
+
     }
   },
   methods: {
-    
     getAlbum() {
       getUserPlaylistDetail(this.$route.query.playlistid).then(res => {
         console.log(res);
@@ -67,6 +72,10 @@ export default {
         }, 1000)
         
       })
+    },
+    goSonglist() {
+      this.isListSongsActive = !this.isListSongsActive;
+      this.songsListData = this.playList;
     }
   },
   mounted() {
