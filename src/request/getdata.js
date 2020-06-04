@@ -130,7 +130,12 @@ export const getUserPlaylistDetail = id => {
     url: `/playlist/detail?id=${id}`
   })
 }
-
+//获取用户播放记录
+export const getUserRecord = (id, type) => {
+  return server({
+    url: `/user/record?uid=${id}&type=${type}`
+  })
+}
 
 //并发请求
 export const serverAll = (arr) => {
