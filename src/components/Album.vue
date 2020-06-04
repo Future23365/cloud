@@ -72,7 +72,7 @@ export default {
     overflow: hidden;
     li {
       float: left;
-      margin-left: 19px;
+      margin-right: 19px;
       margin-bottom: 20px;
       width: 153px;
       height: 168px;
@@ -118,7 +118,7 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        margin-top: 5px;
+        margin-top: 10px;
         a {
           font-size: 15px;
           color: #0c73c2;

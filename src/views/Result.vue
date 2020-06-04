@@ -12,7 +12,7 @@
       <el-tab-pane label="歌词">歌词</el-tab-pane>
       <el-tab-pane label="歌单"><Album ref="childrenPlaylist"></Album></el-tab-pane>
       <el-tab-pane label="主播电台">主播电台</el-tab-pane>
-      <el-tab-pane label="用户">用户</el-tab-pane>
+      <el-tab-pane label="用户"><Userlist ref="childrenUserlist"></Userlist></el-tab-pane>
     </el-tabs>
     <div class="pag">
       <el-pagination
@@ -33,13 +33,15 @@ import { timeShow } from '@/common/tool';
 import Single from '@/components/Single';
 import Mv from '@/components/Mv';
 import Album from '@/components/Album';
+import Userlist from '@/components/Userlist'
 
 export default {
   name: 'result',
   components: {
     Single,
     Mv,
-    Album
+    Album,
+    Userlist
   },
   data() {
     return {
@@ -95,8 +97,12 @@ export default {
           this.getData(100);
           break;
         case '歌单':
-          this.getData(1000)
+          this.getData(1000);
           break;
+        case '用户':
+          this.getData(1002);
+          break;
+
       }
 
     },
@@ -116,6 +122,10 @@ export default {
           break;
         case 1000:
           this.sendPlaylist(data);
+          break
+        case 1002:
+          this.sendUserlist(data);
+          break
       }
     },
     sendSongs(res) {
@@ -152,6 +162,10 @@ export default {
     sendPlaylist(data) {
       this.songCount = data.result.playlistCount;
       this.$refs.childrenPlaylist.getAlbumdata(data.result.playlists, '歌单');
+    },
+    sendUserlist(data) {
+      this.songCount = data.result.userprofileCount;
+      this.$refs.childrenUserlist.getUserlistdata(data.result.userprofiles);
     }
   },
   computed: {
