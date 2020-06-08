@@ -35,13 +35,18 @@
       </div>
     </div>
     <div class="listenrecord">
-      <div class="menu"><h3>听歌排行</h3><span ><span :class=" isWeek === true ? 'sc' : ''">最近一周</span>|<span :class=" isWeek === false ? 'sc' : ''">所有时间</span></span></div>
+      <div class="menu">
+        <h3>听歌排行</h3>
+        <span >
+          <span :class=" isWeek === true ? 'sc' : ''" @click="setWeek('week')">最近一周</span>|<span :class=" isWeek === false ? 'sc' : ''" @click="setWeek('all')">所有时间</span>
+        </span>
+      </div>
       <div class="recond">
         <ul>
           <li v-for="(item, index) in record" :key="index">
             <span class="one">{{index + 1}}.</span>
-            <span class="two">{{item.song.name}}</span>
-            -<span v-for="(jtem, jndex) in item.song.ar" :key="jndex" class="three">{{jtem.name}}</span>
+            <span class="two" @click="goMusic(item.song.id)">{{item.song.name}}</span>
+            -<span v-for="(jtem, jndex) in item.song.ar" :key="jndex" class="three" @click="goAlbum(jtem.id)">{{jtem.name}}</span>
             <span class="four"><div :style="{'width': item.score + 'px'}"></div></span>
           </li>
         </ul>
@@ -105,8 +110,40 @@ export default {
             this.isHasmore = res.more;
         })
       }
-      
     },
+    setWeek(type) {
+      if(type === 'week' && this.isWeek === false) {
+        this.isWeek = true;
+        getUserRecord(this.$route.query.userId, 1).then(res => {
+        console.log(res);
+        this.record = res.weekData;
+      })
+        console.log(this.isWeek);
+      } else if(type === 'all' && this.isWeek === true) {
+        this.isWeek = false;
+        getUserRecord(this.$route.query.userId, 0).then(res => {
+        console.log(res);
+        this.record = res.allData;
+      })
+        console.log(this.isWeek);
+      }
+    },
+    goMusic(id) {
+      // console.log(id);
+      let s = {};
+      s.id = id;
+      this.$store.commit('updateSong', s);
+      this.$router.push('/music');
+    },
+    goAlbum(id) {
+      console.log(id);
+      this.$router.push({
+          path: "/artist",
+          query: {
+            artistid: id
+          }
+        });
+    }
   },
   mounted() {
     this.requsetUserdata();
@@ -125,6 +162,8 @@ export default {
   border: 1px solid #d3d3d3;
   // overflow: hidden;
   .userInf {
+    background-color: #fffef9;
+    overflow: hidden;
     img {
       width: 188px;
       height: 188px;
@@ -149,7 +188,7 @@ export default {
           overflow: hidden;
           span {
             float: left;
-            margin-right: 10px;
+            margin-right: 30px;
           } 
         }
       }
@@ -174,6 +213,7 @@ export default {
         // padding: 4px;
         // text-align: center;
         span {
+          font-size: 16px;
           margin-top: 4px;
           padding: 5px;
           // text-align: center;
@@ -187,7 +227,7 @@ export default {
     }
   }
   .listenrecord {
-    margin-top: 100px;
+    margin-top: 50px;
     .menu {
       line-height: 30px;
       h3 {
@@ -204,7 +244,7 @@ export default {
       }
     }
     .recond {
-      height: 400px;
+      max-height: 400px;
       overflow: auto;
       border: 1px solid #ccc;
     }

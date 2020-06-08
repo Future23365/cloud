@@ -11,7 +11,7 @@
     </div>
     <div class="albdesc">
         <h3>专辑介绍</h3>
-        <p>{{albumData.description}}</p>
+        <p><pre style="display: inline">    </pre>{{albumData.description}}</p>
     </div>
     <h3>包含歌曲列表</h3>
     <Single ref="childrenSingle"></Single>
@@ -77,6 +77,7 @@ export default {
   width: 720px;
   padding: 40px;
   margin: 0 auto;
+  background-color: #fff;
   border: 1px solid #ccc;
   p {
     color: #666;

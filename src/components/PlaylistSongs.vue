@@ -2,7 +2,8 @@
   <div class="playlistsongs">
     <el-table
     :data="tableData"
-    border
+    stripe
+    v-loading="loading"
     style="width: 100%; overflow: auto">
     <el-table-column
       prop="song"
@@ -38,12 +39,15 @@
       label="时长">
     </el-table-column>
   </el-table>
-  <el-pagination
+  <div class="pag">
+    <el-pagination
     :page-size="15"
     layout="prev, pager, next"
     @current-change="getnextSongs"
     :total="total">
-  </el-pagination>
+    </el-pagination>
+  </div>
+  
   </div>
 </template>
 
@@ -60,7 +64,8 @@ export default {
       flag: 750,
       start: 0,
       tableData: [],
-      total: 0
+      total: 0,
+      loading: true,
     }
   },
   methods: {
@@ -94,6 +99,7 @@ export default {
           arr.album.name = res.songs[i].al.name;
           this.tableData.push(arr);
         }
+        this.loading = false;
       })
       this.start = this.start + 15;
       // this.flag = this.flag - 15;
@@ -102,6 +108,7 @@ export default {
       this.$forceUpdate();
     },
     getnextSongs() {
+      this.loading = true;
       this.getSongs();
     }
   },
@@ -138,5 +145,8 @@ export default {
         }
       }
     }
+  .pag {
+    text-align: center;
+  }
 }
 </style>

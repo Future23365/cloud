@@ -148,5 +148,6 @@ export default {
   &>h3 {
     margin-top: 28px;
   }
+  
 }
 </style>
