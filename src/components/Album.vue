@@ -59,9 +59,7 @@ export default {
             }
           })
       }
-      
     },
-
   }
 }
 </script>
@@ -76,8 +74,6 @@ export default {
       margin-bottom: 20px;
       width: 153px;
       height: 168px;
-      // background-color: skyblue;
-
       .show {
         height: 130px;
         position: relative;
@@ -100,7 +96,6 @@ export default {
           &:hover {
             cursor: pointer;
           }
-          // height: 20px;
         }
         .time {
           position: absolute;
@@ -113,8 +108,6 @@ export default {
         }
       }
       .name {
-        // width: 159px;
-        // height: 20px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

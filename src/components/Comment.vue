@@ -73,13 +73,11 @@ export default {
   },
   methods: {
     getComment(limit) {
-      // console.log(this.requestTo);
       getsongComment(this.requestTo.id, 20, this.requestTo.target).then(res => {
         this.goodiscuss = res.hotComments;
         this.newdiscuss = res.comments;
         this.total = res.total;
         this.loading = false;
-        // console.log(this.goodiscuss);
       })
     },
     changeData(e) {
@@ -87,7 +85,6 @@ export default {
       e = e * 20;
       getsongComment(this.requestTo.id, 20, this.requestTo.target, e).then(res => {
         this.newdiscuss = res.comments;
-        // console.log(res)
       })
     },
     showTime(t) {
@@ -135,8 +132,6 @@ export default {
    .com-li {
      margin-top: 15px;
      width: 640px;
-    //  height: 100px;
-    //  background-color: #a03939;
       font-size: 15px;
       border-bottom: 1px solid #000;
       overflow: hidden;
@@ -144,7 +139,6 @@ export default {
        float: left;
        width: 50px;
        height: 50px;
-      //  background-color: #fff;
        img {
          width: 50px;
        }
@@ -153,8 +147,6 @@ export default {
        position: relative;
        float: right;
        width: 570px;
-      //  height: 100px;
-      //  background-color: skyblue;
        .specific {
          margin-bottom: 15px;
        }
@@ -180,9 +172,7 @@ export default {
          width: 570px;
          height: 40px;
          margin-bottom: 15px;
-        //  background-color: pink;
          line-height: 40px;
-        //  overflow: hidden;
          .time {
            float: left;
          }

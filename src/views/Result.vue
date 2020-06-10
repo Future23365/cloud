@@ -7,7 +7,7 @@
       <el-tab-pane label="单曲"><Single @startRequest="getData" ref="childrenSingle"></Single></el-tab-pane>
       <el-tab-pane label="歌手"><Album ref="childrenAuthor"></Album></el-tab-pane>
       <el-tab-pane label="专辑"><Album ref="childrenAlbum"></Album></el-tab-pane>
-      <el-tab-pane label="视频">视频</el-tab-pane>
+      <el-tab-pane label="视频"><mv ref="childrenVideo"></mv></el-tab-pane>
       <el-tab-pane label="MV"><mv ref="childrenMv"></mv></el-tab-pane>
       <el-tab-pane label="歌词">歌词</el-tab-pane>
       <el-tab-pane label="歌单"><Album ref="childrenPlaylist"></Album></el-tab-pane>
@@ -102,6 +102,9 @@ export default {
         case '用户':
           this.getData(1002);
           break;
+        case '视频':
+          this.getData(1014);
+          break;
 
       }
 
@@ -125,7 +128,10 @@ export default {
           break
         case 1002:
           this.sendUserlist(data);
-          break
+          break;
+        case 1014:
+          this.sendVideo(data);
+          break;
       }
     },
     sendSongs(res) {
@@ -166,6 +172,10 @@ export default {
     sendUserlist(data) {
       this.songCount = data.result.userprofileCount;
       this.$refs.childrenUserlist.getUserlistdata(data.result.userprofiles);
+    },
+    sendVideo(data) {
+      this.songCount = data.result.videoCount;
+      this.$refs.childrenVideo.getMvdata(data.result.videos);
     }
   },
   computed: {

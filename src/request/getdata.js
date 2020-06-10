@@ -137,6 +137,26 @@ export const getUserRecord = (id, type) => {
   })
 }
 
+
+//获取video数据
+export const getVideodata = id => {
+  return server({
+    url: `/video/detail?id=${id}`
+  })
+}
+//获取video播放地址
+export const getVideourl = id => {
+  return server({
+    url: `/video/url?id=${id}`
+  })
+}
+//获取video评论
+export const getVideocomments = (id, limit, offset = 0) => {
+  return server({
+    url: `/comment/video?id=${id}&limit=${limit}&offset=${offset}`
+  })
+}
+
 //并发请求
 export const serverAll = (arr) => {
   return axios.all(arr)

@@ -5,6 +5,9 @@
       <router-view  :musicTime="updateProdata"></router-view>
     </div>
     <Player ref="childPlayer" @updateCome="updatePro"></Player>
+    <!-- <div class='popContainer'> -->
+      <!-- <div class="move"></div> -->
+    <!-- </div> -->
   </div>
   
 </template>
@@ -61,9 +64,18 @@ export default {
  #app {
    background-color: #f5f5f5;
    min-width: 800px;
-   .app-center {
-     min-height: 100vh;
-   }
+    .app-center {
+      min-height: 100vh;
+    }
+    .popContainer{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 99999999;
+    }
    
  }
 

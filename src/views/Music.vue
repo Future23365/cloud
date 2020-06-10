@@ -180,7 +180,7 @@ export default {
     width: 640px;
     // height: 960px;
     margin: 0 auto;
-    background-color: #fffef9;
+    background-color: #fff;
     padding-top: 80px;
     padding-left: 80px;
     padding-right: 80px;

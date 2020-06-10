@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { getMvdata, getMvurl } from "@/request/getdata";
+import { getMvdata, getMvurl, getVideodata, getVideourl } from "@/request/getdata";
 import Comment from "@/components/Comment"
 
 export default {
@@ -34,7 +34,8 @@ export default {
   },
   methods: {
     setMvdata() {
-      getMvdata(this.$route.query.mvId).then(res => {
+      if(this.$route.query.mvId.length <= 8) {
+        getMvdata(this.$route.query.mvId).then(res => {
         this.mvData.mvName = res.data.name;
         this.mvData.author = res.data.artistName;
         this.mvData.duration = res.data.duration;
@@ -49,12 +50,34 @@ export default {
         this.mvData.url = res.data.url;
         this.$forceUpdate();  //    强制渲染
       })
+      this.$refs.childrenComment.startRequset({id: this.$route.query.mvId, target: 'mv'});
+      } else if(this.$route.query.mvId.length > 8) {
+        getVideodata(this.$route.query.mvId).then(res => {
+          console.log(res);
+        this.mvData.mvName = res.data.title;
+        // this.mvData.author = res.data.artistName;
+        this.mvData.duration = res.data.durationms;
+        this.mvData.playCount = res.data.playTime.toLocaleString();
+        this.mvData.publishTime = new Date(res.data.publishTime).toLocaleDateString();
+        this.mvData.shareCount = res.data.shareCount.toLocaleString();
+        this.mvData.subCount = res.data.subscribeCount.toLocaleString();
+        this.mvData.desc = res.data.description;
+        this.$forceUpdate();
+      })
+      getVideourl(this.$route.query.mvId).then(res => {
+        this.mvData.url = res.urls[0].url;
+        console.log(res);
+        this.$forceUpdate();  //    强制渲染
+      })
+      this.$refs.childrenComment.startRequset({id: this.$route.query.mvId, target: 'video'});
+      }
+      
 
     }
   },
   mounted() {
     this.setMvdata();
-    this.$refs.childrenComment.startRequset({id: this.$route.query.mvId, target: 'mv'});
+    
     
   }
 };

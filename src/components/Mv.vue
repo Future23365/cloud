@@ -2,16 +2,16 @@
   <div class="mv">
     <ul>
       <li v-for="(item, index) in mvData" :key="index">
-        <div class="show" @click="playVideo(item.id)">
-          <img :src="item.cover || item.imgurl" :alt="item.name" :title="item.name" />
+        <div class="show" @click="playVideo(item.id || item.vid)">
+          <img :src="item.cover || item.imgurl || item.coverUrl" :alt="item.name" :title="item.name" />
           <div class="count">
             <i class="el-icon-view"></i>
-            {{item.playCount.toLocaleString()}}
+            {{(item.playCount || item.playTime).toLocaleString()}}
           </div>
-          <div class="time">{{timeShow(item.duration / 1000)}}</div>
+          <div class="time">{{timeShow((item.duration || item.durationms) / 1000)}}</div>
         </div>
         <div class="name">
-          <a href="javascript:;" :title="item.name">{{item.name}}</a>
+          <a href="javascript:;" :title="item.name || item.title">{{item.name || item.title}}</a>
         </div>
         <div class="aughor">
           <el-link type="info">{{item.artistName}}</el-link>
