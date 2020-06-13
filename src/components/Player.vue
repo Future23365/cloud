@@ -135,7 +135,6 @@ export default {
         this.sname = res.songs[0].name;
         this.author = [];
         for(let item in res.songs[0].ar) {
-          // console.log(res.songs[0].ar[item].name);
           this.author.push(res.songs[0].ar[item].name);
         }
         // console.log('获取歌');
