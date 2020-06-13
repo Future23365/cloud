@@ -51,6 +51,10 @@ export default {
     li {
       overflow: hidden;
       padding: 5px;
+      transition: background-color .5s;
+      &:hover {
+        background-color: #cde6c7;
+      }
       img {
         float: left;
         width: 50px;

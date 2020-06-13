@@ -1,5 +1,6 @@
 import server from './request'
 import axios from 'axios';
+import { reject } from 'core-js/fn/promise';
 
 //获取歌曲url
 export const getsongUrl = id => {
@@ -160,4 +161,14 @@ export const getVideocomments = (id, limit, offset = 0) => {
 //并发请求
 export const serverAll = (arr) => {
   return axios.all(arr)
+}
+
+export const getMp3 = url1 => {
+  return axios.create({ 
+    method: 'get',
+    url: url1,
+    timeout: 5000,
+    responseType: 'blob'
+  })
+  
 }

@@ -25,6 +25,7 @@
           :data-songid="scope.row.hotmusicid" 
           @click="setsongId(scope.row.hotmusicid)">
           {{scope.row.hotmusic}}</a>
+          <Musicmenu :musicid="scope.row.hotmusicid" :musicName="scope.row.hotmusic"></Musicmenu>
         </template>
       </el-table-column>
       
@@ -39,6 +40,7 @@
           :data-songid="scope.row.newmusicid" 
           @click="setsongId(scope.row.newmusicid)">
           {{scope.row.newmusic}}</a>
+          
         </template>
       </el-table-column>
       <el-table-column 
@@ -60,10 +62,13 @@
 
 <script>
 import { getsongTop, getsongUrl, serverAll } from '@/request/getdata';
+import Musicmenu from '@/components/Musicmenu'
 
 export default {
   name: 'Ranking',
-  
+  components: {
+    Musicmenu,
+  },
   data() {
     return {
       ranking: {},

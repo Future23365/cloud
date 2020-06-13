@@ -127,6 +127,7 @@ export default {
     geturl() {
       getsongUrl(this.updateid).then(res => {
         this.url = res.data[0].url;
+        console.log(res);
       })
     },
     getsongDetial() {

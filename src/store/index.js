@@ -9,6 +9,7 @@ export default new vuex.Store({
     songname: '',
     songauthor: [],
     songurl: '',
+    playlist: [],
   },
   mutations: {
     updateSong(state, songi) {
@@ -16,5 +17,8 @@ export default new vuex.Store({
       !!songi.name === true ? state.songname = songi.name: '';
       !!songi.url === true ? state.songurl = songi.url: '';
     },
+    updatePlaylist(obj, type) {
+      playlist.push(obj);
+    }
   }
 })
