@@ -144,7 +144,6 @@ export default {
       let c = `${Number.parseInt(a[0]) * 60 + Number.parseInt(b[0])}.${Number.parseInt(b[1])}`;
       return c;
       }
-      
     }
     
   },
