@@ -1,12 +1,12 @@
 <template>
   <div class="musicmenu">
-    <button class="el-icon-plus"></button>
+    <button class="el-icon-plus" @click="addlist"></button>
     <button class="el-icon-download" @click="musicDownload"></button>
   </div>
 </template>
 
 <script>
-import { getsongUrl, getMp3 } from '@/request/getdata'
+import { getsongUrl, getMp3, getsongDetail } from '@/request/getdata'
 export default {
   name: 'musicmenu',
   props: ['musicid', 'musicName'],
@@ -36,7 +36,26 @@ export default {
         })
         this.$forceUpdate();  //    强制渲染
       })
-      
+    },
+    addlist() {
+      getsongDetail(this.musicid).then(res => {
+        console.log(res);
+        let obj = {};
+        obj.id = res.songs[0].id;
+        obj.name = res.songs[0].name;
+        let arr = [];
+        for(let i = 0; i < res.songs[0].ar.length; i++) {
+          let o = {};
+          o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
+          arr.push(o);
+        }
+        obj.ar = arr;
+        obj.al = res.songs[0].al.name;
+        obj.alId = res.songs[0].al.id;
+        obj.time = res.songs[0].dt;
+        console.log(obj);
+        this.$store.commit('updatePlaylist', obj);
+      })
     }
   }
 }

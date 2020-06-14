@@ -43,8 +43,15 @@
           <use xlink:href="#icon-xunhuan"></use>
         </svg>
 
+        <div class="el-icon-s-order list" @click="showm"></div>
       </div>
     </div>
+    <transition name="fade">
+      <div class="showlist" v-show="isListshow">
+        <Musiclist ></Musiclist>
+      </div>
+    </transition>
+    
   </div>
 
 </template>
@@ -53,10 +60,14 @@
 import iconfom from "@/assets/font/iconfont.js"
 import { getsongUrl, getsongDetail } from '@/request/getdata'
 import { tochance } from '@/common/tool'
+import Musiclist from '@/components/Musiclist'
 
 export default {
   name: 'Plalyer',
   // props: ['seturl'],
+  components: {
+    Musiclist
+  },
   data() {
     return {
       ispuse: false,
@@ -80,6 +91,8 @@ export default {
       url: '',
       sname: '',
       author: [],
+      isListshow: false,
+
     }
   },
   methods: {
@@ -150,9 +163,10 @@ export default {
         this.$store.commit('updateSong', obj)
         !!music[0].songtime === true ? this.$refs.myaudio.currentTime = music[0].songtime : '';
       }
-      
-      
-  },
+    },
+    showm() {
+      this.isListshow = !this.isListshow;
+    }
   },
   computed: {
     updateid: function() {
@@ -173,11 +187,6 @@ export default {
  
   mounted() {
     this.geturl();
-
-    
-
-    // console.log(this.$store.state.songtime);
-    // console.log(this.$refs.myaudio.currentTime);
   }
 }
 </script>
@@ -307,8 +316,37 @@ export default {
           height: 25px;
           margin-left: 10px;
         }
+        .list {
+          width: 25px;
+          height: 25px;
+          font-size: 25px;
+          margin-left: 10px;
+          &:hover {
+            cursor: pointer;
+          }
+        }
       }
     }
+    .showlist {
+      width: 800px;
+      height: 300px; 
+      position: absolute;
+      // margin: 0 auto;
+      margin-left: -400px;
+      left: 50%;
+      background-color: #afb4db;
+      color: #fffef9;
+      // opacity: .94;
+      bottom: 50px;
+      overflow: auto;
+      border-radius: 10px;
+    }
   }
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
 
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>

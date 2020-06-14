@@ -17,8 +17,12 @@ export default new vuex.Store({
       !!songi.name === true ? state.songname = songi.name: '';
       !!songi.url === true ? state.songurl = songi.url: '';
     },
-    updatePlaylist(obj, type) {
-      playlist.push(obj);
+    updatePlaylist(state, obj, type) {
+      state.playlist.push(obj);
+      console.log(state.playlist)
+    },
+    deletePlaylist(state, index) {
+      state.playlist.splice(index, 1);
     }
   }
 })
