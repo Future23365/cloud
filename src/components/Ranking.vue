@@ -5,6 +5,8 @@
       element-loading-text="拼命加载中"
       element-loading-spinner="el-icon-loading"
       :data="tableData"
+      @cell-mouse-enter="enterColum"
+      @cell-mouse-leave="leaveColum"
       stripe
       style="width: 100%">
       <el-table-column
@@ -22,10 +24,11 @@
         <template slot-scope="scope">
           <a href="javascript: void(0);" 
           style="text-decoration: none; color: #232323;" 
-          :data-songid="scope.row.hotmusicid" 
+          :data-songid="scope.row.hotmusicid"
+          @mouseenter="aaa(scope.column.label)"
           @click="setsongId(scope.row.hotmusicid)">
           {{scope.row.hotmusic}}</a>
-          <Musicmenu :musicid="scope.row.hotmusicid" :musicName="scope.row.hotmusic"></Musicmenu>
+          <Musicmenu :musicid="scope.row.hotmusicid" :musicName="scope.row.hotmusic" v-show="(showId === scope.row.hotmusicid) && (columShow === scope.column.label)"></Musicmenu>
         </template>
       </el-table-column>
       
@@ -40,7 +43,7 @@
           :data-songid="scope.row.newmusicid" 
           @click="setsongId(scope.row.newmusicid)">
           {{scope.row.newmusic}}</a>
-          
+          <Musicmenu :musicid="scope.row.newmusicid" :musicName="scope.row.newmusic" v-show="(showId === scope.row.newmusicid) && (columShow === scope.column.label)"></Musicmenu>
         </template>
       </el-table-column>
       <el-table-column 
@@ -54,6 +57,7 @@
           :data-songid="scope.row.electronicid"
           @click="setsongId(scope.row.electronicid)">
           {{scope.row.electronic}}</a>
+          <Musicmenu :musicid="scope.row.electronicid" :musicName="scope.row.electronic" v-show="(showId === scope.row.electronicid) && (columShow === scope.column.label)"></Musicmenu>
         </template>
       </el-table-column>
     </el-table>
@@ -75,6 +79,9 @@ export default {
       tableData: [],
       music: [[],[],[]],
       loading: true,
+      showId: 0,
+      columShow: '',
+
     }
   },
   methods: {
@@ -120,6 +127,29 @@ export default {
         this.$store.commit('updateSong', s);
         this.$router.push('/music');
     },
+    enterColum(row, colum, cell, enent) {
+      switch(colum.label) {
+        case '云音乐热歌榜Top50':
+          this.showId = row.hotmusicid;
+          this.columShow = '云音乐热歌榜Top50';
+          break;
+        case '云音乐新歌榜Top50':
+          this.showId = row.newmusicid;
+          this.columShow = '云音乐新歌榜Top50';
+          break;
+        case '云音乐电音榜Top50':
+          this.showId = row.electronicid
+          this.columShow = '云音乐电音榜Top50';
+          break;
+      }
+      this.$forceUpdate();
+    },
+    leaveColum() {
+      this.showId = 0;
+    },
+    aaa(a) {
+      console.log(a)
+    }
   },
   // computed: {
   //   monitorSong: function() {
