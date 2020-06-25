@@ -9,7 +9,7 @@
           <span v-for="(jtem, jndex) in item.ar" :key="jndex">{{Object.keys(jtem)[jndex]}}</span>
           <span>{{item.al}}</span>
           <span>时间</span>
-          <span @click="deleteList(index)">删除</span>
+          <span @click.stop="deleteList(index)">删除</span>
         </li>
       </ul>
     </div>
@@ -29,6 +29,7 @@ export default {
   methods: {
     deleteList(index) {
       this.$store.commit('deletePlaylist', index);
+      console.log(event)
     },
     playMusic(id) {
       let s = {};
@@ -74,6 +75,14 @@ export default {
         width: 100%;
         span {
           margin-left: 10px;
+          &:nth-last-child(1) {
+            float: right;
+            margin-right: 5px;
+            transition: color .2s;
+            &:hover {
+              color: #6950a1
+            }
+          }
         }
         &:hover {
           cursor: pointer;

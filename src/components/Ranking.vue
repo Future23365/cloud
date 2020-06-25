@@ -26,7 +26,7 @@
           style="text-decoration: none; color: #232323;" 
           :data-songid="scope.row.hotmusicid"
           @mouseenter="aaa(scope.column.label)"
-          @click="setsongId(scope.row.hotmusicid)">
+          @click="setsongId(scope.row.hotmusicid), getsong(scope.row.hotmusicid)">
           {{scope.row.hotmusic}}</a>
           <Musicmenu :musicid="scope.row.hotmusicid" :musicName="scope.row.hotmusic" v-show="(showId === scope.row.hotmusicid) && (columShow === scope.column.label)"></Musicmenu>
         </template>
@@ -41,7 +41,7 @@
           <a href="javascript: void(0);" 
           style="text-decoration: none; color: #232323;" 
           :data-songid="scope.row.newmusicid" 
-          @click="setsongId(scope.row.newmusicid)">
+          @click="setsongId(scope.row.newmusicid), getsong(scope.row.newmusicid)">
           {{scope.row.newmusic}}</a>
           <Musicmenu :musicid="scope.row.newmusicid" :musicName="scope.row.newmusic" v-show="(showId === scope.row.newmusicid) && (columShow === scope.column.label)"></Musicmenu>
         </template>
@@ -55,7 +55,7 @@
           <a href="javascript: void(0);" 
           style="text-decoration: none; color: #232323;" 
           :data-songid="scope.row.electronicid"
-          @click="setsongId(scope.row.electronicid)">
+          @click="setsongId(scope.row.electronicid), getsong(scope.row.electronicid)">
           {{scope.row.electronic}}</a>
           <Musicmenu :musicid="scope.row.electronicid" :musicName="scope.row.electronic" v-show="(showId === scope.row.electronicid) && (columShow === scope.column.label)"></Musicmenu>
         </template>
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { getsongTop, getsongUrl, serverAll } from '@/request/getdata';
+import { getsongTop, getsongUrl, serverAll, getsongDetail } from '@/request/getdata';
 import Musicmenu from '@/components/Musicmenu'
 
 export default {
@@ -85,18 +85,26 @@ export default {
     }
   },
   methods: {
-    // savelocal(id, name, url) {
-    //   if(localStorage.getItem('music') === null) {
-    //     localStorage.setItem('music', JSON.stringify([]))
-    //   }
-    //   let music = {};
-    //   let arr = []
-    //   music.songid = id;
-    //   music.songname = name;
-    //   music.songurl = url;
-    //   arr.push(music);
-    //   localStorage.setItem('music', JSON.stringify(arr));
-    // },
+    getsong(id) {
+        getsongDetail(id).then(res => {
+        this.song = res.songs[0];
+        let obj = {};
+        obj.id = res.songs[0].id;
+        obj.name = res.songs[0].name;
+        let arr = [];
+        for(let i = 0; i < res.songs[0].ar.length; i++) {
+          let o = {};
+          o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
+          arr.push(o);
+        }
+        obj.ar = arr;
+        obj.al = res.songs[0].al.name;
+        obj.alId = res.songs[0].al.id;
+        obj.time = res.songs[0].dt;
+        console.log(obj);
+        this.$store.commit('updatePlaylist', obj);
+      })
+    },
     setTabledata(arr) {
       for(let i = 0; i < 50; i++) {
         this.tableData.push({

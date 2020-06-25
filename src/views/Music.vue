@@ -65,6 +65,27 @@ export default {
       }
       
     },
+    getsongInf(id) {
+      getsongDetail(id).then(res => {
+        this.song = res.songs[0];
+        // let obj = {};
+        // obj.id = res.songs[0].id;
+        // obj.name = res.songs[0].name;
+        // let arr = [];
+        // for(let i = 0; i < res.songs[0].ar.length; i++) {
+        //   let o = {};
+        //   o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
+        //   arr.push(o);
+        // }
+        // obj.ar = arr;
+        // obj.al = res.songs[0].al.name;
+        // obj.alId = res.songs[0].al.id;
+        // obj.time = res.songs[0].dt;
+        // console.log(obj);
+        // this.song = 
+        console.log(res)
+      })
+    },
     stolyric(arr) {
       let obj = {};
       for(let i = 0; i < arr.length; i++) {
@@ -74,28 +95,7 @@ export default {
       }
       return obj;
     },
-    getsong() {
-      if(this.changeid) {
-        getsongDetail(this.$store.state.songid).then(res => {
-        this.song = res.songs[0];
-        let obj = {};
-        obj.id = res.songs[0].id;
-        obj.name = res.songs[0].name;
-        let arr = [];
-        for(let i = 0; i < res.songs[0].ar.length; i++) {
-          let o = {};
-          o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
-          arr.push(o);
-        }
-        obj.ar = arr;
-        obj.al = res.songs[0].al.name;
-        obj.alId = res.songs[0].al.id;
-        obj.time = res.songs[0].dt;
-        console.log(obj);
-        this.$store.commit('updatePlaylist', obj);
-      })
-      }
-    },
+    
     getlyric() {
       if(this.changeid) {
         getsongLyric(this.$store.state.songid).then(res => {
@@ -170,7 +170,7 @@ export default {
   watch: {
     changeid: function(){
       this.sendSongid();
-      this.getsong();
+      this.getsongInf(this.changeid);
       this.getlyric();
     },
     musicTime: function() {
@@ -179,7 +179,7 @@ export default {
   },
   mounted() {
     this.sendSongid();
-    this.getsong();
+    this.getsongInf(this.changeid);
     this.getlyric();
     
   }
