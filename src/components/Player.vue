@@ -1,15 +1,15 @@
 <template>
   <div class="player">
     <div class="w">
-      <audio :src="url" ref="myaudio" @timeupdate="updatetime" @durationchange="setdura"></audio>
+      <audio :src="url" ref="myaudio" @timeupdate="updatetime" @durationchange="setdura" @ended="nextSong"></audio>
       <div class="play">
-        <div class="left">
+        <div class="left" @click="lastSong()">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-previous-1"></use>
           </svg>
         </div>
         <div class="isplay" @click="puse()"><i :class="{'el-icon-video-play' : !ispuse, 'el-icon-video-pause' : ispuse}"></i></div>
-        <div class="right">
+        <div class="right" @click="nextSong()">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-next-1"></use>
           </svg>
@@ -92,6 +92,7 @@ export default {
       sname: '',
       author: [],
       isListshow: false,
+      songList: [],
 
     }
   },
@@ -141,6 +142,14 @@ export default {
       getsongUrl(this.updateid).then(res => {
         this.url = res.data[0].url;
         console.log(res);
+        let that = this;
+        setTimeout(function() {
+          that.puse();
+        }, 1000)
+        
+        // this.ispuse = !this.ispuse;
+        // this.$refs.myaudio.play()
+        // this.puse();
       })
     },
     getsongDetial() {
@@ -166,6 +175,42 @@ export default {
     },
     showm() {
       this.isListshow = !this.isListshow;
+    },
+    nextSong() {
+      console.log("该播放下一曲了")
+      this.songList = this.$store.state.playlist;
+      console.log(this.songList)
+      for(let i = 0; i < this.songList.length; i++) {
+        console.log(this.songList[i].id)
+        if((this.songList[i].id === this.$store.state.songid)) {
+          // console.log(this.songList[i].id)
+          if(i === this.songList.length - 1) {
+            this.$store.commit('updateSong', {'id': this.songList[0].id})
+            return 
+          }
+          this.$store.commit('updateSong', {'id': this.songList[i + 1].id})
+          console.log(this.$store.state.songid)
+          return 
+        }
+      }
+      
+    },
+    lastSong() {
+      this.songList = this.$store.state.playlist;
+      for(let i = 0; i < this.songList.length; i++) {
+        console.log(this.songList[i].id)
+        if((this.songList[i].id === this.$store.state.songid)) {
+          // console.log(this.songList[i].id)
+          if(i === 0) {
+            this.$store.commit('updateSong', {'id': this.songList[this.songList.length - 1].id})
+            return
+          }
+          this.$store.commit('updateSong', {'id': this.songList[i - 1].id})
+          console.log(this.$store.state.songid)
+          return 
+        }
+      }
+
     }
   },
   computed: {
@@ -175,9 +220,11 @@ export default {
   },
   watch: {
     updateid: function() {
+      this.ispuse = false;
       this.geturl();
       this.getsongDetial();
-      this.ispuse = false;
+      
+      
     }
   },
   beforeDestroy() {

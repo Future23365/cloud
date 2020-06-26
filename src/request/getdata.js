@@ -21,10 +21,17 @@ export const getsongNew = () => {
   })
 }
 
-//获取歌曲排行榜
-export const getsongTop = idx => {
+//
+export const getToplist = () => {
   return server({
-    url: `/top/list?idx=${idx}`,
+    url: `/toplist`
+  })
+}
+
+//获取歌曲排行榜
+export const getsongTop = id => {
+  return server({
+    url: `/top/list?id=${id}`,
   })
 }
 //获取歌词

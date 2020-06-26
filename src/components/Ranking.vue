@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { getsongTop, getsongUrl, serverAll, getsongDetail } from '@/request/getdata';
+import { getsongTop, getsongUrl, serverAll, getsongDetail, getToplist } from '@/request/getdata';
 import Musicmenu from '@/components/Musicmenu'
 
 export default {
@@ -122,12 +122,16 @@ export default {
       // console.log(this.tableData);
     },
     getRanking() {
-      serverAll([getsongTop(1), getsongTop(0), getsongTop(25)]).then(res => {
+      getToplist().then(res => {
+        console.log(res)
+        serverAll([getsongTop(res.list[1].id), getsongTop(res.list[3].id), getsongTop(res.list[6].id)]).then(res => {
         this.ranking = res;
         this.setTabledata(this.ranking);
         this.loading = false;
         // console.log(this.ranking);
       })
+      })
+      
     },
     setsongId(id, name) {
         let s = {};
