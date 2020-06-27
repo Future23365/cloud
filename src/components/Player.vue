@@ -18,7 +18,7 @@
       <div class="center">
         <!-- <div class="mask"></div> -->
           <div class="up">
-            <span class="name">{{sname}}</span>
+            <span class="name" @click="enterMusic()">{{sname}}</span>
             <span class="author" v-for="(item,index) in author" :key="index" style="font-size: 10px;" >/<el-link type="primary" :underline="false">{{item}}</el-link></span> 
           </div>
           <div class="down">
@@ -58,7 +58,7 @@
 
 <script>
 import iconfom from "@/assets/font/iconfont.js"
-import { getsongUrl, getsongDetail } from '@/request/getdata'
+import { getsongUrl, getsongDetail, checkMusic } from '@/request/getdata'
 import { tochance } from '@/common/tool'
 import Musiclist from '@/components/Musiclist'
 
@@ -105,6 +105,7 @@ export default {
     },
     
     updatetime(e) {
+      // console.log('出发')
       // console.log(this.$refs.myaudio.currentTime);
       this.value1.value = this.$refs.myaudio.currentTime;
       this.setindex ++;
@@ -139,18 +140,20 @@ export default {
       localStorage.setItem('music', JSON.stringify(arr));
     },
     geturl() {
-      getsongUrl(this.updateid).then(res => {
-        this.url = res.data[0].url;
-        console.log(res);
-        let that = this;
-        setTimeout(function() {
-          that.puse();
-        }, 1000)
-        
-        // this.ispuse = !this.ispuse;
-        // this.$refs.myaudio.play()
-        // this.puse();
+      checkMusic(this.updateid).then(res => {
+        console.log(res)
+        if(res.success === true) {
+          getsongUrl(this.updateid).then(res => {
+          this.url = res.data[0].url;
+          console.log(res);
+          let that = this;
+          setTimeout(function() {
+            that.puse();
+          }, 1000)
       })
+        }
+      })
+      
     },
     getsongDetial() {
       getsongDetail(this.updateid).then(res => {
@@ -169,7 +172,7 @@ export default {
         let music = JSON.parse(localStorage.getItem('music'));
         let obj = {};
         !!music[0].songid === true ?  obj.id = music[0].songid : '';
-        this.$store.commit('updateSong', obj)
+        console.log(obj);
         !!music[0].songtime === true ? this.$refs.myaudio.currentTime = music[0].songtime : '';
       }
     },
@@ -211,6 +214,9 @@ export default {
         }
       }
 
+    },
+    enterMusic() {
+      this.$router.push('/music')
     }
   },
   computed: {
@@ -233,7 +239,7 @@ export default {
   },
  
   mounted() {
-    this.geturl();
+    // this.geturl();
   }
 }
 </script>
@@ -313,6 +319,11 @@ export default {
         /* background-color: red; */
         .up {
           height: 20px;
+          .name {
+            &:hover {
+              cursor: pointer;
+            }
+          }
           .author {
             color: #000;
             font-size: 19px;

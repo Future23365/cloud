@@ -8,6 +8,12 @@ export const getsongUrl = id => {
     url: `/song/url?id=${id}`,
   })
 }
+//检查音乐是否可用
+export const checkMusic = id => {
+  return server({
+    url: `/check/music?id=${id}`
+  })
+}
 //获取歌曲详细信息
 export const getsongDetail = ids => {
   return server({

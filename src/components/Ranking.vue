@@ -25,7 +25,6 @@
           <a href="javascript: void(0);" 
           style="text-decoration: none; color: #232323;" 
           :data-songid="scope.row.hotmusicid"
-          @mouseenter="aaa(scope.column.label)"
           @click="setsongId(scope.row.hotmusicid), getsong(scope.row.hotmusicid)">
           {{scope.row.hotmusic}}</a>
           <Musicmenu :musicid="scope.row.hotmusicid" :musicName="scope.row.hotmusic" v-show="(showId === scope.row.hotmusicid) && (columShow === scope.column.label)"></Musicmenu>
@@ -159,9 +158,6 @@ export default {
     leaveColum() {
       this.showId = 0;
     },
-    aaa(a) {
-      console.log(a)
-    }
   },
   // computed: {
   //   monitorSong: function() {

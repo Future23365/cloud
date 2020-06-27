@@ -9,9 +9,7 @@
       <el-tab-pane label="专辑"><Album ref="childrenAlbum"></Album></el-tab-pane>
       <el-tab-pane label="视频"><mv ref="childrenVideo"></mv></el-tab-pane>
       <el-tab-pane label="MV"><mv ref="childrenMv"></mv></el-tab-pane>
-      <el-tab-pane label="歌词">歌词</el-tab-pane>
       <el-tab-pane label="歌单"><Album ref="childrenPlaylist"></Album></el-tab-pane>
-      <el-tab-pane label="主播电台">主播电台</el-tab-pane>
       <el-tab-pane label="用户"><Userlist ref="childrenUserlist"></Userlist></el-tab-pane>
     </el-tabs>
     <div class="pag">
