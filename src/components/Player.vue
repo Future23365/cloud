@@ -22,7 +22,7 @@
             <span class="author" v-for="(item,index) in author" :key="index" style="font-size: 10px;" >/<el-link type="primary" :underline="false">{{item}}</el-link></span> 
           </div>
           <div class="down">
-            <div class="down-left"><el-slider v-model="value1.value" :show-tooltip="value1.showtooltip" style="max-width: 600px; min-width: 400px;" :max="value1.max" @change="settime"></el-slider></div>
+            <div class="down-left"><el-slider v-model="value1.value" :show-tooltip="value1.showtooltip" style="max-width: 600px; min-width: 400px; height: 30px;" :max="value1.max" @change="settime" input-size="small"></el-slider></div>
             <div class="down-right">
               <span>{{nowtime}}</span>
               <span>/{{alltime}}</span>
@@ -93,7 +93,7 @@ export default {
       author: [],
       isListshow: false,
       songList: [],
-
+      firstIn: false
     }
   },
   methods: {
@@ -114,6 +114,7 @@ export default {
       if(this.setindex = 4) {
         this.nowtime = tochance(this.value1.value);
         this.setindex = 0;
+        this.savesonginf()
       }
     },
     setdura(e) {
@@ -123,7 +124,9 @@ export default {
       this.value2.volume = this.$refs.myaudio.volume;
     },
     settime(e) {
+      console.log(e)
       this.$refs.myaudio.currentTime = e;
+      this.savesonginf();
     },
     setvolume(e) {
       this.$refs.myaudio.volume = e;
@@ -142,16 +145,21 @@ export default {
     geturl() {
       checkMusic(this.updateid).then(res => {
         console.log(res)
+        let that = this;
         if(res.success === true) {
           getsongUrl(this.updateid).then(res => {
-          this.url = res.data[0].url;
-          console.log(res);
-          let that = this;
-          setTimeout(function() {
-            that.puse();
-          }, 1000)
-      })
+            this.url = res.data[0].url;
+            if(this.firstIn === false) {
+              setTimeout(function() {
+                that.puse();
+              }, 1000)
+            }
+          
+          })
         }
+        setTimeout(function() {
+          that.firstIn = false;
+        }, 10)
       })
       
     },
@@ -166,14 +174,17 @@ export default {
       })
     },
     localSet() {
+      this.firstIn = true;
       if(localStorage.getItem('music') === [] || localStorage.getItem('music') === null) {
       localStorage.setItem('music', JSON.stringify([]));
       }else {
         let music = JSON.parse(localStorage.getItem('music'));
         let obj = {};
         !!music[0].songid === true ?  obj.id = music[0].songid : '';
-        console.log(obj);
+        
         !!music[0].songtime === true ? this.$refs.myaudio.currentTime = music[0].songtime : '';
+        console.log(obj);
+        this.$store.commit('updateSong', obj)
       }
     },
     showm() {
@@ -221,6 +232,7 @@ export default {
   },
   computed: {
     updateid: function() {
+      
       return this.$store.state.songid;
     }
   },
@@ -229,7 +241,7 @@ export default {
       this.ispuse = false;
       this.geturl();
       this.getsongDetial();
-      
+      // this.firstIn = false;
       
     }
   },
@@ -239,7 +251,7 @@ export default {
   },
  
   mounted() {
-    // this.geturl();
+    this.localSet();
   }
 }
 </script>
@@ -339,14 +351,27 @@ export default {
       .down {
         width: 100%;
         line-height: 38px;
-        height: 38px;
+        height: 30px;
+        // margin-top: -8px;
         .down-left{
           float: left;
           /* margin-left: 50px; */
           /* width: 600px; */
           /* height: 30px; */
+          & /deep/ .el-slider {
+            .el-slider__runway {
+              margin: 9px 0 0 0;
+            }
+            // .el-slider__button-wrapper {
+            //   width: 30px;
+            //   height: 30px;
+            // }
+          }
         }
         .down-right {
+          height: 30px;
+          margin-top: -5px;
+          margin-left: 10px;
           float: left;
         }
       }

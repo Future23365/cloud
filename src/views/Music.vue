@@ -45,7 +45,7 @@ export default {
       progressFlag: {},
       lyricFlag: 0,
       lyricFlagindex: 0,
-
+      nowLyric: 0
     }
   },
   components: {
@@ -87,10 +87,12 @@ export default {
       })
     },
     stolyric(arr) {
+      // console.log(arr);
       let obj = {};
       for(let i = 0; i < arr.length; i++) {
         let a = arr[i].split("]");
         obj[a[0]] = a[1];
+        // console.log(obj)
         this.progressFlag[this.trt(a[0].slice(1))] = false;
       }
       return obj;
@@ -139,10 +141,16 @@ export default {
     },
     updateWhite(time) {
       // let to = ''
+      // console.log(time)
+      time = time + 0.400
+      // console.log(time)
+      // console.log(this.progressFlag)
       for(let i = 0; i < Object.keys(this.progressFlag).length; i++) {
         if(time < Object.keys(this.progressFlag)[i]){
-          this.progressFlag[Object.keys(this.progressFlag)[i -2]] = false;
+          // this.progressFlag[Object.keys(this.progressFlag)[i -2]] = false;
+          this.progressFlag[Object.keys(this.progressFlag)[this.nowLyric]] = false;
           this.progressFlag[Object.keys(this.progressFlag)[i -1]] = true;
+          this.nowLyric = i - 1;
           this.$forceUpdate();
           return;
         }
