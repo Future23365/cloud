@@ -38,6 +38,15 @@ export default new vuex.Store({
     },
     deletePlaylist(state, index) {
       state.playlist.splice(index, 1);
+    },
+    deleteAll(state) {
+      for(let i = 0; i < state.playlist.length; i++) {
+        if(state.playlist[i].id !== state.songid) {
+          state.playlist.splice(i, 1);
+          console.log(state.playlist.length)
+          i--;
+        }
+      }
     }
   }
 })

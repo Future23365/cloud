@@ -143,25 +143,27 @@ export default {
       localStorage.setItem('music', JSON.stringify(arr));
     },
     geturl() {
+      let what = this;
       checkMusic(this.updateid).then(res => {
         console.log(res)
         let that = this;
         if(res.success === true) {
           getsongUrl(this.updateid).then(res => {
             this.url = res.data[0].url;
+            console.log(this.firstIn)
             if(this.firstIn === false) {
               setTimeout(function() {
                 that.puse();
-              }, 1000)
+              }, 700)
             }
           
           })
         }
-        setTimeout(function() {
-          that.firstIn = false;
-        }, 10)
+        
       })
-      
+      setTimeout(function() {
+          what.firstIn = false;
+        }, 900)
     },
     getsongDetial() {
       getsongDetail(this.updateid).then(res => {
@@ -174,6 +176,7 @@ export default {
       })
     },
     localSet() {
+      console.log("触发了")
       this.firstIn = true;
       if(localStorage.getItem('music') === [] || localStorage.getItem('music') === null) {
       localStorage.setItem('music', JSON.stringify([]));
@@ -185,6 +188,25 @@ export default {
         !!music[0].songtime === true ? this.$refs.myaudio.currentTime = music[0].songtime : '';
         console.log(obj);
         this.$store.commit('updateSong', obj)
+
+        getsongDetail(obj.id).then(res => {
+        this.song = res.songs[0];
+        let obj = {};
+        obj.id = res.songs[0].id;
+        obj.name = res.songs[0].name;
+        let arr = [];
+        for(let i = 0; i < res.songs[0].ar.length; i++) {
+          let o = {};
+          o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
+          arr.push(o);
+        }
+        obj.ar = arr;
+        obj.al = res.songs[0].al.name;
+        obj.alId = res.songs[0].al.id;
+        obj.time = res.songs[0].dt;
+        console.log(obj);
+        this.$store.commit('updatePlaylist', obj);
+      })
       }
     },
     showm() {

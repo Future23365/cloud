@@ -1,6 +1,6 @@
 <template>
   <div class="musiclist">
-    <div class="head">播放列表({{listlength}})</div>
+    <div class="head">播放列表({{listlength}})<span @click="deleteAlllist">删除全部</span></div>
     <div class="list">
       <div class="mess">
         <span></span>
@@ -52,7 +52,12 @@ export default {
     },
     time(time) {
       return timeShow(time / 1000)
-    }
+    },
+    deleteAlllist() {
+      console.log("12")
+      this.$store.commit("deleteAll")
+    },
+    
   },
   computed: {
     listlength: function() {
@@ -88,6 +93,16 @@ export default {
     line-height: 40px;
     padding-left: 20px;
     background-color: #494e8f;
+    span {
+      font-size: 14px;
+      float: right;
+      margin-right: 10px;
+      &:hover {
+        cursor: pointer;
+        
+        color: #afb4db;
+      }
+    }
   }
   .list {
     .mess {

@@ -1,6 +1,6 @@
 <template>
-  <div class="user">
-    <div class="userInf">
+  <div class="user" >
+    <div class="userInf" v-bind:style="{background: bgcURl}">
       <img :src="userData.profile.avatarUrl" alt="">
       <div class="name">
         <div class="name-inf">
@@ -54,8 +54,11 @@
     </div>
     <div class="userlist">
         <h3>{{userData.profile.nickname}}创建的歌单</h3>
-        <Album ref="childrenSonglist"></Album>
-        <div><button @click="getSonglistmore(songlistPage += 29)">更多</button></div>
+        <Album ref="childrenSonglist1"></Album>
+        <div v-show="isHasmore"><button @click="getSonglistmore(songlistPage += 29)">更多</button></div>
+        <h3>{{userData.profile.nickname}}收藏的歌单</h3>
+        <Album ref="childrenSonglist2"></Album>
+        <!-- <div><button @click="getSonglistmore(2, songlistPage += 29)">更多</button></div> -->
     </div>
   </div>
 </template>
@@ -78,38 +81,45 @@ export default {
       isHasmore: true,
       record: [],
       isWeek: true,
-
+      ownPlaylist : [],
+      collectionPlaylist : [],
     }
   },
   methods: {
-    requsetUserdata() {
+    requsetUserdata(limit) {
       getUserData(this.$route.query.userId).then(res => {
+        console.log(res);
         this.userData = res;
         this.$forceUpdate(); 
         // console.log(res);
       })
-
-      getUserplaylist(this.$route.query.userId).then(res => {
-        // console.log(res);
-        this.$refs.childrenSonglist.getAlbumdata(res.playlist, "歌单");
-      })
-
+      this.getplayList(limit);
       getUserRecord(this.$route.query.userId, 1).then(res => {
         console.log(res);
         this.record = res.weekData;
       })
     },
-    getSonglistmore(limit = 30) {
-      if(!this.isHasmore) {
-          this.$message({
-            message: '没有更多了呦！',
-          });
-        }else {
-          getUserplaylist(this.$route.query.userId, limit).then(res => {
-            this.$refs.childrenSonglist.getAlbumdata(res.playlist, '歌单');
-            this.isHasmore = res.more;
-        })
-      }
+    getplayList(limit) {
+      getUserplaylist(this.$route.query.userId, limit).then(res => {
+        // console.log(res);
+        
+        for(let i = 0; i < res.playlist.length; i++) {
+          console.log(this.$route.query.userId)
+          if(res.playlist[i].userId === Number.parseInt(this.$route.query.userId)) {
+            this.ownPlaylist.push(res.playlist[i])
+          }else {
+            this.collectionPlaylist.push(res.playlist[i])
+          }
+        }
+        this.isHasmore = res.more;
+        // console.log(ownPlaylist);
+        // console.log(collectionPlaylist)
+        this.$refs.childrenSonglist1.getAlbumdata(this.ownPlaylist, "歌单");
+        this.$refs.childrenSonglist2.getAlbumdata(this.collectionPlaylist, "歌单");
+      })
+    },
+    getSonglistmore(limit) {
+      this.getplayList(limit);
     },
     setWeek(type) {
       if(type === 'week' && this.isWeek === false) {
@@ -146,8 +156,13 @@ export default {
     }
   },
   mounted() {
-    this.requsetUserdata();
-  }
+    this.requsetUserdata(this.songlistPage);
+  },
+  computed: {
+    bgcURl: function() {
+      return `url(${this.userData.profile.backgroundUrl}) no-repeat`
+    }
+  },
 }
 </script>
 
@@ -156,13 +171,15 @@ export default {
   min-width: 720px;
   max-width: 1120px;
   margin: 0 auto;
-  padding: 40px;
+  // padding: 40px;
   // background-color: #afb4db;
   background-color: #fff;
   border: 1px solid #d3d3d3;
   // overflow: hidden;
   .userInf {
-    background-color: #fffef9;
+    padding: 40px;
+    // background-color: #fffef9;
+    background-size: cover;
     overflow: hidden;
     img {
       width: 188px;
@@ -176,7 +193,8 @@ export default {
       overflow: hidden;
       // min-width: 492px;
       // max-width: 892px;
-      
+      min-height: 188px;
+      background-color: rgba(255, 255, 255, 0.7);
       .name-inf {
         .name-head {
           font-size: 22px;
@@ -227,7 +245,7 @@ export default {
     }
   }
   .listenrecord {
-    margin-top: 50px;
+    margin: 40px ;
     .menu {
       line-height: 30px;
       h3 {
@@ -298,12 +316,12 @@ export default {
     }
   }
   .userlist {
-    margin-top: 50px;
-    div {
-      &:last-child {
-        text-align: right;
-      }
-    }
+    margin: 40px;
+    // div {
+    //   &:last-child {
+    //     text-align: right;
+    //   }
+    // }
     .album {
       & /deep/ img {
         width: 140px;
