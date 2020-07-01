@@ -2,7 +2,10 @@
   <div id="app">
     <Header></Header>
     <div class="app-center">
-      <router-view  :musicTime="updateProdata"></router-view>
+      <!-- <keep-alive :include="result"> -->
+        <router-view  :musicTime="updateProdata"></router-view>
+      <!-- </keep-alive> -->
+      
     </div>
     <Player ref="childPlayer" @updateCome="updatePro"></Player>
     <!-- <div class='popContainer'> -->

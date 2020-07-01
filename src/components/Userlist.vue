@@ -12,26 +12,37 @@
           </span>
           <p>{{item.signature}}</p>
         </div>
-        <div>歌单</div>
-        <div>粉丝</div>
+        <!-- <div>歌单</div>
+        <div>粉丝</div> -->
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import getUserData from '@/request/getdata';
 export default {
   name: 'userlist',
   data() {
     return {
       userlistData: [],
       gender: ['','#icon-nan', '#icon-nv'],
+      playCount: 0,
+      fansCount: 0,
     }
   },
   methods: {
     getUserlistdata(data) {
       this.userlistData = data;
       console.log(data);
+    },
+    getuser() {
+    //   getUserData().then(res => {
+    //     console.log(res);
+    //     this.userData = res;
+    //     this.$forceUpdate(); 
+    //     // console.log(res);
+    // }),
     },
     goUser(id) {
       this.$router.push({

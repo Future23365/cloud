@@ -47,6 +47,7 @@
             <span class="one">{{index + 1}}.</span>
             <span class="two" @click="goMusic(item.song.id)">{{item.song.name}}</span>
             -<span v-for="(jtem, jndex) in item.song.ar" :key="jndex" class="three" @click="goAlbum(jtem.id)">{{jtem.name}}</span>
+            <Musicmenu :musicid="item.song.id" :musicName="item.song.name"></Musicmenu>
             <span class="four"><div :style="{'width': item.score + 'px'}"></div></span>
           </li>
         </ul>
@@ -64,14 +65,15 @@
 </template>
 
 <script>
-import { getUserData, getUserplaylist, getUserRecord } from '@/request/getdata';
+import { getUserData, getUserplaylist, getUserRecord, getsongDetail } from '@/request/getdata';
 import Album from '@/components/Album';
-
+import Musicmenu from '@/components/Musicmenu'
 
 export default {
   name: 'user',
   components: {
-    Album
+    Album,
+    Musicmenu
   },
   data() {
     return {
@@ -142,6 +144,25 @@ export default {
       // console.log(id);
       let s = {};
       s.id = id;
+
+      getsongDetail(id).then(res => {
+        this.song = res.songs[0];
+        let obj = {};
+        obj.id = res.songs[0].id;
+        obj.name = res.songs[0].name;
+        let arr = [];
+        for(let i = 0; i < res.songs[0].ar.length; i++) {
+          let o = {};
+          o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
+          arr.push(o);
+        }
+        obj.ar = arr;
+        obj.al = res.songs[0].al.name;
+        obj.alId = res.songs[0].al.id;
+        obj.time = res.songs[0].dt;
+        console.log(obj);
+        this.$store.commit('updatePlaylist', obj);
+      })
       this.$store.commit('updateSong', s);
       this.$router.push('/music');
     },
@@ -179,7 +200,7 @@ export default {
   .userInf {
     padding: 40px;
     // background-color: #fffef9;
-    background-size: cover;
+    background-size: 100% auto !important;
     overflow: hidden;
     img {
       width: 188px;
@@ -265,6 +286,14 @@ export default {
       max-height: 400px;
       overflow: auto;
       border: 1px solid #ccc;
+      ul {
+        li {
+          .musicmenu {
+            position: relative;
+            margin-left: 50px;
+          }
+        }
+      }
     }
     ul {
       li {
