@@ -15,7 +15,7 @@
       </div>
       <div class="lyric" :style="{height: height}" v-loading="loading">
         <ul>
-          <li v-for="(item, value, index) in lyric" :key="index" :class="{'whiteActive': progressFlag[setClass(index)]}"  @click="aaa(index)" ref="qqq">{{item}}<br>{{value in translyric ? translyric[value] : ""}}</li>
+          <li v-for="(item, value, index) in lyric" :key="index" :class="{'whiteActive': progressFlag[setClass(index)]}" ref="qqq">{{item}}<br>{{value in translyric ? translyric[value] : ""}}</li>
         </ul>
       </div>
     </div>
@@ -67,6 +67,9 @@ export default {
     },
     getsongInf(id) {
       getsongDetail(id).then(res => {
+        // console.log(id)
+        // console.log(res);
+        // console.log(this.song)
         this.song = res.songs[0];
         // let obj = {};
         // obj.id = res.songs[0].id;
@@ -83,28 +86,37 @@ export default {
         // obj.time = res.songs[0].dt;
         // console.log(obj);
         // this.song = 
-        console.log(res)
+        // console.log(res)
       })
     },
-    stolyric(arr) {
-      // console.log(arr);
+    stolyric(arr, flag = false) {
+      console.log(arr);
       let obj = {};
+      if(flag === true) {
+        this.progressFlag = {}
+      }
+      
       for(let i = 0; i < arr.length; i++) {
         let a = arr[i].split("]");
         obj[a[0]] = a[1];
         // console.log(obj)
-        this.progressFlag[this.trt(a[0].slice(1))] = false;
+        if(flag === true) {
+          this.progressFlag[this.trt(a[0].slice(1))] = false;
+        }
+        
       }
+      console.log(this.progressFlag)
       return obj;
     },
     
     getlyric() {
+      // console.log("更新歌词")
       if(this.changeid) {
         getsongLyric(this.$store.state.songid).then(res => {
-          // console.log(res);
+          console.log(res);
           this.loading = false;
           if('lrc' in res && 'lyric' in res.lrc) {
-            this.lyric = this.stolyric(res.lrc.lyric.split('\n'));
+            this.lyric = this.stolyric(res.lrc.lyric.split('\n'), true);
           }
           if('tlyric' in res && 'lyric' in res.tlyric && res.tlyric.lyric != null) {
             this.translyric = this.stolyric(res.tlyric.lyric.split('\n'));  
@@ -135,10 +147,6 @@ export default {
         }
       });
     },
-    aaa(i) {
-      this.progressFlag[Object.keys(this.progressFlag)[i]] = !this.progressFlag[Object.keys(this.progressFlag)[i]];
-      this.$forceUpdate();
-    },
     updateWhite(time) {
       // let to = ''
       // console.log(time)
@@ -164,7 +172,13 @@ export default {
       if(t.split(':') != ''){
       let a = t.split(':');
       let b = a[1].split('.');
-      let c = `${Number.parseInt(a[0]) * 60 + Number.parseInt(b[0])}.${Number.parseInt(b[1])}`;
+      let c
+      if(b[1]) {
+        c = `${Number.parseInt(a[0]) * 60 + Number.parseInt(b[0])}.${Number.parseInt(b[1])}`;
+      }else if(!b[1]) {
+        c = `${Number.parseInt(a[0]) * 60 + Number.parseInt(b[0])}.000`;
+      }
+      
       return c;
       }
     }
@@ -172,11 +186,15 @@ export default {
   },
   computed: {
     changeid: function() {
-      return this.$store.state.songid
+      if(this.$store.state.songid !== 0) {
+        return this.$store.state.songid
+      }
+      
     }
   },
   watch: {
     changeid: function(){
+      console.log('------')
       this.sendSongid();
       this.getsongInf(this.changeid);
       this.getlyric();
@@ -186,9 +204,13 @@ export default {
     }
   },
   mounted() {
-    this.sendSongid();
-    this.getsongInf(this.changeid);
-    this.getlyric();
+
+    if(this.changeid !== undefined) {
+      this.sendSongid();
+      this.getsongInf(this.changeid);
+      this.getlyric();
+    }
+    
     
   }
 }

@@ -18,8 +18,8 @@
       <div class="center">
         <!-- <div class="mask"></div> -->
           <div class="up">
-            <span class="name" @click="enterMusic()">{{sname}}</span>
-            <span class="author" v-for="(item,index) in author" :key="index" style="font-size: 10px;" >/<el-link type="primary" :underline="false">{{item}}</el-link></span> 
+            <span class="name" @click="enterMusic()" title="回到播放界面">{{sname}}</span>
+            <span class="author" v-for="(item,index) in author[0]" :key="index" style="font-size: 10px;" ><el-link :underline="false" @click="goArtist(item.id)">{{item.name}}</el-link></span> 
           </div>
           <div class="down">
             <div class="down-left"><el-slider v-model="value1.value" :show-tooltip="value1.showtooltip" style="max-width: 600px; min-width: 400px; height: 30px;" :max="value1.max" @change="settime" input-size="small"></el-slider></div>
@@ -167,12 +167,12 @@ export default {
     },
     getsongDetial() {
       getsongDetail(this.updateid).then(res => {
+        console.log(res);
         this.sname = res.songs[0].name;
-        this.author = [];
-        for(let item in res.songs[0].ar) {
-          this.author.push(res.songs[0].ar[item].name);
-        }
+        this.author = []
+        this.author.push(res.songs[0].ar);
         // console.log('获取歌');
+        console.log(this.author)
       })
     },
     localSet() {
@@ -250,7 +250,15 @@ export default {
     },
     enterMusic() {
       this.$router.push('/music')
-    }
+    },
+    goArtist(id) {
+      this.$router.push({
+        path: "/artist",
+        query: {
+          artistid: id
+        }
+      });
+    },
   },
   computed: {
     updateid: function() {
@@ -359,10 +367,13 @@ export default {
             }
           }
           .author {
-            color: #000;
+            // color: #000;
             font-size: 19px;
             .el-link {
-              color: #000;
+              margin-right: 5px;
+              &:hover {
+                color: #000;
+              }
             }
           }
         }

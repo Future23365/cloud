@@ -66,5 +66,19 @@ export default {
   display: inline-block;
   position: absolute;
   right: 0;
+  button {
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    margin-right: 5px;
+    outline: none;
+    // width: 50px;
+    // height: 50px;
+    &:hover {
+      cursor: pointer;
+      color: #67C23A;
+      // border: none;
+    }
+  }
 }
 </style>
