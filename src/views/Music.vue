@@ -15,6 +15,7 @@
       </div>
       <div class="lyric" :style="{height: height}" v-loading="loading">
         <ul>
+          <div v-show="!hasLyric">纯音乐，请欣赏</div>
           <li v-for="(item, value, index) in lyric" :key="index" :class="{'whiteActive': progressFlag[setClass(index)]}" ref="qqq">{{item}}<br>{{value in translyric ? translyric[value] : ""}}</li>
         </ul>
       </div>
@@ -45,7 +46,9 @@ export default {
       progressFlag: {},
       lyricFlag: 0,
       lyricFlagindex: 0,
-      nowLyric: 0
+      nowLyric: 0,
+      hasLyric: true,
+
     }
   },
   components: {
@@ -57,7 +60,11 @@ export default {
         let size = Object.keys(this.lyric).length + Object.keys(this.translyric).length;
         Object.keys(this.translyric).length < 5 ? size = size * 25 : size = size * 20; 
         
-        this.height = size + 'px';
+        if(size === 0) {
+          this.height = '500px';
+        } else {
+          this.height = size + 'px';
+        }
         this.isactive = !this.isactive;
       } else {
         this.height = '500px';
@@ -90,7 +97,7 @@ export default {
       })
     },
     stolyric(arr, flag = false) {
-      console.log(arr);
+      // console.log(arr);
       let obj = {};
       if(flag === true) {
         this.progressFlag = {}
@@ -105,7 +112,7 @@ export default {
         }
         
       }
-      console.log(this.progressFlag)
+      // console.log(this.progressFlag)
       return obj;
     },
     
@@ -115,13 +122,20 @@ export default {
         getsongLyric(this.$store.state.songid).then(res => {
           console.log(res);
           this.loading = false;
+          this.hasLyric = true;
+          this.lyric = {};
+          this.translyric = {};
+          this.height = '500px';
+          this.isactive = false;
           if('lrc' in res && 'lyric' in res.lrc) {
             this.lyric = this.stolyric(res.lrc.lyric.split('\n'), true);
           }
           if('tlyric' in res && 'lyric' in res.tlyric && res.tlyric.lyric != null) {
             this.translyric = this.stolyric(res.tlyric.lyric.split('\n'));  
           }
-          
+          if((!('lrc' in res && 'lyric' in res.lrc) && !('tlyric' in res && 'lyric' in res.tlyric && res.tlyric.lyric != null)) || ((!!res.lry === false) && (!!res.tlyric.lyric === false))) {
+            this.hasLyric = false;
+          }
         })
       }
     },
@@ -189,8 +203,8 @@ export default {
       if(this.$store.state.songid !== 0) {
         return this.$store.state.songid
       }
-      
-    }
+    },
+    
   },
   watch: {
     changeid: function(){
@@ -292,6 +306,10 @@ export default {
           transition: height 3s ;
           ul {
             padding: 0 30px;
+            div {
+              line-height: 440px;
+              text-align: center;
+            }
             
             li {
               margin-bottom: 8px;

@@ -11,3 +11,7 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount("#app")
+
+router.afterEach((to,from,next) => {
+  window.scrollTo(0,0);
+})

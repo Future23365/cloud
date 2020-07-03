@@ -12,6 +12,7 @@ export default new vuex.Store({
     songauthor: [],
     songurl: '',
     playlist: [],
+    flag: 0,
   },
   mutations: {
     updateSong(state, songi) {
@@ -47,6 +48,9 @@ export default new vuex.Store({
           i--;
         }
       }
+    },
+    updataFlag(state,value) {
+      state.flag = value;
     }
   }
 })

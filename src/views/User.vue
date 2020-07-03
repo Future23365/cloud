@@ -43,11 +43,11 @@
       </div>
       <div class="recond">
         <ul>
-          <li v-for="(item, index) in record" :key="index">
+          <li v-for="(item, index) in record" :key="index" @mouseenter="enterLi(item.song.id)" @mouseleave="leaveLi(item.song.id)">
             <span class="one">{{index + 1}}.</span>
             <span class="two" @click="goMusic(item.song.id)">{{item.song.name}}</span>
             -<span v-for="(jtem, jndex) in item.song.ar" :key="jndex" class="three" @click="goAlbum(jtem.id)">{{jtem.name}}</span>
-            <Musicmenu :musicid="item.song.id" :musicName="item.song.name"></Musicmenu>
+            <Musicmenu :musicid="item.song.id" :musicName="item.song.name" v-show="(showId === item.song.id)"></Musicmenu>
             <span class="four"><div :style="{'width': item.score + 'px'}"></div></span>
           </li>
         </ul>
@@ -85,6 +85,7 @@ export default {
       isWeek: true,
       ownPlaylist : [],
       collectionPlaylist : [],
+      showId: 0,
     }
   },
   methods: {
@@ -174,6 +175,12 @@ export default {
             artistid: id
           }
         });
+    },
+    enterLi(id) {
+      this.showId = id;
+    },
+    leaveLi(id) {
+      this.showId = 0
     }
   },
   mounted() {

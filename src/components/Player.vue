@@ -216,11 +216,18 @@ export default {
       console.log("该播放下一曲了")
       this.songList = this.$store.state.playlist;
       console.log(this.songList)
+      
       for(let i = 0; i < this.songList.length; i++) {
         console.log(this.songList[i].id)
         if((this.songList[i].id === this.$store.state.songid)) {
-          // console.log(this.songList[i].id)
+          console.log(this.songList[i].id)
           if(i === this.songList.length - 1) {
+            if(this.songList.length === 1) {
+              let va = this.playFlag + 1;
+              console.log(va)
+              this.$store.commit('updataFlag', va)
+              return
+            }
             this.$store.commit('updateSong', {'id': this.songList[0].id})
             return 
           }
@@ -262,8 +269,10 @@ export default {
   },
   computed: {
     updateid: function() {
-      
       return this.$store.state.songid;
+    },
+    playFlag: function() {
+      return this.$store.state.flag;
     }
   },
   watch: {
@@ -272,7 +281,11 @@ export default {
       this.geturl();
       this.getsongDetial();
       // this.firstIn = false;
-      
+    },
+    playFlag: function() {
+      this.ispuse = false;
+      this.geturl();
+      this.getsongDetial();
     }
   },
   beforeDestroy() {
@@ -418,13 +431,19 @@ export default {
           position: absolute;
           top: -100px;
           left: 0;
+          transition: color .5s;
+          &:hover {
+              color: #f47920;
+          }
         }
         svg {
           width: 25px;
           height: 25px;
           margin-top: 12.5px;
+          transition: color .5s;
           &:hover {
             cursor: pointer;
+            color: #f47920;
           }
         }
         .pattern {
@@ -439,6 +458,7 @@ export default {
           margin-left: 10px;
           &:hover {
             cursor: pointer;
+            color: #f47920;
           }
         }
       }
