@@ -32,7 +32,7 @@ export default {
     return {
       song: [],
       ischoose: '',
-
+      isSave: false,
     }
   },
   methods: {
@@ -59,6 +59,21 @@ export default {
     },
     fatherShow() {
       this.$parent.showm();
+    },
+    saveList() {
+      localStorage.setItem('musicList', JSON.stringify(this.$store.state.playlist));
+    },
+    getSaveList() {
+      if(localStorage.getItem('musicList') === [] || localStorage.getItem('musicList') === null) {
+        localStorage.setItem('musicList', JSON.stringify([]));
+      }else {
+        let arr = JSON.parse(localStorage.getItem('musicList'));
+        console.log(arr.length);
+        for(let i = 0; i < arr.length; i++) {
+          this.$store.commit('updatePlaylist', arr[i])
+        }
+        this.isSave = true
+      }
     }
     
   },
@@ -73,11 +88,18 @@ export default {
   watch: {
     listlength: function() {
       this.song = this.$store.state.playlist;
+      if(this.isSave) {
+        this.saveList();
+      }
+      
       console.log(this.song);
     },
     nowSong: function() {
       this.ischoose = this.nowSong
     }
+  },
+  mounted() {
+    this.getSaveList()
   }
 }
 </script>

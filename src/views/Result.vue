@@ -226,5 +226,38 @@ export default {
     .pag {
       text-align: center;
     }
+    .el-tabs {
+      .el-tab-pane /deep/ .album {
+          &:nth-of-type(1) {
+            ul {
+              li {
+                margin-right: 28.333333px;
+                // text-align: center;
+                &:nth-of-type(1) {
+                  // margin-left: 2px;
+                }
+              }
+            } 
+          }
+      }
+      .el-tab-pane /deep/ .mv {
+          &:nth-of-type(1) {
+            ul {
+              li {
+                margin-right: 21px;
+                // text-align: center;
+              }
+            } 
+          }
+      }
+      
+        // &:nth-of-type(1) {
+        //   ul {
+        //     li {
+        //       margin-right: 28.3px !important;
+        //     }
+        //   }
+        // }
+    }
   }
 </style>

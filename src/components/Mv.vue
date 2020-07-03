@@ -71,7 +71,7 @@ export default {
     overflow: hidden;
     li {
       float: left;
-      margin-left: 10px;
+      margin-left: 1px;
       margin-bottom: 10px;
       width: 159px;
       height: 137px;

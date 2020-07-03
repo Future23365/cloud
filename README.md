@@ -2,6 +2,8 @@
 
 vue版网易云音乐, 无登录功能，后端接口来自[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi), 功能完善中，bug制造中...
 
+在线预览地址：[在线预览](http://www.pinlepinle.com/cloud)（在线预览可能会有问题，建议克隆项目到本地体验全部bug）:smile:
+
 ## 本地运行
 
 #### 1. 安装NeteaseCloudMUsicApi

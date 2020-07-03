@@ -3,6 +3,7 @@ import {Loading} from 'element-ui';
 
 const service = axios.create({
   baseURL: 'http://localhost:3000',
+  // baseURL: 'http://www.pinlepinle.com:3000',
   withCredentials: true,
   timeout: 5000,
   

@@ -14,11 +14,11 @@
       <el-tab-pane label="热门作品" name="hot"><Single ref="childrenSingle"></Single></el-tab-pane>
       <el-tab-pane label="所有专辑">
         <Album ref="childrenAlbum"></Album>
-        <div><button @click="getArtistAlbummore(mvPage += 30)">更多</button></div>
+        <div v-show="isHasmore" ><button @click="getArtistAlbummore(mvPage += 30)" class="requestMore">获取更多</button></div>
       </el-tab-pane>
       <el-tab-pane label="相关mv">
         <mv ref="childrenMv"></mv>
-        <div><button @click="getArtistMvmore(mvPage += 30)">更多</button></div>
+        <div v-show="isHasmore" ><button @click="getArtistMvmore(mvPage += 30)" class="requestMore">获取更多</button></div>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -87,35 +87,21 @@ export default {
       
     },
     getArtistMvmore(limit = 30) {
-      if(!this.isHasmore) {
-          this.$message({
-            message: '没有更多了呦！',
-          });
-        }else {
-          getArtistmv(this.$route.query.artistid, limit).then(res => {
-            console.log(res);
-            this.$refs.childrenMv.getMvdata(res.mvs);
-            this.isHasmore = res.hasMore;
-            console.log(this.mvPage);
-        })
-      }
-      
+      getArtistmv(this.$route.query.artistid, limit).then(res => {
+        console.log(res);
+        this.$refs.childrenMv.getMvdata(res.mvs);
+        this.isHasmore = res.hasMore;
+        console.log(this.mvPage);
+      })
     },
     getArtistAlbummore(limit = 30) {
-
-      if(!this.isHasmore) {
-          this.$message({
-            message: '没有更多了呦！',
-          });
-        }else {
-          getArtistalbum(this.$route.query.artistid, limit).then(res => {
-            console.log(res);
-            this.$refs.childrenAlbum.getAlbumdata(res.hotAlbums);
-            this.isHasmore = res.more;
-            console.log(this.isHasmore)
-            console.log(this.mvPage);
-        })
-      }
+      getArtistalbum(this.$route.query.artistid, limit).then(res => {
+        console.log(res);
+        this.$refs.childrenAlbum.getAlbumdata(res.hotAlbums);
+        this.isHasmore = res.more;
+        console.log(this.isHasmore)
+        console.log(this.mvPage);
+      })
     },
     handleClick(e) {
       console.log(e.label);
@@ -178,7 +164,14 @@ export default {
     .el-tab-pane div:last-child {
       text-align: right;
     }
-    
+    .requestMore {
+      outline: none;
+      border: none;
+      &:hover {
+        cursor: pointer;
+        color: #67C23A;
+      }
+    }
   }
   
 }

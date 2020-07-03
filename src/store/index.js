@@ -20,7 +20,7 @@ export default new vuex.Store({
       !!songi.name === true ? state.songname = songi.name: '';
       !!songi.url === true ? state.songurl = songi.url: '';
     },
-    updatePlaylist(state, obj, type) {
+    updatePlaylist(state, obj) {
       
       if( !state.playlist.find( item => {
         return item.id === obj.id

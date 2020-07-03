@@ -30,7 +30,7 @@
         </div>
         <div class="beReplied" v-if="item.beReplied.length > 0">
           <span class="rep-userhead"><img :src="item.beReplied[0].user.avatarUrl" alt=""></span>
-          <span class="rep-username"><el-link type="primary">{{item.beReplied[0].user.nickname}}</el-link>:</span>
+          <span class="rep-username"><el-link type="primary" @click=goUser(item.beReplied[0].user.userId)>{{item.beReplied[0].user.nickname}}</el-link>:</span>
           {{item.beReplied[0].content}}
         </div>
         <div class="other">

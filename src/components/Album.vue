@@ -70,7 +70,7 @@ export default {
     overflow: hidden;
     li {
       float: left;
-      margin-right: 19px;
+      margin-right: 7px;
       margin-bottom: 20px;
       width: 153px;
       height: 168px;

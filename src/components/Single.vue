@@ -119,7 +119,7 @@ export default {
     },
     enterColum(row) {
       this.showId = row.songId;
-      console.log(row);
+      // console.log(row);
       this.$forceUpdate();
     },
     leaveColum() {
