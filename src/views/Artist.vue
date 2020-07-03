@@ -112,6 +112,7 @@ export default {
             console.log(res);
             this.$refs.childrenAlbum.getAlbumdata(res.hotAlbums);
             this.isHasmore = res.more;
+            console.log(this.isHasmore)
             console.log(this.mvPage);
         })
       }

@@ -27,10 +27,10 @@ $ npm install
 #### 4.运行
 
 ```
-npm run serve
+$ npm run serve
 ```
 
-#### 5.输入网址
+#### 5.浏览器输入网址
 
 ~~~ 
 http://localhost:8080
