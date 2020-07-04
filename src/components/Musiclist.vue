@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { timeShow } from '@/common/tool'
+import { timeShow } from '@/common/tool';
 export default {
   name: 'musiclist',
   data() {
@@ -38,23 +38,19 @@ export default {
   methods: {
     deleteList(index) {
       this.$store.commit('deletePlaylist', index);
-      console.log(event)
     },
     playMusic(id) {
       let s = {};
       s.id = id;
       this.$store.commit('updateSong', s);
-      
       if(this.$route.path !== '/music') {
         this.$router.push('/music');
-        console.log(this.$route.path)
       }
     },
     time(time) {
       return timeShow(time / 1000)
     },
     deleteAlllist() {
-      console.log("12")
       this.$store.commit("deleteAll")
     },
     fatherShow() {
@@ -68,7 +64,6 @@ export default {
         localStorage.setItem('musicList', JSON.stringify([]));
       }else {
         let arr = JSON.parse(localStorage.getItem('musicList'));
-        console.log(arr.length);
         for(let i = 0; i < arr.length; i++) {
           this.$store.commit('updatePlaylist', arr[i])
         }
@@ -91,8 +86,6 @@ export default {
       if(this.isSave) {
         this.saveList();
       }
-      
-      console.log(this.song);
     },
     nowSong: function() {
       this.ischoose = this.nowSong
@@ -108,10 +101,11 @@ export default {
 .musiclist {
   width: 100%;
   height: 100%;
-  // overflow-y: hidden;
+  overflow-y: auto;
     /*滚动条整体样式*/
   .head {
     position: sticky;
+    position: -webkit-sticky;
     top: 0;
     right: 0;
     height: 40px;
@@ -167,7 +161,6 @@ export default {
           width: 150px;
           height: 28px;
           overflow: hidden;
-          // margin-right: 10px;
           line-height: 28px;
           font-size: 12px;
           &:nth-child(1) {

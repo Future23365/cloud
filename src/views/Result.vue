@@ -4,13 +4,13 @@
       搜索<span>{{this.$route.query.s}}</span>,找到<span>{{songCount}}</span>个结果
     </div>
     <el-tabs type="border-card"  @tab-click="setTab">
-      <el-tab-pane label="单曲"><Single @startRequest="getData" ref="childrenSingle"></Single></el-tab-pane>
-      <el-tab-pane label="歌手"><Album ref="childrenAuthor"></Album></el-tab-pane>
-      <el-tab-pane label="专辑"><Album ref="childrenAlbum"></Album></el-tab-pane>
-      <el-tab-pane label="视频"><mv ref="childrenVideo"></mv></el-tab-pane>
-      <el-tab-pane label="MV"><mv ref="childrenMv"></mv></el-tab-pane>
-      <el-tab-pane label="歌单"><Album ref="childrenPlaylist"></Album></el-tab-pane>
-      <el-tab-pane label="用户"><Userlist ref="childrenUserlist"></Userlist></el-tab-pane>
+      <el-tab-pane label="单曲" v-loading="loading"><Single @startRequest="getData" ref="childrenSingle"></Single></el-tab-pane>
+      <el-tab-pane label="歌手" v-loading="loading"><Album ref="childrenAuthor"></Album></el-tab-pane>
+      <el-tab-pane label="专辑" v-loading="loading"><Album ref="childrenAlbum"></Album></el-tab-pane>
+      <el-tab-pane label="视频" v-loading="loading"><mv ref="childrenVideo"></mv></el-tab-pane>
+      <el-tab-pane label="MV" v-loading="loading"><mv ref="childrenMv"></mv></el-tab-pane>
+      <el-tab-pane label="歌单" v-loading="loading"><Album ref="childrenPlaylist"></Album></el-tab-pane>
+      <el-tab-pane label="用户" v-loading="loading"><Userlist ref="childrenUserlist"></Userlist></el-tab-pane>
     </el-tabs>
     <div class="pag">
       <el-pagination
@@ -31,7 +31,7 @@ import { timeShow } from '@/common/tool';
 import Single from '@/components/Single';
 import Mv from '@/components/Mv';
 import Album from '@/components/Album';
-import Userlist from '@/components/Userlist'
+import Userlist from '@/components/Userlist';
 
 export default {
   name: 'result',
@@ -46,7 +46,7 @@ export default {
       songCount: 0,
       songs: [],
       tabName: '单曲',
-
+      loading: true
     }
   },
   methods: {
@@ -60,7 +60,7 @@ export default {
       if('type' in obj) { type = obj.type };
       getsearchResult( s || this.$route.query.s, limit || this.$route.query.limit, offset || this.$route.query.offset, type || this.$route.query.type).then(res => {
 
-        console.log(res);
+        this.loading = false;
         this.sendTableData(res, type);
       }) 
     },
@@ -81,6 +81,7 @@ export default {
     },
     setTab(e) {
       this.tabName = e.label;
+      this.loading = true;
       switch(e.label) {
         case '单曲':
           this.getData(1);
@@ -133,7 +134,6 @@ export default {
       }
     },
     sendSongs(res) {
-      console.log(res);
       let arr = [];
         for(let i = 0; i < res.result.songs.length; i++) {
           let obj = {};
@@ -195,11 +195,9 @@ export default {
   },
   watch: {
     '$route' : function() {
-      // if(this.$route.params.path.search('result')) {
-        console.log(this.$route);
+      if(this.$route.path === '/result') {
         this.getData();
-      // }
-      
+      }
     }
   },
 }
@@ -232,10 +230,6 @@ export default {
             ul {
               li {
                 margin-right: 28.333333px;
-                // text-align: center;
-                &:nth-of-type(1) {
-                  // margin-left: 2px;
-                }
               }
             } 
           }
@@ -250,14 +244,6 @@ export default {
             } 
           }
       }
-      
-        // &:nth-of-type(1) {
-        //   ul {
-        //     li {
-        //       margin-right: 28.3px !important;
-        //     }
-        //   }
-        // }
     }
   }
 </style>

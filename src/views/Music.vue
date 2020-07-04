@@ -29,8 +29,8 @@
 
 <script>
 import { getsongLyric, getsongDetail } from '@/request/getdata';
-import { tochance } from '@/common/tool'
-import Comment from '@/components/Comment'
+import { tochance } from '@/common/tool';
+import Comment from '@/components/Comment';
 export default {
   name: 'Music',
   props: ['musicTime'],
@@ -74,26 +74,7 @@ export default {
     },
     getsongInf(id) {
       getsongDetail(id).then(res => {
-        // console.log(id)
-        // console.log(res);
-        // console.log(this.song)
         this.song = res.songs[0];
-        // let obj = {};
-        // obj.id = res.songs[0].id;
-        // obj.name = res.songs[0].name;
-        // let arr = [];
-        // for(let i = 0; i < res.songs[0].ar.length; i++) {
-        //   let o = {};
-        //   o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
-        //   arr.push(o);
-        // }
-        // obj.ar = arr;
-        // obj.al = res.songs[0].al.name;
-        // obj.alId = res.songs[0].al.id;
-        // obj.time = res.songs[0].dt;
-        // console.log(obj);
-        // this.song = 
-        // console.log(res)
       })
     },
     stolyric(arr, flag = false) {
@@ -102,7 +83,6 @@ export default {
       if(flag === true) {
         this.progressFlag = {}
       }
-      
       for(let i = 0; i < arr.length; i++) {
         let a = arr[i].split("]");
         obj[a[0]] = a[1];
@@ -112,7 +92,6 @@ export default {
         }
         
       }
-      // console.log(this.progressFlag)
       return obj;
     },
     
@@ -120,7 +99,6 @@ export default {
       // console.log("更新歌词")
       if(this.changeid) {
         getsongLyric(this.$store.state.songid).then(res => {
-          console.log(res);
           this.loading = false;
           this.hasLyric = true;
           this.lyric = {};
@@ -133,7 +111,7 @@ export default {
           if('tlyric' in res && 'lyric' in res.tlyric && res.tlyric.lyric != null) {
             this.translyric = this.stolyric(res.tlyric.lyric.split('\n'));  
           }
-          if((!('lrc' in res && 'lyric' in res.lrc) && !('tlyric' in res && 'lyric' in res.tlyric && res.tlyric.lyric != null)) || ((!!res.lry === false) && (!!res.tlyric.lyric === false))) {
+          if((!('lrc' in res && 'lyric' in res.lrc) && !('tlyric' in res && 'lyric' in res.tlyric && res.tlyric.lyric != null)) || ((!!res.lrc === false) && (!!res.tlyric.lyric === false))) {
             this.hasLyric = false;
           }
         })
@@ -177,23 +155,26 @@ export default {
           return;
         }
       }
-
     },
     setClass(i) {
       return Object.keys(this.progressFlag)[i];
     },
     trt(t) {
       if(t.split(':') != ''){
-      let a = t.split(':');
-      let b = a[1].split('.');
-      let c
-      if(b[1]) {
-        c = `${Number.parseInt(a[0]) * 60 + Number.parseInt(b[0])}.${Number.parseInt(b[1])}`;
-      }else if(!b[1]) {
-        c = `${Number.parseInt(a[0]) * 60 + Number.parseInt(b[0])}.000`;
-      }
-      
-      return c;
+        let a = t.split(':');
+        let b = []
+        try {
+          b = a[1].split('.');
+        }catch {
+          b[1] = ''
+        }
+        let c
+        if(b[1]) {
+          c = `${Number.parseInt(a[0]) * 60 + Number.parseInt(b[0])}.${Number.parseInt(b[1])}`;
+        }else if(!b[1]) {
+          c = `${Number.parseInt(a[0]) * 60 + Number.parseInt(b[0])}.000`;
+        }
+        return c;
       }
     }
     
@@ -208,7 +189,6 @@ export default {
   },
   watch: {
     changeid: function(){
-      console.log('------')
       this.sendSongid();
       this.getsongInf(this.changeid);
       this.getlyric();
@@ -224,15 +204,12 @@ export default {
       this.getsongInf(this.changeid);
       this.getlyric();
     }
-    
-    
   }
 }
 </script>
 
 <style lang="scss" scoped>
 
-  
   .music {
     // max-width: 980px;
     width: 640px;

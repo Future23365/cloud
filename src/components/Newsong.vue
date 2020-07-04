@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { getsongDetail } from '@/request/getdata'
+import { getsongDetail } from '@/request/getdata';
 export default {
   name: 'Newsong',
   props: ['list'],

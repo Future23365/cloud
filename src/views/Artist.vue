@@ -29,7 +29,7 @@ import { getArtistdesc, getArtistsongs, getArtistalbum, getArtistmv, getMvdata }
 import { timeShow } from '@/common/tool';
 import Single from '@/components/Single';
 import Mv from '@/components/Mv';
-import Album from '@/components/Album'
+import Album from '@/components/Album';
 
 export default {
   name: 'artist',
@@ -88,23 +88,17 @@ export default {
     },
     getArtistMvmore(limit = 30) {
       getArtistmv(this.$route.query.artistid, limit).then(res => {
-        console.log(res);
         this.$refs.childrenMv.getMvdata(res.mvs);
         this.isHasmore = res.hasMore;
-        console.log(this.mvPage);
       })
     },
     getArtistAlbummore(limit = 30) {
       getArtistalbum(this.$route.query.artistid, limit).then(res => {
-        console.log(res);
         this.$refs.childrenAlbum.getAlbumdata(res.hotAlbums);
         this.isHasmore = res.more;
-        console.log(this.isHasmore)
-        console.log(this.mvPage);
       })
     },
     handleClick(e) {
-      console.log(e.label);
       this.mvPage = 30;
       this.isHasmore = true;
       switch(e.label) {
@@ -119,7 +113,6 @@ export default {
   },
   mounted() {
     this.getArtistdata();
-    // this.getArtistMv();
   },
   watch: {
     '$route': function() {

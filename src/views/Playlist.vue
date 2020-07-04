@@ -14,7 +14,7 @@
     </div>
     <h3>包含歌曲列表</h3>
     <Single ref="childrenSingle"></Single>
-    <button @click="goSonglist">获得详细歌单请点击</button>
+    <button @click="goSonglist" class="requestMore">获得详细歌单请点击</button>
     <PlaylistSongs v-show="isListSongsActive" :songList="songsListData"></PlaylistSongs>
     <Comment ref="childrenComment"></Comment>
   </div>
@@ -25,7 +25,7 @@ import { getUserPlaylistDetail } from '@/request/getdata';
 import { timeShow } from '@/common/tool';
 import Single from '@/components/Single';
 import Comment from '@/components/Comment';
-import PlaylistSongs from '@/components/PlaylistSongs'
+import PlaylistSongs from '@/components/PlaylistSongs';
 
 export default {
   name: 'albumdetail',
@@ -40,17 +40,14 @@ export default {
       priviLeges: [],
       songsListData: [],
       isListSongsActive: false,
-
     }
   },
   methods: {
     getAlbum() {
       getUserPlaylistDetail(this.$route.query.playlistid).then(res => {
-        console.log(res);
         this.playList = res.playlist;
         this.priviLeges = res.privileges
         this.$forceUpdate();
-
         let arr = [];
         for(let i = 0; i < res.playlist.tracks.length; i++) {
           let obj = {};
@@ -65,12 +62,10 @@ export default {
           obj.songTime = timeShow(res.playlist.tracks[i].dt / 1000);
           arr.push(obj);
         }
-        console.log(this.$refs.childrenSingle);
         let that = this;
         setImmediate(function() {
           that.$refs.childrenSingle.settableData(arr);
         }, 1000)
-        
       })
     },
     goSonglist() {
@@ -148,6 +143,13 @@ export default {
   &>h3 {
     margin-top: 28px;
   }
-  
+  .requestMore {
+    border: none;
+    outline: none;
+    float: right;
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 </style>

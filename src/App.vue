@@ -2,21 +2,15 @@
   <div id="app">
     <Header></Header>
     <div class="app-center">
-      <!-- <keep-alive :include="result"> -->
-        <router-view  :musicTime="updateProdata"></router-view>
-      <!-- </keep-alive> -->
-      
+      <router-view  :musicTime="updateProdata"></router-view>
     </div>
     <Player ref="childPlayer" @updateCome="updatePro"></Player>
-    <!-- <div class='popContainer'> -->
-      <!-- <div class="move"></div> -->
-    <!-- </div> -->
   </div>
   
 </template>
 
 <script>
-import Header from '@/views/Header.vue'
+import Header from '@/views/Header.vue';
 import Player from '@/components/Player';
 export default {
   name: 'app',
@@ -32,18 +26,10 @@ export default {
     Player
   },
   methods: {
-    load() {
-      console.log("滚动");
-    },
     updatePro(time) {
-      // console.log(time)
       this.updateProdata = time;
     }
   },
-  mounted() {
-    // console.log(this.$refs.childPlayer);
-    // this.$refs.childPlayer.localSet();
-  }
 
 }
 </script>

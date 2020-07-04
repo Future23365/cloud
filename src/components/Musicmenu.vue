@@ -6,28 +6,22 @@
 </template>
 
 <script>
-import { getsongUrl, getMp3, getsongDetail } from '@/request/getdata'
+import { getsongUrl, getMp3, getsongDetail } from '@/request/getdata';
 export default {
   name: 'musicmenu',
   props: ['musicid', 'musicName'],
   data() {
     return {
       mid: '',
-
     }
   },
   methods: {
     musicDownload(e) {
-      console.log('234');
-      console.log(this.musicid);
       getsongUrl(this.musicid).then(res => {
-        console.log(res);
         /*下载MP3文件*/ 
         fetch(res.data[0].url).then(res => {
-          console.log(res);
           return res.blob();
         }).then(res => {
-          console.log(res);
           var bURL = URL.createObjectURL(res);
           var link = document.createElement('a');
           link.href = bURL;
@@ -39,7 +33,6 @@ export default {
     },
     addlist() {
       getsongDetail(this.musicid).then(res => {
-        console.log(res);
         let obj = {};
         obj.id = res.songs[0].id;
         obj.name = res.songs[0].name;
@@ -53,7 +46,6 @@ export default {
         obj.al = res.songs[0].al.name;
         obj.alId = res.songs[0].al.id;
         obj.time = res.songs[0].dt;
-        console.log(obj);
         this.$store.commit('updatePlaylist', obj);
       })
     }
@@ -72,12 +64,9 @@ export default {
     font-size: 20px;
     margin-right: 5px;
     outline: none;
-    // width: 50px;
-    // height: 50px;
     &:hover {
       cursor: pointer;
       color: #67C23A;
-      // border: none;
     }
   }
 }

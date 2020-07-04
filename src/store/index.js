@@ -26,16 +26,12 @@ export default new vuex.Store({
         return item.id === obj.id
       })) {
         state.playlist.push(obj);
-        console.log(state.playlist);
       }
       else {
         Message({
           message: '播放列表已经有啦！',
         });
       }
-      
-
-      
     },
     deletePlaylist(state, index) {
       state.playlist.splice(index, 1);
@@ -44,7 +40,6 @@ export default new vuex.Store({
       for(let i = 0; i < state.playlist.length; i++) {
         if(state.playlist[i].id !== state.songid) {
           state.playlist.splice(i, 1);
-          console.log(state.playlist.length)
           i--;
         }
       }

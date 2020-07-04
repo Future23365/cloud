@@ -33,7 +33,6 @@ export default {
   methods: {
     getMvdata(data) {
       this.mvData = data;
-      console.log(this.mvData);
     },
     timeShow(time) {
       let minute;

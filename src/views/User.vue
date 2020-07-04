@@ -43,6 +43,7 @@
       </div>
       <div class="recond">
         <ul>
+          <div v-show="!hasRecord || record.length === 0">暂无记录</div>
           <li v-for="(item, index) in record" :key="index" @mouseenter="enterLi(item.song.id)" @mouseleave="leaveLi(item.song.id)">
             <span class="one">{{index + 1}}.</span>
             <span class="two" @click="goMusic(item.song.id)">{{item.song.name}}</span>
@@ -56,7 +57,7 @@
     <div class="userlist">
         <h3>{{userData.profile.nickname}}创建的歌单</h3>
         <Album ref="childrenSonglist1"></Album>
-        <div v-show="isHasmore"><button @click="getSonglistmore(songlistPage += 29)">更多</button></div>
+        <div v-show="isHasmore"><button @click="getSonglistmore(songlistPage += 29)" class="moreButton">更多</button></div>
         <h3>{{userData.profile.nickname}}收藏的歌单</h3>
         <Album ref="childrenSonglist2"></Album>
         <!-- <div><button @click="getSonglistmore(2, songlistPage += 29)">更多</button></div> -->
@@ -67,7 +68,7 @@
 <script>
 import { getUserData, getUserplaylist, getUserRecord, getsongDetail } from '@/request/getdata';
 import Album from '@/components/Album';
-import Musicmenu from '@/components/Musicmenu'
+import Musicmenu from '@/components/Musicmenu';
 
 export default {
   name: 'user',
@@ -86,28 +87,26 @@ export default {
       ownPlaylist : [],
       collectionPlaylist : [],
       showId: 0,
+      hasRecord: true,
     }
   },
   methods: {
     requsetUserdata(limit) {
       getUserData(this.$route.query.userId).then(res => {
-        console.log(res);
         this.userData = res;
         this.$forceUpdate(); 
-        // console.log(res);
       })
       this.getplayList(limit);
       getUserRecord(this.$route.query.userId, 1).then(res => {
-        console.log(res);
         this.record = res.weekData;
+        let that = this;
+      },reject => {
+        this.hasRecord = false
       })
     },
     getplayList(limit) {
       getUserplaylist(this.$route.query.userId, limit).then(res => {
-        // console.log(res);
-        
         for(let i = 0; i < res.playlist.length; i++) {
-          console.log(this.$route.query.userId)
           if(res.playlist[i].userId === Number.parseInt(this.$route.query.userId)) {
             this.ownPlaylist.push(res.playlist[i])
           }else {
@@ -115,8 +114,6 @@ export default {
           }
         }
         this.isHasmore = res.more;
-        // console.log(ownPlaylist);
-        // console.log(collectionPlaylist)
         this.$refs.childrenSonglist1.getAlbumdata(this.ownPlaylist, "歌单");
         this.$refs.childrenSonglist2.getAlbumdata(this.collectionPlaylist, "歌单");
       })
@@ -128,24 +125,22 @@ export default {
       if(type === 'week' && this.isWeek === false) {
         this.isWeek = true;
         getUserRecord(this.$route.query.userId, 1).then(res => {
-        console.log(res);
-        this.record = res.weekData;
-      })
-        console.log(this.isWeek);
+          this.record = res.weekData;
+        },reject => {
+          this.hasRecord = false
+        })
       } else if(type === 'all' && this.isWeek === true) {
         this.isWeek = false;
         getUserRecord(this.$route.query.userId, 0).then(res => {
-        console.log(res);
-        this.record = res.allData;
-      })
-        console.log(this.isWeek);
+          this.record = res.allData;
+        },reject => {
+          this.hasRecord = false
+        })
       }
     },
     goMusic(id) {
-      // console.log(id);
       let s = {};
       s.id = id;
-
       getsongDetail(id).then(res => {
         this.song = res.songs[0];
         let obj = {};
@@ -161,14 +156,12 @@ export default {
         obj.al = res.songs[0].al.name;
         obj.alId = res.songs[0].al.id;
         obj.time = res.songs[0].dt;
-        console.log(obj);
         this.$store.commit('updatePlaylist', obj);
       })
       this.$store.commit('updateSong', s);
       this.$router.push('/music');
     },
     goAlbum(id) {
-      console.log(id);
       this.$router.push({
           path: "/artist",
           query: {
@@ -199,14 +192,10 @@ export default {
   min-width: 720px;
   max-width: 1120px;
   margin: 0 auto;
-  // padding: 40px;
-  // background-color: #afb4db;
   background-color: #fff;
   border: 1px solid #d3d3d3;
-  // overflow: hidden;
   .userInf {
     padding: 40px;
-    // background-color: #fffef9;
     background-size: 100% auto !important;
     overflow: hidden;
     img {
@@ -217,10 +206,7 @@ export default {
       overflow: hidden;
     }
     .name {
-      // float: left;
       overflow: hidden;
-      // min-width: 492px;
-      // max-width: 892px;
       min-height: 188px;
       background-color: rgba(255, 255, 255, 0.7);
       .name-inf {
@@ -256,14 +242,10 @@ export default {
         margin-top: 10px;
         border-top: 1px solid #666;
         
-        // padding: 4px;
-        // text-align: center;
         span {
           font-size: 16px;
           margin-top: 4px;
           padding: 5px;
-          // text-align: center;
-          // border-right: 1px solid #666;
         }
       }
       .person {
@@ -294,6 +276,10 @@ export default {
       overflow: auto;
       border: 1px solid #ccc;
       ul {
+        // min-height: 50px;
+        div {
+          text-align: center;
+        }
         li {
           .musicmenu {
             position: relative;
@@ -353,15 +339,25 @@ export default {
   }
   .userlist {
     margin: 40px;
-    // div {
-    //   &:last-child {
-    //     text-align: right;
-    //   }
-    // }
+
     .album {
       & /deep/ img {
         width: 140px;
         height: 140px;
+        
+      }
+      & /deep/ ul {
+        li {
+        margin-right: 20.1px;
+      }
+      }
+    }
+    .moreButton {
+      border: none;
+      outline: none;
+      float: right;
+      &:hover {
+        cursor: pointer;
       }
     }
   }

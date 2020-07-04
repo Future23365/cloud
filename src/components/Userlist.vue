@@ -34,15 +34,6 @@ export default {
   methods: {
     getUserlistdata(data) {
       this.userlistData = data;
-      console.log(data);
-    },
-    getuser() {
-    //   getUserData().then(res => {
-    //     console.log(res);
-    //     this.userData = res;
-    //     this.$forceUpdate(); 
-    //     // console.log(res);
-    // }),
     },
     goUser(id) {
       this.$router.push({

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getsearchSuggest } from '@/request/getdata'
+import { getsearchSuggest, getsongDetail } from '@/request/getdata';
 export default {
   name: 'Search',
   data() {
@@ -27,32 +27,46 @@ export default {
     querySearchAsync(queryString, cb) {
       if(!!queryString.trim()) {
         getsearchSuggest(queryString).then(res => {
-        console.log(res);
-        let datasongs = [];
-        if(!!res.result.songs) {
-          for(let i = 0; i < res.result.songs.length; i++) {
-          this.songs[`${res.result.songs[i].name}  ${res.result.songs[i].artists[0].name}`] = res.result.songs[i].id
-          datasongs.push({'value': `${res.result.songs[i].name}  ${res.result.songs[i].artists[0].name}`})
+          let datasongs = [];
+          if(!!res.result.songs) {
+            for(let i = 0; i < res.result.songs.length; i++) {
+            this.songs[`${res.result.songs[i].name}  ${res.result.songs[i].artists[0].name}`] = res.result.songs[i].id
+            datasongs.push({'value': `${res.result.songs[i].name}  ${res.result.songs[i].artists[0].name}`})
+            }
+            cb(datasongs)
           }
-          cb(datasongs)
-        }
-        
-        // console.log(res);
-      })
+        })
       }
       
     },
     handleSelect(item) {
-      console.log(item);
-      console.log(this.songs);
       let s = {};
       s.id = this.songs[item.value];
       s.name = item.value;
       this.$store.commit('updateSong', s);
-      // this.$router.go(0);
-      console.log(this.$store.state.songid);
+      getsongDetail(s.id).then(res => {
+        this.song = res.songs[0];
+        let obj = {};
+        obj.id = res.songs[0].id;
+        obj.name = res.songs[0].name;
+        let arr = [];
+        for(let i = 0; i < res.songs[0].ar.length; i++) {
+          let o = {};
+          o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
+          arr.push(o);
+        }
+        obj.ar = arr;
+        obj.al = res.songs[0].al.name;
+        obj.alId = res.songs[0].al.id;
+        obj.time = res.songs[0].dt;
+        this.$store.commit('updatePlaylist', obj);
+      })
+      if(this.$route.path === '/music') {
+
+      }else{
+        this.$router.push('/music');
+      }
       
-      this.$router.push('/music');
       
     },
     getResult(s) {

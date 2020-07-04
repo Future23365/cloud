@@ -100,7 +100,6 @@ export default {
         obj.al = res.songs[0].al.name;
         obj.alId = res.songs[0].al.id;
         obj.time = res.songs[0].dt;
-        console.log(obj);
         this.$store.commit('updatePlaylist', obj);
       })
     },
@@ -118,19 +117,15 @@ export default {
           this.music[1].push(arr[1].playlist.tracks[i]);
           this.music[2].push(arr[2].playlist.tracks[i]);
       }
-      // console.log(this.tableData);
     },
     getRanking() {
       getToplist().then(res => {
-        console.log(res)
         serverAll([getsongTop(res.list[1].id), getsongTop(res.list[3].id), getsongTop(res.list[6].id)]).then(res => {
-        this.ranking = res;
-        this.setTabledata(this.ranking);
-        this.loading = false;
-        // console.log(this.ranking);
+          this.ranking = res;
+          this.setTabledata(this.ranking);
+          this.loading = false;
+        })
       })
-      })
-      
     },
     setsongId(id, name) {
         let s = {};
@@ -159,16 +154,6 @@ export default {
       this.showId = 0;
     },
   },
-  // computed: {
-  //   monitorSong: function() {
-  //     return this.$store.state.songid;
-  //   }
-  // },
-  // watch: {
-  //   monitorSong: function() {
-  //     this.getSongurl();
-  //   }
-  // },
   mounted() {
     this.getRanking();
   }

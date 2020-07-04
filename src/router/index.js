@@ -8,7 +8,7 @@ import Mvideo from '@/views/Mvideo.vue';
 import Artist from '@/views/Artist.vue';
 import Album from '@/components/Album.vue';
 import Albumdetail from '@/views/Albumdetail.vue';
-import User from '@/views/User.vue'
+import User from '@/views/User.vue';
 import Playlist from '@/views/Playlist';
 
 Vue.use(Router);

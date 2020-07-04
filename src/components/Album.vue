@@ -23,13 +23,11 @@ export default {
     return {
       albumData: [],
       albumFlag: '专辑',
-
     }
   },
   methods: {
     getAlbumdata(data , type = '专辑') {
       this.albumData = data;
-      console.log(data);
       if(type != '专辑') {
         this.albumFlag = type;
       }

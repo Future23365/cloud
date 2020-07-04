@@ -4,6 +4,8 @@
     :data="tableData"
     stripe
     v-loading="loading"
+    @cell-mouse-enter="enterColum"
+    @cell-mouse-leave="leaveColum"
     style="width: 100%; overflow: auto">
     <el-table-column
       prop="song"
@@ -13,6 +15,7 @@
         <a href="javascript:;" >
           {{scope.row.song}}
         </a>
+        <Musicmenu :musicid="scope.row.id" :musicName="scope.row.song" v-show="(showId === scope.row.id)"></Musicmenu>
       </template>
     </el-table-column>
     <el-table-column
@@ -54,10 +57,14 @@
 <script>
 import { getsongDetail } from '@/request/getdata';
 import { timeShow } from '@/common/tool';
+import Musicmenu from '@/components/Musicmenu';
 
 export default {
   name: 'playlistsongs',
   props: ['songList'],
+  components: {
+    Musicmenu
+  },
   data() {
     return {
       songsData: [],
@@ -66,12 +73,12 @@ export default {
       tableData: [],
       total: 0,
       loading: true,
+      showId: 0,
     }
   },
   methods: {
     getSongs() {
       this.tableData = [];
-      console.log(this.songsData);
       let ids = '';
       for(let i = this.start; i < this.songsData.trackIds.length - this.flag; i++) {
         if(i === this.songsData.trackIds.length - this.flag - 1) {
@@ -81,7 +88,6 @@ export default {
         }
       }
       getsongDetail(ids).then(res => {
-        console.log(res);
         for(let i = 0; i < res.songs.length; i++) {
           let arr = {};
           arr.song = res.songs[i].name;
@@ -102,7 +108,6 @@ export default {
         this.loading = false;
       })
       this.start = this.start + 15;
-      // this.flag = this.flag - 15;
       this.flag - 15 > 0 ? this.flag = this.flag - 15 : this.flag = 0;
       console.log(this.flag);
       this.$forceUpdate();
@@ -110,21 +115,25 @@ export default {
     getnextSongs() {
       this.loading = true;
       this.getSongs();
-    }
+    },
+    enterColum(row) {
+      this.showId = row.id;
+      this.$forceUpdate();
+    },
+    leaveColum() {
+      this.showId = 0;
+    },
   },
   watch: {
     songList: function() {
-      // console.log(this.songList);
       this.songsData = this.songList;
       this.start = this.songsData.tracks.length;
       this.songsData.trackIds.length - 15 - this.start > 0 ? this.flag = this.songsData.trackIds.length - 15 - this.start : this.flag = 0;
-      // this.flag = this.songsData.trackIds.length - 15 - this.start;
       this.total = this.songsData.trackIds.length - this.start;
       this.getSongs();
     }
   },
   mounted() {
-    // console.log(this.songList);
   }
 }
 </script>

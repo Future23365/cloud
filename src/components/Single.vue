@@ -50,8 +50,9 @@
 </template>
 
 <script>
-import { getsongDetail } from '@/request/getdata'
-import Musicmenu from '@/components/Musicmenu'
+import { getsongDetail } from '@/request/getdata';
+import Musicmenu from '@/components/Musicmenu';
+import { Message } from 'element-ui';
 
 export default {
   name: 'single',
@@ -69,13 +70,10 @@ export default {
     
     settableData(data) {
       this.tableData = [];
-      // console.log(data);
       this.tableData = data;
       this.loading = false;
-      // console.log(this.tableData);
     },
     goMusic(id) {
-      // console.log(id);
       let s = {};
       s.id = id;
       getsongDetail(id).then(res => {
@@ -93,29 +91,48 @@ export default {
         obj.al = res.songs[0].al.name;
         obj.alId = res.songs[0].al.id;
         obj.time = res.songs[0].dt;
-        console.log(obj);
         this.$store.commit('updatePlaylist', obj);
       })
       this.$store.commit('updateSong', s);
       this.$router.push('/music');
     },
     goArtist(id) {
-      // console.log('歌手id');
-      // console.log(id);
-      this.$router.push({
-        path: '/artist',
-        query: {
-          artistid: id
+      if(this.$route.path === '/artist') {
+        if(this.$route.query.artistid !== id) {
+          this.$router.push({
+          path: '/artist',
+          query: {
+            artistid: id
+          }
+        })
+        }else{
+          Message({
+          message: '已经在这啦！',
+        });
         }
-      })
+      }else{
+        this.$router.push({
+          path: '/artist',
+          query: {
+            artistid: id
+          }
+        })
+      }
+      
     },
     goAlbum(id) {
-      this.$router.push({
-        path: "/albumdetail",
-        query: {
-          albumdetailId: id
+      if(this.$route.path === '/albumdetail') {
+        Message({
+          message: '已经在这啦！',
+        });
+      } else{
+        this.$router.push({
+          path: "/albumdetail",
+          query: {
+            albumdetailId: id
         }
-      });
+        });
+      } 
     },
     enterColum(row) {
       this.showId = row.songId;
