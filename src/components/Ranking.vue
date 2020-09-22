@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { getsongTop, getsongUrl, serverAll, getsongDetail, getToplist } from '@/request/getdata';
+import { getsongTop, getsongUrl, serverAll, getsongDetail, getToplist, getUserPlaylistDetail } from '@/request/getdata';
 import Musicmenu from '@/components/Musicmenu'
 
 export default {
@@ -120,7 +120,20 @@ export default {
     },
     getRanking() {
       getToplist().then(res => {
-        serverAll([getsongTop(res.list[1].id), getsongTop(res.list[3].id), getsongTop(res.list[6].id)]).then(res => {
+        // console.log(res)
+        let hotmusic = 0;
+        let newmusic = 0;
+        let electric = 0;
+        for(let item of res.list) {
+          if(item.name === '云音乐热歌榜') {
+            hotmusic = item.id
+          }else if(item.name === '云音乐新歌榜') {
+            newmusic = item.id
+          }else if(item.name === '云音乐电音榜') {
+            electric = item.id
+          }
+        }
+        serverAll([getUserPlaylistDetail(hotmusic), getUserPlaylistDetail(newmusic), getUserPlaylistDetail(electric)]).then(res => {
           this.ranking = res;
           this.setTabledata(this.ranking);
           this.loading = false;
