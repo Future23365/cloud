@@ -1,9 +1,12 @@
 <template>
   <div id="app">
+    <!-- 头部组件 -->
     <Header></Header>
+    <!-- 主体部分 -->
     <div class="app-center">
       <router-view  :musicTime="updateProdata"></router-view>
     </div>
+    <!-- 播放器 -->
     <Player ref="childPlayer" @updateCome="updatePro"></Player>
   </div>
   
@@ -16,9 +19,8 @@ export default {
   name: 'app',
   data() {
     return {
-    audio: {data: [{url: ''}]},
-    updateProdata: '',
-
+      audio: {data: [{url: ''}]}, //存播放地址
+      updateProdata: '',  //存播放时间
     }
   },
   components: {
@@ -26,6 +28,7 @@ export default {
     Player
   },
   methods: {
+    //子组件事件调用函数，获取当前播放时间
     updatePro(time) {
       this.updateProdata = time;
     }

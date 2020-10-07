@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {Loading} from 'element-ui';
+// import {Loading} from 'element-ui';
 
 const service = axios.create({
   baseURL: 'http://localhost:3000',

@@ -1,7 +1,9 @@
 <template>
   <div class="player">
     <div class="w">
+      <!-- 播放器 -->
       <audio :src="url" ref="myaudio" @timeupdate="updatetime" @durationchange="setdura" @ended="nextSong"></audio>
+      <!-- 上一曲、播放暂停、下一曲，三个按钮 -->
       <div class="play">
         <div class="left" @click="lastSong()">
           <svg class="icon" aria-hidden="true">
@@ -15,37 +17,35 @@
           </svg>
         </div>
       </div>
+      <!-- 中间进度条部分 -->
       <div class="center">
-        <!-- <div class="mask"></div> -->
-          <div class="up">
-            <span class="name" @click="enterMusic()" title="回到播放界面">{{sname}}</span>
-            <span class="author" v-for="(item,index) in author[0]" :key="index" style="font-size: 10px;" ><el-link :underline="false" @click="goArtist(item.id)">{{item.name}}</el-link></span> 
+        <div class="up">
+          <span class="name" @click="enterMusic()" title="回到播放界面">{{sname}}</span>
+          <span class="author" v-for="(item,index) in author[0]" :key="index" style="font-size: 10px;" ><el-link :underline="false" @click="goArtist(item.id)">{{item.name}}</el-link></span> 
+        </div>
+        <div class="down">
+          <div class="down-left"><el-slider v-model="value1.value" :show-tooltip="value1.showtooltip" style="max-width: 600px; min-width: 400px; height: 30px;" :max="value1.max" @change="settime" input-size="small"></el-slider></div>
+          <div class="down-right">
+            <span>{{nowtime}}</span>
+            <span>/{{alltime}}</span>
           </div>
-          <div class="down">
-            <div class="down-left"><el-slider v-model="value1.value" :show-tooltip="value1.showtooltip" style="max-width: 600px; min-width: 400px; height: 30px;" :max="value1.max" @change="settime" input-size="small"></el-slider></div>
-            <div class="down-right">
-              <span>{{nowtime}}</span>
-              <span>/{{alltime}}</span>
-              </div>
-            </div>
-        
+        </div>
       </div>
+      <!-- 右边声音、播放列表、按钮 -->
       <div class="menu">
         <svg class="icon" aria-hidden="true" @click="isvoice = !isvoice">
             <use xlink:href="#icon-yinliang"></use>
         </svg>
-
         <div class="voice" v-show="isvoice">
           <el-slider v-model="value2.volume" vertical height="100px" :max="value2.max" :step="0.1" @input="setvolume"></el-slider>
         </div>
-
         <svg class="icon pattern" aria-hidden="true">
           <use xlink:href="#icon-xunhuan"></use>
         </svg>
-
         <div class="el-icon-s-order list" @click="showm"></div>
       </div>
     </div>
+    <!-- 播放列表显示，利用vue过渡效果 -->
     <transition name="fade">
       <div class="showlist" v-show="isListshow">
         <Musiclist ></Musiclist>
@@ -70,25 +70,29 @@ export default {
   },
   data() {
     return {
+      //播放标记位
       ispuse: false,
+      //初始歌名和作者
       songinf: {
         name: 'name',
         author: 'author'
       },
+      //进度条参数
       value1: {
         value: 0,
         max: 100,
         showtooltip: false
       },
+      //声音参数
       value2: {
         volume: 1,
         max: 1,
         steep: 0.1
       },
-      alltime: '00:00',
-      nowtime: '00:00',
-      isvoice: false,
-      url: '',
+      alltime: '00:00', //总时间
+      nowtime: '00:00', //当前时间
+      isvoice: false, //声音显示标记为
+      url: '',  //存储播放地址
       sname: '',
       author: [],
       isListshow: false,

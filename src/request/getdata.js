@@ -1,6 +1,6 @@
 import server from './request'
 import axios from 'axios';
-import { reject } from 'core-js/fn/promise';
+// import { reject } from 'core-js/fn/promise';
 
 //获取歌曲url
 export const getsongUrl = id => {

@@ -1,33 +1,36 @@
 <template>
   <div class="header">
     <div class="main">
+      <!-- logo -->
       <div class="logo">
-      <a href="/" title="回到首页">
-      <div class="page"></div>
-      </a>
+        <a href="/" title="回到首页">
+          <div class="page"></div>
+        </a>
       </div>
+      <!-- 导航栏组件 -->
       <el-menu :default-active="activeIndex"
-      class="el-menu-demo menu"
-      mode="horizontal" 
-      @select="handleSelect" 
-      background-color="#33a3dc"
-      text-color="#fff"
-      active-text-color="#ffd04b"
-      router
-      >
+        class="el-menu-demo menu"
+        mode="horizontal" 
+        background-color="#33a3dc"
+        text-color="#fff"
+        active-text-color="#ffd04b"
+        router
+        >
         <el-menu-item index="1" style="height: 50px;line-height: 50px" route="/" >首页</el-menu-item>
         <!-- <el-menu-item index="2" style="height: 50px;line-height: 50px" route="/my">我的音乐</el-menu-item> -->
       </el-menu>
+      <!-- 搜索框 -->
       <Search></Search>
+      <!-- 关于按钮 -->
       <span @click="dialogVisible = true">关于</span>
     </div>
-    
+    <!-- 关于显示框 -->
     <el-dialog title="关于本项目" :visible.sync="dialogVisible" width="30%">
       <p>作者:刘松柏</p>
       <p>简介：
         <br>
         <ul>
-          <li>一个正在努力的大三学生</li>
+          <li>一个正在努力的追梦者</li>
           <li>喜欢编程，但技术还不太行</li>
           <li>奋斗有点晚，但没有迟到</li>
           <li>向往自由，对未来充满想象</li>
@@ -60,11 +63,6 @@ export default {
     return {
       dialogVisible: false,
       activeIndex: '1'
-    }
-  },
-  methods: {
-    handleSelect(key, keyPath) {
-      // console.log(key,keyPath);
     }
   },
   components: {
