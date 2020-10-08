@@ -12,8 +12,7 @@
       <el-table-column
       width="50"
       align="center"
-      type="index"
-      prop="hotmusic">
+      type="index">
       </el-table-column>
       <el-table-column 
       label="云音乐热歌榜Top50"
@@ -74,35 +73,42 @@ export default {
   },
   data() {
     return {
-      ranking: {},
-      tableData: [],
-      music: [[],[],[]],
-      loading: true,
-      showId: 0,
-      columShow: '',
+      // ranking: {},
+      tableData: [],  //组件用于存入
+      // music: [[],[],[]],  //存入三种排行榜
+      loading: true,  //加载状态标记为
+      showId: 0,    //控制需要显示菜单德尔一行
+      columShow: '',  //控制菜单要显示的哪一列
 
     }
   },
   methods: {
+    // 请求歌曲数据
     getsong(id) {
-        getsongDetail(id).then(res => {
-        this.song = res.songs[0];
+      getsongDetail(id).then(res => {
+        // this.song = res.songs[0];
+        // let obj = {};
+        // obj.id = res.songs[0].id;
+        // obj.name = res.songs[0].name;
+        // let arr = [];
+        // for(let i = 0; i < res.songs[0].ar.length; i++) {
+        //   let o = {};
+        //   o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
+        //   arr.push(o);
+        // }
+        // obj.ar = arr;
+        // obj.al = res.songs[0].al.name;
+        // obj.alId = res.songs[0].al.id;
+        // obj.time = res.songs[0].dt;
+        // this.$store.commit('updatePlaylist', obj);
+
+        // 分发action使歌曲添加到播放列表
         let obj = {};
-        obj.id = res.songs[0].id;
-        obj.name = res.songs[0].name;
-        let arr = [];
-        for(let i = 0; i < res.songs[0].ar.length; i++) {
-          let o = {};
-          o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
-          arr.push(o);
-        }
-        obj.ar = arr;
-        obj.al = res.songs[0].al.name;
-        obj.alId = res.songs[0].al.id;
-        obj.time = res.songs[0].dt;
-        this.$store.commit('updatePlaylist', obj);
+        obj.id = id;
+        this.$store.dispatch('sendUpdatePlaylist', obj);
       })
     },
+    // 设置表格要显示的数据
     setTabledata(arr) {
       for(let i = 0; i < 50; i++) {
         this.tableData.push({
@@ -112,15 +118,16 @@ export default {
           hotmusicid: arr[0].playlist.tracks[i].id,
           newmusicid: arr[1].playlist.tracks[i].id,
           electronicid: arr[2].playlist.tracks[i].id,
-          });
-          this.music[0].push(arr[0].playlist.tracks[i]);
-          this.music[1].push(arr[1].playlist.tracks[i]);
-          this.music[2].push(arr[2].playlist.tracks[i]);
+        });
+          // this.music[0].push(arr[0].playlist.tracks[i]);
+          // this.music[1].push(arr[1].playlist.tracks[i]);
+          // this.music[2].push(arr[2].playlist.tracks[i]);
       }
     },
+    // 请求数据
     getRanking() {
+      // 先获取歌单ID，再由歌单ID获取歌单详细数据
       getToplist().then(res => {
-        // console.log(res)
         let hotmusic = 0;
         let newmusic = 0;
         let electric = 0;
@@ -133,19 +140,21 @@ export default {
             electric = item.id
           }
         }
+        // 通过Promise.all并发请求
         serverAll([getUserPlaylistDetail(hotmusic), getUserPlaylistDetail(newmusic), getUserPlaylistDetail(electric)]).then(res => {
-          this.ranking = res;
-          this.setTabledata(this.ranking);
+          this.setTabledata(res);
           this.loading = false;
         })
       })
     },
+    // 点击歌曲事件处理函数
     setsongId(id, name) {
         let s = {};
         s.id = id;
         this.$store.commit('updateSong', s);
         this.$router.push('/music');
     },
+    // 鼠标进入单元格事件处理函数，根据列标签判断进入的是哪一列，由此取出对应的歌曲ID
     enterColum(row, colum, cell, enent) {
       switch(colum.label) {
         case '云音乐热歌榜Top50':
@@ -161,13 +170,15 @@ export default {
           this.columShow = '云音乐电音榜Top50';
           break;
       }
-      this.$forceUpdate();
+      // this.$forceUpdate();
     },
+    // 离开单元格将歌曲ID归零
     leaveColum() {
       this.showId = 0;
     },
   },
   mounted() {
+    // 调用请求数据函数
     this.getRanking();
   }
 }

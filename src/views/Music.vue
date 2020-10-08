@@ -1,10 +1,14 @@
 <template>
   <div class="music">
+    <!-- 歌曲信息及歌词 -->
     <div class="s-info">
+      <!-- 歌曲信息 -->
       <div class="song-info">
+        <!-- 歌曲图片 -->
         <div class="mask">
           <img :src="song.al.picUrl" alt="">
         </div>
+        <!-- 歌曲名字歌手专辑 -->
         <div class="info">
           <p class="song-name">{{song.name}}</p>
           <p>歌手：</p>
@@ -13,14 +17,18 @@
           <p><el-link type="primary" @click="goAlbum(song.al.id)">{{song.al.name}}</el-link></p>
         </div>
       </div>
+      <!-- 歌词 -->
       <div class="lyric" :style="{height: height}" v-loading="loading">
         <ul>
           <div v-show="!hasLyric">纯音乐，请欣赏</div>
+          <!-- 一个li包含一句原歌词和一句翻译，先遍历原歌词，在找到原歌词对应翻译的索引 -->
           <li v-for="(item, value, index) in lyric" :key="index" :class="{'whiteActive': progressFlag[setClass(index)]}" ref="qqq">{{item}}<br>{{value in translyric ? translyric[value] : ""}}</li>
         </ul>
       </div>
     </div>
+    <!-- 展开关闭歌词按钮 -->
     <el-button icon="el-icon-arrow-down" circle class="showlyric" v-on:click="setheight" :class="{'rota': isactive}"></el-button>
+    <!-- 评论 -->
     <div class="comment">
       <Comment ref="childrenComment"></Comment>
     </div>
@@ -33,38 +41,41 @@ import { tochance } from '@/common/tool';
 import Comment from '@/components/Comment';
 export default {
   name: 'Music',
-  props: ['musicTime'],
+  props: ['musicTime'], //  从父组件取得歌曲的实时时间
   data() {
     return {
-      song: {al: {picUrl: '@/assets.img.logo.png'}},
-      lyric: {},
-      translyric: {},
-      isactive: false,
-      height: '500px',
-      loading: true,
-      setRequestTo: {},
-      progressFlag: {},
-      lyricFlag: 0,
-      lyricFlagindex: 0,
-      nowLyric: 0,
-      hasLyric: true,
-
+      song: {al: {picUrl: '@/assets.img.logo.png'}}, //存储歌曲信息
+      lyric: {},  //存储源歌词信息
+      translyric: {}, //存储翻译歌词信息
+      isactive: false, //展开按钮的状态
+      height: '500px',  //歌词显示框默认高
+      loading: true,  //默认显示加载动画标志位
+      // setRequestTo: {}, 
+      progressFlag: {}, //存储歌词是否变亮
+      // lyricFlag: 0,
+      // lyricFlagindex: 0,
+      nowLyric: 0,  //存储现在歌词的位置
+      hasLyric: true, //是否有歌词
     }
   },
   components: {
     Comment,
   },
   methods: {
+    // 设置歌词框的高
     setheight() {
+      // 这里尽然每次点击都从新算一遍高，?????
       if(!this.isactive) {
+        // 如果歌词有翻译，则每行25px,否则每行20px,同一句歌词个翻译算作一行
         let size = Object.keys(this.lyric).length + Object.keys(this.translyric).length;
         Object.keys(this.translyric).length < 5 ? size = size * 25 : size = size * 20; 
-        
-        if(size === 0) {
-          this.height = '500px';
-        } else {
-          this.height = size + 'px';
-        }
+        // 如果没有歌词，则设置为默认500px，否则设置高
+        size === 0 ? this.height = '500px' : this.height = size + 'px'
+        // if(size === 0) {
+        //   this.height = '500px';
+        // } else {
+        //   this.height = size + 'px';
+        // }
         this.isactive = !this.isactive;
       } else {
         this.height = '500px';
@@ -72,17 +83,19 @@ export default {
       }
       
     },
+    //请求歌曲信息
     getsongInf(id) {
       getsongDetail(id).then(res => {
         this.song = res.songs[0];
       })
     },
+    // 进一步处理歌词
     stolyric(arr, flag = false) {
       // console.log(arr);
       let obj = {};
-      if(flag === true) {
-        this.progressFlag = {}
-      }
+      // if(flag === true) {
+      //   this.progressFlag = {}
+      // }
       for(let i = 0; i < arr.length; i++) {
         let a = arr[i].split("]");
         obj[a[0]] = a[1];
@@ -94,9 +107,8 @@ export default {
       }
       return obj;
     },
-    
+    // 请求获取歌曲歌词
     getlyric() {
-      // console.log("更新歌词")
       if(this.changeid) {
         getsongLyric(this.$store.state.songid).then(res => {
           this.loading = false;
@@ -105,6 +117,7 @@ export default {
           this.translyric = {};
           this.height = '500px';
           this.isactive = false;
+          // 如果歌词存在，则根据回车将歌词存如数组里面，然后请求stolyric进一步处理数组
           if('lrc' in res && 'lyric' in res.lrc) {
             this.lyric = this.stolyric(res.lrc.lyric.split('\n'), true);
           }
@@ -180,6 +193,7 @@ export default {
     
   },
   computed: {
+    // 获取当前正在播放的歌曲id
     changeid: function() {
       if(this.$store.state.songid !== 0) {
         return this.$store.state.songid
@@ -188,6 +202,7 @@ export default {
     
   },
   watch: {
+    // 监听歌曲ID是否改变
     changeid: function(){
       this.sendSongid();
       this.getsongInf(this.changeid);
