@@ -11,7 +11,6 @@
 import Newsong from '@/components/Newsong';
 import Ranking from '@/components/Ranking';
 
-
 export default {
   name: 'Home',
   data() {
