@@ -1,13 +1,13 @@
 <template>
   <div class="home">
-    <Newsong :list='newsong'></Newsong>
+    <!-- 新歌轮播图子组件 -->
+    <Newsong></Newsong>
+    <!-- 榜单子组件 -->
     <Ranking></Ranking>
-    
   </div>
 </template>
 
 <script>
-import { getsongNew } from '@/request/getdata';
 import Newsong from '@/components/Newsong';
 import Ranking from '@/components/Ranking';
 
@@ -18,23 +18,12 @@ export default {
     return {
       newsong: [],
       ranking: [],
-      songinformation: {}
     }
   },
   components: {
     Newsong,
     Ranking,
   },
-  methods: {
-    getData() {
-      getsongNew().then(res => {
-        this.newsong.push(res.result);  //获取新课
-      })
-    },
-  },
-  mounted() {
-    this.getData();
-  }
 }
 </script>
 

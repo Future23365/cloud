@@ -93,19 +93,22 @@ export default {
       nowtime: '00:00', //当前时间
       isvoice: false, //声音显示标记为
       url: '',  //存储播放地址
-      sname: '',
-      author: [],
-      isListshow: false,
-      songList: [],
-      firstIn: false
+      sname: '', //默认歌曲名
+      author: [], //默认歌手名
+      isListshow: false,  //播放列表显示标记位
+      songList: [], //存歌曲
+      firstIn: false, //是否是第一次进入
+      setindex: 0 //更新进度标志位
     }
   },
   methods: {
+    //播放暂停函数
     puse() {
       this.ispuse = !this.ispuse;
       this.ispuse ? this.$refs.myaudio.play() : this.$refs.myaudio.pause();
       this.savesonginf();
     },
+    //更新播放时间
     updatetime(e) {
       this.value1.value = this.$refs.myaudio.currentTime;
       this.setindex ++;
@@ -116,18 +119,22 @@ export default {
         this.savesonginf()
       }
     },
+    //音频加载完成之后设置总时长
     setdura(e) {
       this.value1.max = this.$refs.myaudio.duration;
       this.alltime = tochance(this.value1.max);
       this.value2.volume = this.$refs.myaudio.volume;
     },
+    //点击进度条设置时间事件
     settime(e) {
       this.$refs.myaudio.currentTime = e;
       this.savesonginf();
     },
+    // 设置声音事件
     setvolume(e) {
       this.$refs.myaudio.volume = e;
     },
+    //保存歌曲状态到本地
     savesonginf() {
       let arr = [];
       let obj = {};
@@ -136,10 +143,13 @@ export default {
       arr.push(obj);
       localStorage.setItem('music', JSON.stringify(arr));
     },
+    // 获取音频url
     geturl() {
       let what = this;
+      //检查歌曲是否可以播放
       checkMusic(this.updateid).then(res => {
         let that = this;
+        //如果可以播放则请求url
         if(res.success === true) {
           getsongUrl(this.updateid).then(res => {
             this.url = res.data[0].url;
@@ -148,32 +158,31 @@ export default {
                 that.puse();
               }, 700)
             }
-          
           })
         }else {
           Message({
           message: '此歌曲暂时无法播放',
         });
         }
-        
       }, reject => {
         Message({
           message: '此歌曲暂时无法播放！',
         });
       })
       setTimeout(function() {
-          what.firstIn = false;
-        }, 900)
+        what.firstIn = false;
+      }, 900)
     },
+    // 请求歌曲信息
     getsongDetial() {
       getsongDetail(this.updateid).then(res => {
         this.sname = res.songs[0].name;
-        this.author = []
+        this.author = [];
         this.author.push(res.songs[0].ar);
       })
     },
+    // 保存本地
     localSet() {
-      this.firstIn = true;
       if(localStorage.getItem('music') === [] || localStorage.getItem('music') === null) {
         localStorage.setItem('music', JSON.stringify([]));
       }else {
@@ -181,33 +190,39 @@ export default {
         let obj = {};
         !!music[0].songid === true ?  obj.id = music[0].songid : '';
         !!music[0].songtime === true ? this.$refs.myaudio.currentTime = music[0].songtime : '';
-        this.$store.commit('updateSong', obj)
+        this.$store.commit('updateSong', obj);
+        this.firstIn = true;
       }
     },
+    // 显示、隐藏播放列表
     showm() {
       this.isListshow = !this.isListshow;
     },
+    // 下一曲事件
     nextSong() {
+      // 获取播放列表
       this.songList = this.$store.state.playlist;
-      
+      // 循环找出当前的歌曲，获取下一曲，这方法属实有点鸡肋@_@
       for(let i = 0; i < this.songList.length; i++) {
         if((this.songList[i].id === this.$store.state.songid)) {
+          // 如果是最后一首，则播放第一首
           if(i === this.songList.length - 1) {
-            if(this.songList.length === 1) {
-              let va = this.playFlag + 1;
-              console.log(va)
-              this.$store.commit('updataFlag', va)
-              return
-            }
+            // 如果只有一首歌，则提交flag以触发自动播放
+            // if(this.songList.length === 1) {
+            //   let va = this.playFlag + 1;
+            //   this.$store.commit('updataFlag', va)
+            //   return
+            // }
             this.$store.commit('updateSong', {'id': this.songList[0].id})
             return 
           }
+          // 将歌曲列表的下一曲提交到vuex
           this.$store.commit('updateSong', {'id': this.songList[i + 1].id})
-          console.log(this.$store.state.songid)
           return 
         }
       }
     },
+    // 上一曲事件
     lastSong() {
       this.songList = this.$store.state.playlist;
       for(let i = 0; i < this.songList.length; i++) {
@@ -221,6 +236,7 @@ export default {
         }
       }
     },
+    // 点击歌曲名进入详情页
     enterMusic() {
       if(this.$route.path === '/music') {
         Message({
@@ -231,36 +247,37 @@ export default {
       }
       
     },
+    //点击歌手进入歌手详情
     goArtist(id) {
-      this.$router.push({
-        path: "/artist",
-        query: {
-          artistid: id
-        }
-      });
+      if(this.$route.path === '/artist' && this.$route.query.artistid === id) {
+        Message({
+          message: '已经在歌手页面啦！',
+        });
+      } else {
+        this.$router.push({
+          path: "/artist",
+          query: {
+            artistid: id
+          }
+        });
+      }
+      
     },
   },
   computed: {
+    //vuex中的正在播放的音乐
     updateid: function() {
       return this.$store.state.songid;
     },
-    playFlag: function() {
-      return this.$store.state.flag;
-    }
   },
   watch: {
+    // 监听vuex歌曲id变化触发事件，重新获取url及歌曲信息
     updateid: function() {
       this.ispuse = false;
       this.geturl();
       this.getsongDetial();
     },
-    playFlag: function() {
-      this.ispuse = false;
-      this.geturl();
-      this.getsongDetial();
-    }
   },
- 
   mounted() {
     this.localSet();
   }

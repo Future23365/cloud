@@ -16,35 +16,51 @@
 </template>
 
 <script>
-import { getsongDetail } from '@/request/getdata';
+import { getsongDetail, getsongNew } from '@/request/getdata';
 export default {
   name: 'Newsong',
-  props: ['list'],
+  data() {
+    return {
+      list: [] //存放新歌列表
+    }
+  },
   methods: {
     goMusic (id) {
       let s = {};
-        s.id = id;
-        this.$store.commit('updateSong', s);
-        this.$router.push('/music');
-      getsongDetail(id).then(res => {
-        this.song = res.songs[0];
-        let obj = {};
-        obj.id = res.songs[0].id;
-        obj.name = res.songs[0].name;
-        let arr = [];
-        for(let i = 0; i < res.songs[0].ar.length; i++) {
-          let o = {};
-          o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
-          arr.push(o);
-        }
-        obj.ar = arr;
-        obj.al = res.songs[0].al.name;
-        obj.alId = res.songs[0].al.id;
-        obj.time = res.songs[0].dt;
-        console.log(obj);
-        this.$store.commit('updatePlaylist', obj);
+      s.id = id;
+      this.$store.commit('updateSong', s);
+      this.$router.push('/music');
+      // 获取歌曲的详情信息并存如播放列表
+      // getsongDetail(id).then(res => {
+      //   this.song = res.songs[0];
+        
+      //   // obj.name = res.songs[0].name;
+      //   // let arr = [];
+      //   // for(let i = 0; i < res.songs[0].ar.length; i++) {
+      //   //   let o = {};
+      //   //   o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
+      //   //   arr.push(o);
+      //   // }
+      //   // obj.ar = arr;
+      //   // obj.al = res.songs[0].al.name;
+      //   // obj.alId = res.songs[0].al.id;
+      //   // obj.time = res.songs[0].dt;
+      //   // this.$store.commit('updatePlaylist', obj);
+      // })
+      
+      // 分发action使歌曲添加到播放列表
+      let obj = {};
+      obj.id = id;
+      this.$store.dispatch('sendUpdatePlaylist', obj);
+    },
+    getData() {
+      getsongNew().then(res => {
+        this.list.push(res.result);  //获取新歌
       })
-    }
+    },
+  },
+  created() {
+    this.getData();
   }
 }
 </script>
