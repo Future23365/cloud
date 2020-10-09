@@ -1,14 +1,19 @@
 <template>
   <div class="comment" v-loading="loading">
+    <!-- 精彩评论 -->
     <div class="marbox">精彩评论</div>
     <div class="com-li" v-for="(item, index) in goodiscuss" :key="index">
+      <!-- 头像 -->
       <div class="user-head">
         <img :src="item.user.avatarUrl" alt="">
       </div>
+      <!-- 评论详情 -->
       <div class="details">
+        <!-- 评论内容 -->
         <div class="specific">
           <span class="user-name"><el-link type="primary" @click=goUser(item.user.userId)>{{item.user.nickname}}</el-link>:</span> {{item.content}}
         </div>
+        <!-- 时间和点赞次数 -->
         <div class="other">
           <span class="time">{{new Date(item.time).toLocaleDateString()}}</span>
           <span class="fnumber">
@@ -19,20 +24,25 @@
         </div>
       </div>
     </div>
+    <!-- 最新评论 -->
     <div class="marbox">最新评论</div>
     <div class="com-li" v-for="(item, index) in newdiscuss" :key="index + 's'">
+      <!-- 头像 -->
       <div class="user-head">
         <img :src="item.user.avatarUrl" alt="">
       </div>
       <div class="details">
+        <!-- 用户及评论内容 -->
         <div class="specific">
           <span class="user-name"><el-link type="primary" @click=goUser(item.user.userId)>{{item.user.nickname}}</el-link>:</span> {{item.content}}
         </div>
+        <!-- 回复评论 -->
         <div class="beReplied" v-if="item.beReplied.length > 0">
           <span class="rep-userhead"><img :src="item.beReplied[0].user.avatarUrl" alt=""></span>
           <span class="rep-username"><el-link type="primary" @click=goUser(item.beReplied[0].user.userId)>{{item.beReplied[0].user.nickname}}</el-link>:</span>
           {{item.beReplied[0].content}}
         </div>
+        <!-- 时间及点赞 -->
         <div class="other">
           <span class="time">{{showTime(item.time)}}</span>
           <span class="fnumber">
@@ -43,6 +53,7 @@
         </div>
       </div>
     </div>
+    <!-- 分页器 -->
     <div class="pagination">
       <el-pagination
     background
@@ -53,7 +64,6 @@
     :total="total">
     </el-pagination>
     </div>
-    
   </div>
 </template>
 
@@ -63,15 +73,16 @@ export default {
   name: 'Comment',
   data() {
     return {
-      goodiscuss: [],
-      newdiscuss: [],
-      pagesize: 20,
-      total: 0,
-      loading: true,
-      requestTo: {}
+      goodiscuss: [], //存储热评
+      newdiscuss: [], //存储新评论
+      pagesize: 20, //每页个数
+      total: 0, //总数
+      loading: true, //加载状态
+      requestTo: {} //楼层回复
     }
   },
   methods: {
+    // 请求评论
     getComment(limit) {
       getsongComment(this.requestTo.id, 20, this.requestTo.target).then(res => {
         this.goodiscuss = res.hotComments;
@@ -80,6 +91,7 @@ export default {
         this.loading = false;
       })
     },
+    // 分页器点击函数，e为偏移量
     changeData(e) {
       e--;
       e = e * 20;
@@ -87,6 +99,7 @@ export default {
         this.newdiscuss = res.comments;
       })
     },
+    //将请求道德毫秒数转换为日常时间，今天评论的只显示小时和分钟，其他时间显示日期
     showTime(t) {
       let nowdate = new Date();
       let date = new Date(t);
@@ -100,11 +113,13 @@ export default {
         return date.toLocaleDateString();
       }
     },
+    //请求评论
     startRequset(obj) {
       this.requestTo.id = obj.id;
       this.requestTo.target = obj.target;
       this.getComment();
     },
+    // 点击用户跳转
     goUser(id) {
       this.$router.push({
         path: '/user',
@@ -113,10 +128,7 @@ export default {
         }
       })
     }
-  },
-  mounted() {
   }
-  
 }
 </script>
 

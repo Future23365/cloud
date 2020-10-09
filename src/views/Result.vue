@@ -3,15 +3,17 @@
     <div class="title">
       搜索<span>{{this.$route.query.s}}</span>,找到<span>{{songCount}}</span>个结果
     </div>
+    <!-- 用标签页来显示结果, 歌手、专辑、歌单公用一个组件，视频和MV公用一个组件 -->
     <el-tabs type="border-card"  @tab-click="setTab">
       <el-tab-pane label="单曲" v-loading="loading"><Single @startRequest="getData" ref="childrenSingle"></Single></el-tab-pane>
       <el-tab-pane label="歌手" v-loading="loading"><Album ref="childrenAuthor"></Album></el-tab-pane>
       <el-tab-pane label="专辑" v-loading="loading"><Album ref="childrenAlbum"></Album></el-tab-pane>
-      <el-tab-pane label="视频" v-loading="loading"><mv ref="childrenVideo"></mv></el-tab-pane>
-      <el-tab-pane label="MV" v-loading="loading"><mv ref="childrenMv"></mv></el-tab-pane>
+      <el-tab-pane label="视频" v-loading="loading"><Mv ref="childrenVideo"></Mv></el-tab-pane>
+      <el-tab-pane label="MV" v-loading="loading"><Mv ref="childrenMv"></Mv></el-tab-pane>
       <el-tab-pane label="歌单" v-loading="loading"><Album ref="childrenPlaylist"></Album></el-tab-pane>
       <el-tab-pane label="用户" v-loading="loading"><Userlist ref="childrenUserlist"></Userlist></el-tab-pane>
     </el-tabs>
+    <!-- 分页器 -->
     <div class="pag">
       <el-pagination
       background
@@ -21,7 +23,6 @@
       :total="songCount">
       </el-pagination>
     </div>
-    
   </div>
 </template>
 
@@ -43,23 +44,21 @@ export default {
   },
   data() {
     return {
-      songCount: 0,
-      songs: [],
-      tabName: '单曲',
-      loading: true
+      songCount: 0, //结果数量
+      // songs: [],  //
+      tabName: '单曲', //默认标签
+      loading: true   //加载状态
     }
   },
   methods: {
-    
+    // 请求数据，如果没有传入参数，就从当前路由中取
     getData(type = 1, obj = {}) {
       let s, limit, offset;
-      // console.log(type);
       if('s' in obj) { s = obj.s };
       if('limit' in obj) { limit = obj.limit };
       if('offset' in obj) { offset = obj.offset };
       if('type' in obj) { type = obj.type };
       getsearchResult( s || this.$route.query.s, limit || this.$route.query.limit, offset || this.$route.query.offset, type || this.$route.query.type).then(res => {
-
         this.loading = false;
         this.sendTableData(res, type);
       }) 
@@ -79,6 +78,7 @@ export default {
         this.getData(1000, {'offset': (page - 1) * 30})
       }
     },
+    // 点击标签事件处理函数,根据点击的选项传入不同的参数请求数据
     setTab(e) {
       this.tabName = e.label;
       this.loading = true;
@@ -104,10 +104,9 @@ export default {
         case '视频':
           this.getData(1014);
           break;
-
       }
-
     },
+    // 根据选择的不同，传入不同组件不同的数据
     sendTableData(data, type) {
       switch(type) {
         case 1: 
@@ -133,6 +132,7 @@ export default {
           break;
       }
     },
+    //传单曲数据，利用$refs调用子组件函数
     sendSongs(res) {
       let arr = [];
         for(let i = 0; i < res.result.songs.length; i++) {
@@ -151,49 +151,39 @@ export default {
         this.songCount = res.result.songCount;
         this.$refs.childrenSingle.settableData(arr);
     },
+    //传mv数据，利用$refs调用子组件函数
     sendMv(data) {
       this.songCount = data.result.mvCount;
       this.$refs.childrenMv.getMvdata(data.result.mvs);
     },
+    //传专辑数据，利用$refs调用子组件函数
     sendAlbum(data) {
       this.songCount = data.result.albumCount;
       this.$refs.childrenAlbum.getAlbumdata(data.result.albums);
     },
+    //传歌手数据，利用$refs调用子组件函数
     sendAuthor(data) {
       this.songCount = data.result.artistCount;
       this.$refs.childrenAuthor.getAlbumdata(data.result.artists);
     },
+    //传歌单数据，利用$refs调用子组件函数
     sendPlaylist(data) {
       this.songCount = data.result.playlistCount;
       this.$refs.childrenPlaylist.getAlbumdata(data.result.playlists, '歌单');
     },
+    //传用户数据，利用$refs调用子组件函数
     sendUserlist(data) {
       this.songCount = data.result.userprofileCount;
       this.$refs.childrenUserlist.getUserlistdata(data.result.userprofiles);
     },
+    //传视频数据，利用$refs调用子组件函数
     sendVideo(data) {
       this.songCount = data.result.videoCount;
       this.$refs.childrenVideo.getMvdata(data.result.videos);
     }
   },
-  computed: {
-    keywords: function() {
-      return this.$route.query.s;
-    },
-    limit: function() {
-      return this.$route.query.limit;
-    },
-    offset: function() {
-      return this.$route.query.offset;
-    },
-    type : function() {
-      return this.$route.query.type;
-    }
-  },
-  mounted() {
-    
-  },
   watch: {
+    // 监听路由变化请求数据
     '$route' : function() {
       if(this.$route.path === '/result') {
         this.getData();
