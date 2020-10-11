@@ -1,7 +1,10 @@
 <template>
   <div class="artist">
+    <!-- 歌手名 -->
     <div class="artistName"><h3>{{artistName}}</h3><span></span></div>
+    <!-- 歌手照片 -->
     <img :src="picUrl" alt="">
+    <!-- 歌手简及描述介 -->
     <div class="desc">
       <h3>个人简介</h3>
       <p>{{desc.briefDesc}}</p>
@@ -10,6 +13,7 @@
         <pre>{{item.txt}}</pre>
       </div>
     </div>
+    //歌手单曲、专辑、及mv
     <el-tabs value="hot" type="card" @tab-click="handleClick">
       <el-tab-pane label="热门作品" name="hot"><Single ref="childrenSingle"></Single></el-tab-pane>
       <el-tab-pane label="所有专辑">
@@ -17,7 +21,7 @@
         <div v-show="isHasmore" ><button @click="getArtistAlbummore(mvPage += 30)" class="requestMore">获取更多</button></div>
       </el-tab-pane>
       <el-tab-pane label="相关mv">
-        <mv ref="childrenMv"></mv>
+        <Mv ref="childrenMv"></Mv>
         <div v-show="isHasmore" ><button @click="getArtistMvmore(mvPage += 30)" class="requestMore">获取更多</button></div>
       </el-tab-pane>
     </el-tabs>
@@ -37,35 +41,33 @@ export default {
     Single,
     Mv,
     Album,
-
   },
   data() {
     return {
-      desc: {
+      desc: { //描述的默认数据
         briefDesc: '',
         introduction: [],
       },
-      artistName: '',
-      picUrl: '',
-      hotSongs: [],
-      mvPage: 30,
-      isHasmore: true,
-
+      artistName: '', //歌手名字
+      picUrl: '', //歌手照片
+      hotSongs: [], //热门歌曲
+      mvPage: 30, //默认翻页数量
+      isHasmore: true,  //专辑和mv更多请求标记位
     }
   },
   methods: {
-    
+    // 请求歌手数据
     getArtistdata() {
+      // 请求歌手描述
       getArtistdesc(this.$route.query.artistid).then(res => {
         this.desc.briefDesc = res.briefDesc;
         this.desc.introduction = res.introduction;
       })
-
+      // 请求各自单曲
       getArtistsongs(this.$route.query.artistid).then(res => {
         this.artistName = res.artist.name;
         this.picUrl = res.artist.picUrl;
         this.hotSongs = res.hotSongs;
-
         let arr = [];
         for(let i = 0; i < res.hotSongs.length; i++) {
           let obj = {};
@@ -80,24 +82,25 @@ export default {
           obj.songTime = timeShow(res.hotSongs[i].dt / 1000);
           arr.push(obj);
         }
-        // console.log(arr);
+        // 单曲利用single组件显示
         this.$refs.childrenSingle.settableData(arr);
       })
-
-      
     },
+    // 请求歌手mv数据
     getArtistMvmore(limit = 30) {
       getArtistmv(this.$route.query.artistid, limit).then(res => {
         this.$refs.childrenMv.getMvdata(res.mvs);
         this.isHasmore = res.hasMore;
       })
     },
+    // 请求歌曲专辑数据
     getArtistAlbummore(limit = 30) {
       getArtistalbum(this.$route.query.artistid, limit).then(res => {
         this.$refs.childrenAlbum.getAlbumdata(res.hotAlbums);
         this.isHasmore = res.more;
       })
     },
+    // 获取更多按钮
     handleClick(e) {
       this.mvPage = 30;
       this.isHasmore = true;
@@ -111,9 +114,11 @@ export default {
       }
     },
   },
+  // 默认请求歌手数据
   mounted() {
     this.getArtistdata();
   },
+  // 监听路由变化实时更新显示
   watch: {
     '$route': function() {
       this.getArtistdata();

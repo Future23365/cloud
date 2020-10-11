@@ -1,5 +1,6 @@
 <template>
   <div class="albumdetail">
+    <!-- 歌单信息 -->
     <div class="info">
       <img :src="playList.coverImgUrl" alt="">
       <div class="cntc">
@@ -8,13 +9,16 @@
         <p><span>创建时间:</span><span>{{new Date(playList.createTime).toLocaleDateString()}}</span></p>
       </div>
     </div>
+    <!-- 歌单描述 -->
     <div class="albdesc">
-        <h3>歌单介绍</h3>
-        <p>{{playList.description}}</p>
+      <h3>歌单介绍</h3>
+      <p>{{playList.description}}</p>
     </div>
+    <!-- 具体歌曲及评论 -->
     <h3>包含歌曲列表</h3>
     <Single ref="childrenSingle"></Single>
-    <button @click="goSonglist" class="requestMore">获得详细歌单请点击</button>
+    <button @click="goSonglist" class="requestMore" v-show="hasmore">获得详细歌单请点击</button>
+    <!-- 显示全部歌曲 -->
     <PlaylistSongs v-show="isListSongsActive" :songList="songsListData"></PlaylistSongs>
     <Comment ref="childrenComment"></Comment>
   </div>
@@ -36,13 +40,15 @@ export default {
   },
   data() {
     return {
-      playList: {creator: {avatarUrl: ''}},
+      playList: {creator: {avatarUrl: ''}}, //保存歌单信息
       priviLeges: [],
-      songsListData: [],
-      isListSongsActive: false,
+      songsListData: [], //详细歌单数据
+      isListSongsActive: false, //是否点击
+      hasmore: true
     }
   },
   methods: {
+    // 请求歌单数据
     getAlbum() {
       getUserPlaylistDetail(this.$route.query.playlistid).then(res => {
         this.playList = res.playlist;
@@ -62,18 +68,24 @@ export default {
           obj.songTime = timeShow(res.playlist.tracks[i].dt / 1000);
           arr.push(obj);
         }
+        // 如果还有全部歌曲，则显示更多按钮
+        if(this.playList.trackIds.length <= this.playList.tracks.length) {
+          this.hasmore = false;
+        }
         let that = this;
         setImmediate(function() {
           that.$refs.childrenSingle.settableData(arr);
         }, 1000)
       })
     },
+    // 点击详细歌单
     goSonglist() {
       this.isListSongsActive = !this.isListSongsActive;
       this.songsListData = this.playList;
     }
   },
   mounted() {
+    // 初始化请求
     this.getAlbum();
     let that = this;
     setTimeout(function() {

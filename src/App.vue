@@ -4,7 +4,10 @@
     <Header></Header>
     <!-- 主体部分 -->
     <div class="app-center">
+      <!-- 结果页面缓存 -->
+      <!-- <keep-alive include="result"> -->
       <router-view  :musicTime="updateProdata"></router-view>
+      <!-- </keep-alive> -->
     </div>
     <!-- 播放器 -->
     <Player ref="childPlayer" @updateCome="updatePro"></Player>

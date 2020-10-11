@@ -2,6 +2,7 @@
   <div class="mv">
     <ul>
       <li v-for="(item, index) in mvData" :key="index">
+        <!-- 显示封面 -->
         <div class="show" @click="playVideo(item.id || item.vid)">
           <img :src="item.cover || item.imgurl || item.coverUrl" :alt="item.name" :title="item.name" />
           <div class="count">
@@ -10,9 +11,11 @@
           </div>
           <div class="time">{{timeShow((item.duration || item.durationms) / 1000)}}</div>
         </div>
+        <!-- 名字 -->
         <div class="name">
           <a href="javascript:;" :title="item.name || item.title">{{item.name || item.title}}</a>
         </div>
+        <!-- 作者 -->
         <div class="aughor">
           <el-link type="info">{{item.artistName}}</el-link>
         </div>
@@ -27,13 +30,15 @@ export default {
   name: "mv",
   data() {
     return {
-      mvData: []
+      mvData: [] //存储数据
     };
   },
   methods: {
+    // 父组件请求数据函数
     getMvdata(data) {
       this.mvData = data;
     },
+    // 显示视频或mv的时间
     timeShow(time) {
       let minute;
       let second;
@@ -50,6 +55,7 @@ export default {
       }
       return minute + ":" + second;
     },
+    // 点击跳转路由
     playVideo(id) {
       this.$router.push({
         path: "/mvideo",
@@ -59,8 +65,6 @@ export default {
       });
     }
   },
-  mounted() {
-  }
 };
 </script>
 

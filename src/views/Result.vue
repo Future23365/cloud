@@ -159,12 +159,12 @@ export default {
     //传专辑数据，利用$refs调用子组件函数
     sendAlbum(data) {
       this.songCount = data.result.albumCount;
-      this.$refs.childrenAlbum.getAlbumdata(data.result.albums);
+      this.$refs.childrenAlbum.getAlbumdata(data.result.albums, '专辑');
     },
     //传歌手数据，利用$refs调用子组件函数
     sendAuthor(data) {
       this.songCount = data.result.artistCount;
-      this.$refs.childrenAuthor.getAlbumdata(data.result.artists);
+      this.$refs.childrenAuthor.getAlbumdata(data.result.artists, '歌手');
     },
     //传歌单数据，利用$refs调用子组件函数
     sendPlaylist(data) {

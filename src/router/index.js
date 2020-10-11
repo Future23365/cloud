@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/views/Home.vue';
-import My from '@/views/My.vue';
 import Music from '@/views/Music.vue';
 import Result from '@/views/Result.vue';
 import Mvideo from '@/views/Mvideo.vue';
@@ -18,11 +17,6 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
-    },
-    {
-      path: '/my',
-      name: 'my',
-      component: My
     },
     {
       path: '/music',

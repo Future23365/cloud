@@ -2,12 +2,15 @@
   <div class="album">
     <ul>
       <li v-for="(item, index) in albumData" :key="index">
+        <!-- 显示的图片 -->
         <div class="show" @click="toAlbum(item.id)">
           <img :src="item.cover || item.picUrl || item.coverImgUrl || item.img1v1Url" :alt="item.name" :title="item.name" />
         </div>
+        <!-- 显示的名字 -->
         <div class="name">
           <a href="javascript:;" :title="item.name">{{item.name}}</a>
         </div>
+        <!-- 显示的作者 -->
         <div class="aughor">
           <el-link type="info">{{'artist' in item ? item.artist.name : ''}}</el-link>
         </div>
@@ -21,42 +24,40 @@ export default {
   name: 'album',
   data() {
     return {
-      albumData: [],
-      albumFlag: '专辑',
+      albumData: [], //存储数据
+      albumFlag: '专辑',  //
     }
   },
   methods: {
-    getAlbumdata(data , type = '专辑') {
+    //父组件传入数据和类型
+    getAlbumdata(data, type = '专辑') {
       this.albumData = data;
-      if(type != '专辑') {
-        this.albumFlag = type;
-      }
+      this.albumFlag = type;
     },
+    // 分类跳转路由
     toAlbum(id) {
       if(this.albumFlag === '专辑') {
-        if('artist' in this.albumData[0]) {
           this.$router.push({
           path: "/albumdetail",
           query: {
             albumdetailId: id
           }
-        });
-        } else {
-          this.$router.push({
-          path: '/artist',
-          query: {
-            artistid: id
-            }
-          })
-        }
+        })
       } else if(this.albumFlag === '歌单') {
         this.$router.push({
           path: '/playlist',
           query: {
             playlistid: id
-            }
-          })
-      }
+          }
+        })
+      }else if(this.albumFlag === '歌手') {
+        this.$router.push({
+        path: '/artist',
+        query: {
+          artistid: id
+          }
+        })
+      } 
     },
   }
 }

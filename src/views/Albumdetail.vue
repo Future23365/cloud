@@ -1,5 +1,6 @@
 <template>
   <div class="albumdetail">
+    <!-- 专辑信息 -->
     <div class="info">
       <img :src="albumData.blurPicUrl" alt="">
       <div class="cntc">
@@ -9,10 +10,12 @@
         <p><span>发行公司:</span><span>{{albumData.company}}</span></p>
       </div>
     </div>
+    <!-- 专辑介绍 -->
     <div class="albdesc">
         <h3>专辑介绍</h3>
         <p><pre style="display: inline">    </pre>{{albumData.description}}</p>
     </div>
+    <!-- 歌曲及评论 -->
     <h3>包含歌曲列表</h3>
     <Single ref="childrenSingle"></Single>
     <Comment ref="childrenComment"></Comment>
@@ -33,20 +36,17 @@ export default {
   },
   data() {
     return {
-      albumData: {},
-      albumSongs: []
+      albumData: {}, //专辑数据
+      albumSongs: []  //歌曲数据
     }
   },
   methods: {
-    
+    // 请求专辑数据
     getAlbum() {
-      getAlbumdata(this.$route.query.albumdetailId).then(res => {
-      })
       getAlbum(this.$route.query.albumdetailId).then(res => {
         this.albumData = res.album;
         this.albumSongs = res.songs
         this.$forceUpdate();
-
         let arr = [];
         for(let i = 0; i < res.songs.length; i++) {
           let obj = {};
@@ -66,7 +66,9 @@ export default {
     }
   },
   mounted() {
+    // 请求专辑数据
     this.getAlbum();
+    // 设置评论数据
     this.$refs.childrenComment.startRequset({id: this.$route.query.albumdetailId, target: 'album'});
   }
 }

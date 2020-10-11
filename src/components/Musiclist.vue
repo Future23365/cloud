@@ -1,6 +1,8 @@
 <template>
   <div class="musiclist">
+    <!-- 表头 -->
     <div class="head" @click="fatherShow" title="隐藏列表">播放列表({{listlength}})<span @click.stop="deleteAlllist" title="删除全部">删除全部</span></div>
+    <!-- 列表内容 -->
     <div class="list">
       <div class="mess">
         <span></span>
@@ -30,15 +32,17 @@ export default {
   name: 'musiclist',
   data() {
     return {
-      song: [],
-      ischoose: '',
-      isSave: false,
+      song: [], //歌曲列表
+      ischoose: '', //高亮显示
+      isSave: false, //本地如果没有列表则建立空localStorage
     }
   },
   methods: {
+    // 删除歌曲，向statecommit
     deleteList(index) {
       this.$store.commit('deletePlaylist', index);
     },
+    // 播放歌曲
     playMusic(id) {
       let s = {};
       s.id = id;
@@ -47,25 +51,30 @@ export default {
         this.$router.push('/music');
       }
     },
+    // 时间转换
     time(time) {
       return timeShow(time / 1000)
     },
+    // 删除全部歌曲
     deleteAlllist() {
       this.$store.commit("deleteAll")
     },
+    // 显示隐藏列表
     fatherShow() {
       this.$parent.showm();
     },
+    // 保存列表
     saveList() {
       localStorage.setItem('musicList', JSON.stringify(this.$store.state.playlist));
     },
+    // 取得保存的列表
     getSaveList() {
       if(localStorage.getItem('musicList') === [] || localStorage.getItem('musicList') === null) {
         localStorage.setItem('musicList', JSON.stringify([]));
       }else {
         let arr = JSON.parse(localStorage.getItem('musicList'));
         for(let i = 0; i < arr.length; i++) {
-          this.$store.commit('updatePlaylist', arr[i])
+          this.$store.dispatch('sendUpdatePlaylist', {id: arr[i].id})
         }
         this.isSave = true
       }
@@ -73,25 +82,30 @@ export default {
     
   },
   computed: {
+    // 获取列表长度
     listlength: function() {
       return this.$store.state.playlist.length;
     },
+    // 获取当前播放的歌曲
     nowSong: function() {
       return this.$store.state.songid;
     },
   },
   watch: {
+    // 监听列表长度，保存到本地
     listlength: function() {
       this.song = this.$store.state.playlist;
       if(this.isSave) {
         this.saveList();
       }
     },
+    // 监听正在播放的歌曲改变高亮显示
     nowSong: function() {
       this.ischoose = this.nowSong
     }
   },
   mounted() {
+    // 取得本地列表
     this.getSaveList()
   }
 }

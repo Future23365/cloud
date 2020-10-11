@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import vuex from 'vuex';
-import serve from '../request/request'
 import { Message } from 'element-ui';
 import { getsongDetail } from '@/request/getdata';
 
@@ -68,6 +67,9 @@ export default new vuex.Store({
           obj.alId = res.songs[0].al.id;
           obj.time = res.songs[0].dt;
           context.commit('updatePlaylist', obj);
+          Message({
+            message: '已向播放列表添加歌曲',
+          });
         })
       }else {
         Message({

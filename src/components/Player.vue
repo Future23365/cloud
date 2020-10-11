@@ -39,7 +39,7 @@
         <div class="voice" v-show="isvoice">
           <el-slider v-model="value2.volume" vertical height="100px" :max="value2.max" :step="0.1" @input="setvolume"></el-slider>
         </div>
-        <svg class="icon pattern" aria-hidden="true">
+        <svg class="icon pattern" aria-hidden="true" @click="setModel">
           <use xlink:href="#icon-xunhuan"></use>
         </svg>
         <div class="el-icon-s-order list" @click="showm"></div>
@@ -105,7 +105,7 @@ export default {
     //播放暂停函数
     puse() {
       this.ispuse = !this.ispuse;
-      this.ispuse ? this.$refs.myaudio.play() : this.$refs.myaudio.pause();
+      this.ispuse && this.url !== '' ? this.$refs.myaudio.play() : this.$refs.myaudio.pause();
       this.savesonginf();
     },
     //更新播放时间
@@ -156,7 +156,7 @@ export default {
             if(this.firstIn === false) {
               setTimeout(function() {
                 that.puse();
-              }, 700)
+              }, 1000)
             }
           })
         }else {
@@ -187,11 +187,19 @@ export default {
         localStorage.setItem('music', JSON.stringify([]));
       }else {
         let music = JSON.parse(localStorage.getItem('music'));
-        let obj = {};
-        !!music[0].songid === true ?  obj.id = music[0].songid : '';
-        !!music[0].songtime === true ? this.$refs.myaudio.currentTime = music[0].songtime : '';
-        this.$store.commit('updateSong', obj);
-        this.firstIn = true;
+        if(music.length !== 0) {
+          let obj = {};
+          !!music[0].songid === true ?  obj.id = music[0].songid : '';
+          !!music[0].songtime === true ? this.$refs.myaudio.currentTime = music[0].songtime : '';
+          this.$store.commit('updateSong', obj);
+          this.firstIn = true;
+        } else {
+          Message({
+          message: '点首歌曲试试效果！',
+          type: 'warning',
+        });
+        }
+        
       }
     },
     // 显示、隐藏播放列表
@@ -207,12 +215,6 @@ export default {
         if((this.songList[i].id === this.$store.state.songid)) {
           // 如果是最后一首，则播放第一首
           if(i === this.songList.length - 1) {
-            // 如果只有一首歌，则提交flag以触发自动播放
-            // if(this.songList.length === 1) {
-            //   let va = this.playFlag + 1;
-            //   this.$store.commit('updataFlag', va)
-            //   return
-            // }
             this.$store.commit('updateSong', {'id': this.songList[0].id})
             return 
           }
@@ -261,8 +263,12 @@ export default {
           }
         });
       }
-      
     },
+    setModel() {
+      Message({
+          message: '暂时还没有弄这个功能哦~_~',
+        });
+    }
   },
   computed: {
     //vuex中的正在播放的音乐

@@ -7,16 +7,16 @@
 
 <script>
 import { getsongUrl, getMp3, getsongDetail } from '@/request/getdata';
+import { Message } from 'element-ui';
 export default {
   name: 'musicmenu',
-  props: ['musicid', 'musicName'],
-  data() {
-    return {
-      mid: '',
-    }
-  },
+  props: ['musicid', 'musicName'], //父组件传入歌名和id
   methods: {
+    // 下载方法
     musicDownload(e) {
+      Message({
+        message: '请稍等^_^',
+      });
       getsongUrl(this.musicid).then(res => {
         /*下载MP3文件*/ 
         fetch(res.data[0].url).then(res => {
@@ -27,26 +27,20 @@ export default {
           link.href = bURL;
           link.setAttribute('download', this.musicName);
           link.click();
+        }, reject => {
+          Message({
+            message: '下载失败，要不再试一次？^_^',
+          });
         })
         this.$forceUpdate();  //    强制渲染
       })
     },
+    //添加歌曲到播放列表
     addlist() {
       getsongDetail(this.musicid).then(res => {
         let obj = {};
         obj.id = res.songs[0].id;
-        obj.name = res.songs[0].name;
-        let arr = [];
-        for(let i = 0; i < res.songs[0].ar.length; i++) {
-          let o = {};
-          o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
-          arr.push(o);
-        }
-        obj.ar = arr;
-        obj.al = res.songs[0].al.name;
-        obj.alId = res.songs[0].al.id;
-        obj.time = res.songs[0].dt;
-        this.$store.commit('updatePlaylist', obj);
+        this.$store.dispatch('sendUpdatePlaylist', obj);
       })
     }
   }

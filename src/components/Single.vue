@@ -9,6 +9,7 @@
       @cell-mouse-leave="leaveColum"
       stripe
       style="width: 100%">
+      <!-- 歌曲名列 -->
       <el-table-column
         prop="songName"
         label="歌曲"
@@ -20,6 +21,7 @@
             <Musicmenu :musicid="scope.row.songId" :musicName="scope.row.songName" v-show="(showId === scope.row.songId)"></Musicmenu>
         </template>
       </el-table-column>
+      <!-- 歌手列 -->
       <el-table-column
         prop="songAuthor"
         label="歌手"
@@ -30,6 +32,7 @@
           </a>
         </template>
       </el-table-column>
+      <!-- 专辑列 -->
       <el-table-column
         prop="songAlbum"
         label="专辑"
@@ -40,6 +43,7 @@
           </a>
         </template>
       </el-table-column>
+      <!-- 时长列 -->
       <el-table-column
         prop="songTime"
         label="时长"
@@ -61,65 +65,48 @@ export default {
   },
   data() {
     return {
-      tableData: [],
-      loading: true,
-      showId: 0,
+      tableData: [], //表格数据
+      loading: true,  //加载标记位
+      showId: 0,  //标记进入的每一行
     }
   },
   methods: {
-    
+    // 父组件调用此函数将数据传入过来
     settableData(data) {
       this.tableData = [];
       this.tableData = data;
       this.loading = false;
     },
+    // 点击歌曲名播放
     goMusic(id) {
       let s = {};
       s.id = id;
+      // 请求歌曲并分发action
       getsongDetail(id).then(res => {
-        this.song = res.songs[0];
+        // 分发action使歌曲添加到播放列表
         let obj = {};
-        obj.id = res.songs[0].id;
-        obj.name = res.songs[0].name;
-        let arr = [];
-        for(let i = 0; i < res.songs[0].ar.length; i++) {
-          let o = {};
-          o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
-          arr.push(o);
-        }
-        obj.ar = arr;
-        obj.al = res.songs[0].al.name;
-        obj.alId = res.songs[0].al.id;
-        obj.time = res.songs[0].dt;
-        this.$store.commit('updatePlaylist', obj);
+        obj.id = id;
+        this.$store.dispatch('sendUpdatePlaylist', obj);
       })
       this.$store.commit('updateSong', s);
       this.$router.push('/music');
     },
+    // 点击歌手跳转
     goArtist(id) {
-      if(this.$route.path === '/artist') {
-        if(this.$route.query.artistid !== id) {
-          this.$router.push({
-          path: '/artist',
-          query: {
-            artistid: id
-          }
-        })
-        }else{
-          Message({
-          message: '已经在这啦！',
-        });
-        }
-      }else{
+      if(this.$route.path !== '/artist' && this.$route.query.artistid !== id) {
         this.$router.push({
           path: '/artist',
           query: {
             artistid: id
           }
         })
+      }else{
+        Message({
+          message: '已经在这啦！',
+        });
       }
-      
     },
+    // 点击专辑跳转
     goAlbum(id) {
       if(this.$route.path === '/albumdetail') {
         Message({
@@ -127,28 +114,25 @@ export default {
         });
       } else{
         this.$router.push({
-          path: "/albumdetail",
-          query: {
-            albumdetailId: id
-        }
+            path: "/albumdetail",
+            query: {
+              albumdetailId: id
+          }
         });
       } 
     },
+    // 保存鼠标进入的当前行的id
     enterColum(row) {
       this.showId = row.songId;
       // console.log(row);
       this.$forceUpdate();
     },
+    // 离开当前行将id清零
     leaveColum() {
       this.showId = 0;
     },
   },
-  computed: {
-
-  },
-  watch: {
-    
-  },
+  // 因为默认显示歌曲结果，所以向父组件请求方法来获取数据
   mounted() {
     this.$emit('startRequest', 1);
   }

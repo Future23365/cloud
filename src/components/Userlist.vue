@@ -2,7 +2,9 @@
   <div class="userlist">
     <ul>
       <li v-for="(item, index) in userlistData" :key="index">
-        <img :src="item.avatarUrl" alt="">
+        <!-- 用户头像 -->
+        <img :src="item.avatarUrl" alt="头像走丢啦">
+        <!-- 用户的名字性别及描述 -->
         <div class="des">
           <a href="javascript:;" @click="goUser(item.userId)">{{item.nickname}}</a>
           <span>
@@ -12,8 +14,6 @@
           </span>
           <p>{{item.signature}}</p>
         </div>
-        <!-- <div>歌单</div>
-        <div>粉丝</div> -->
       </li>
     </ul>
   </div>
@@ -25,16 +25,16 @@ export default {
   name: 'userlist',
   data() {
     return {
-      userlistData: [],
-      gender: ['','#icon-nan', '#icon-nv'],
-      playCount: 0,
-      fansCount: 0,
+      userlistData: [], //存储用户列表数据
+      gender: ['','#icon-nan', '#icon-nv'], //保存性别图片类名
     }
   },
   methods: {
+    // 父组件传入数据
     getUserlistdata(data) {
       this.userlistData = data;
     },
+    // 跳转路由之用户详情页
     goUser(id) {
       this.$router.push({
         path: '/user',

@@ -1,7 +1,10 @@
 <template>
   <div class="user" >
+    <!-- 头像部分 -->
     <div class="userInf" v-bind:style="{background: bgcURl}">
+      <!-- 头像 -->
       <img :src="userData.profile.avatarUrl" alt="">
+      <!-- 用于信息 -->
       <div class="name">
         <div class="name-inf">
           <div class="name-head">
@@ -34,6 +37,7 @@
         <div class="base"></div>
       </div>
     </div>
+    <!-- 听歌排行 -->
     <div class="listenrecord">
       <div class="menu">
         <h3>听歌排行</h3>
@@ -54,6 +58,7 @@
         </ul>
       </div>
     </div>
+    <!-- 用户歌单 -->
     <div class="userlist">
         <h3>{{userData.profile.nickname}}创建的歌单</h3>
         <Album ref="childrenSonglist1"></Album>
@@ -78,25 +83,27 @@ export default {
   },
   data() {
     return {
-      userData: {profile: {avatarUrl: ''}},
-      gender: ['','#icon-nan', '#icon-nv'],
-      songlistPage: 30,
-      isHasmore: true,
-      record: [],
-      isWeek: true,
-      ownPlaylist : [],
-      collectionPlaylist : [],
-      showId: 0,
-      hasRecord: true,
+      userData: {profile: {avatarUrl: ''}}, //用户数据
+      gender: ['','#icon-nan', '#icon-nv'], //性别
+      songlistPage: 30, //增加30个歌单
+      isHasmore: true, //是否有更多歌单
+      record: [], //听歌记录
+      isWeek: true, //周记录和总记录标记
+      ownPlaylist : [], //创建的歌单
+      collectionPlaylist : [], //收藏的歌单
+      showId: 0, //用于显示歌曲下载菜单
+      hasRecord: true, //是否有听歌记录
     }
   },
   methods: {
+    // 请求用户数据
     requsetUserdata(limit) {
       getUserData(this.$route.query.userId).then(res => {
         this.userData = res;
         this.$forceUpdate(); 
       })
       this.getplayList(limit);
+      // 请求用户听歌记录
       getUserRecord(this.$route.query.userId, 1).then(res => {
         this.record = res.weekData;
         let that = this;
@@ -104,6 +111,7 @@ export default {
         this.hasRecord = false
       })
     },
+    // 请求用户歌单
     getplayList(limit) {
       getUserplaylist(this.$route.query.userId, limit).then(res => {
         for(let i = 0; i < res.playlist.length; i++) {
@@ -118,9 +126,11 @@ export default {
         this.$refs.childrenSonglist2.getAlbumdata(this.collectionPlaylist, "歌单");
       })
     },
+    // 获取更多歌曲按钮函数
     getSonglistmore(limit) {
       this.getplayList(limit);
     },
+    // 选择听歌排行
     setWeek(type) {
       if(type === 'week' && this.isWeek === false) {
         this.isWeek = true;
@@ -138,29 +148,20 @@ export default {
         })
       }
     },
+    // 点击音乐跳转路由
     goMusic(id) {
       let s = {};
       s.id = id;
       getsongDetail(id).then(res => {
-        this.song = res.songs[0];
+        // 分发action使歌曲添加到播放列表
         let obj = {};
-        obj.id = res.songs[0].id;
-        obj.name = res.songs[0].name;
-        let arr = [];
-        for(let i = 0; i < res.songs[0].ar.length; i++) {
-          let o = {};
-          o[res.songs[0].ar[i].name] = res.songs[0].ar[i].id;
-          arr.push(o);
-        }
-        obj.ar = arr;
-        obj.al = res.songs[0].al.name;
-        obj.alId = res.songs[0].al.id;
-        obj.time = res.songs[0].dt;
-        this.$store.commit('updatePlaylist', obj);
+        obj.id = id;
+        this.$store.dispatch('sendUpdatePlaylist', obj);
       })
       this.$store.commit('updateSong', s);
       this.$router.push('/music');
     },
+    // 点击歌手跳转
     goAlbum(id) {
       this.$router.push({
           path: "/artist",
@@ -180,6 +181,7 @@ export default {
     this.requsetUserdata(this.songlistPage);
   },
   computed: {
+    // 取得背景
     bgcURl: function() {
       return `url(${this.userData.profile.backgroundUrl}) no-repeat`
     }

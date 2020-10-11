@@ -1,5 +1,6 @@
 import axios from 'axios';
 // import {Loading} from 'element-ui';
+import { Message } from 'element-ui';
 
 const service = axios.create({
   baseURL: 'http://localhost:3000',
@@ -14,6 +15,12 @@ service.interceptors.response.use(
     return response.data
   },
   err => {
+    Message({
+      message: '请求超时，请尝试刷新^_^',
+      type: 'error',
+      showClose: true,
+      duration: 0
+    });
     return Promise.reject(err)
   }
 )
