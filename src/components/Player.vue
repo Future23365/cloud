@@ -229,7 +229,6 @@ export default {
         }
       } else if(this.musicModel === 'randomplay') {
         let random = Math.floor(Math.random() * this.songList.length);
-        console.log(random, '随机数')
         if(this.songList[random].id === this.$store.state.songid) {
           this.nextSong()
         } else {
