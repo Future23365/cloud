@@ -40,7 +40,7 @@
           <el-slider v-model="value2.volume" vertical height="100px" :max="value2.max" :step="0.1" @input="setvolume"></el-slider>
         </div>
         <svg class="icon pattern" aria-hidden="true" @click="setModel">
-          <use xlink:href="#icon-xunhuan"></use>
+          <use :xlink:href="playmodelicon"></use>
         </svg>
         <div class="el-icon-s-order list" @click="showm"></div>
       </div>
@@ -98,7 +98,8 @@ export default {
       isListshow: false,  //播放列表显示标记位
       songList: [], //存歌曲
       firstIn: false, //是否是第一次进入
-      setindex: 0 //更新进度标志位
+      setindex: 0, //更新进度标志位
+      musicModel: 'allLoop'
     }
   },
   methods: {
@@ -140,6 +141,7 @@ export default {
       let obj = {};
       obj.songtime = this.$refs.myaudio.currentTime.toFixed(5);
       obj.songid = this.updateid;
+      obj.playmodel = this.musicModel
       arr.push(obj);
       localStorage.setItem('music', JSON.stringify(arr));
     },
@@ -191,6 +193,7 @@ export default {
           let obj = {};
           !!music[0].songid === true ?  obj.id = music[0].songid : '';
           !!music[0].songtime === true ? this.$refs.myaudio.currentTime = music[0].songtime : '';
+          !!music[0].playmodel === true ? this.musicModel = music[0].playmodel : '';
           this.$store.commit('updateSong', obj);
           this.firstIn = true;
         } else {
@@ -199,7 +202,6 @@ export default {
           type: 'warning',
         });
         }
-        
       }
     },
     // 显示、隐藏播放列表
@@ -210,19 +212,31 @@ export default {
     nextSong() {
       // 获取播放列表
       this.songList = this.$store.state.playlist;
-      // 循环找出当前的歌曲，获取下一曲，这方法属实有点鸡肋@_@
-      for(let i = 0; i < this.songList.length; i++) {
-        if((this.songList[i].id === this.$store.state.songid)) {
-          // 如果是最后一首，则播放第一首
-          if(i === this.songList.length - 1) {
-            this.$store.commit('updateSong', {'id': this.songList[0].id})
+      //歌单循环
+      if(this.musicModel === 'allLoop') {
+        // 循环找出当前的歌曲，获取下一曲，这方法属实有点鸡肋@_@
+        for(let i = 0; i < this.songList.length; i++) {
+          if((this.songList[i].id === this.$store.state.songid)) {
+            // 如果是最后一首，则播放第一首
+            if(i === this.songList.length - 1) {
+              this.$store.commit('updateSong', {'id': this.songList[0].id})
+              return 
+            }
+            // 将歌曲列表的下一曲提交到vuex
+            this.$store.commit('updateSong', {'id': this.songList[i + 1].id})
             return 
           }
-          // 将歌曲列表的下一曲提交到vuex
-          this.$store.commit('updateSong', {'id': this.songList[i + 1].id})
-          return 
+        }
+      } else if(this.musicModel === 'randomplay') {
+        let random = Math.floor(Math.random() * this.songList.length);
+        console.log(random, '随机数')
+        if(this.songList[random].id === this.$store.state.songid) {
+          this.nextSong()
+        } else {
+          this.$store.commit('updateSong', {'id': this.songList[random].id});
         }
       }
+      
     },
     // 上一曲事件
     lastSong() {
@@ -265,9 +279,16 @@ export default {
       }
     },
     setModel() {
-      Message({
-          message: '暂时还没有弄这个功能哦~_~',
-        });
+      console.log(this.musicModel)
+      if(this.musicModel === 'allLoop') {
+        this.musicModel = 'randomplay';
+      }else if(this.musicModel === 'randomplay') {
+        this.musicModel = 'allLoop';
+      }
+      this.savesonginf()
+      // Message({
+      //     message: '暂时还没有弄这个功能哦~_~',
+      //   });
     }
   },
   computed: {
@@ -275,6 +296,14 @@ export default {
     updateid: function() {
       return this.$store.state.songid;
     },
+    //返回播放模式图标
+    playmodelicon: function() {
+      let key_value = {
+        allLoop: '#icon-xunhuan',
+        randomplay: '#icon-suiji',
+      }
+      return key_value[this.musicModel]
+    }
   },
   watch: {
     // 监听vuex歌曲id变化触发事件，重新获取url及歌曲信息
