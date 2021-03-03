@@ -110,6 +110,7 @@ export default {
     },
     // 设置表格要显示的数据
     setTabledata(arr) {
+      console.log(arr)
       for(let i = 0; i < 50; i++) {
         this.tableData.push({
           hotmusic: arr[0].playlist.tracks[i].name,

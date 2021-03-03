@@ -3,7 +3,7 @@
     <div class="main">
       <!-- logo -->
       <div class="logo">
-        <a href="/" title="回到首页">
+        <a href="http://www.pinlepinle.com/cloud" title="回到首页">
           <div class="page"></div>
         </a>
       </div>
